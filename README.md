@@ -48,40 +48,6 @@ src/
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Node.js 18+ and npm
-- PHP 8.0+ (for backend)
-- MySQL 8.0+ (for database)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd aac-innovation-website
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Build for production**
-   ```bash
-   npm run build
-   ```
-
 ## 🎨 Design System
 
 ### Colors
@@ -129,34 +95,6 @@ Key configuration in `.env`:
 - `POST /api/contact.php` - Contact form submission
 - `POST /api/bookings.php` - Booking form submission
 - `GET /api/services.php` - Service data retrieval
-
-### Database Schema
-```sql
--- Users table for contact/booking data
-CREATE TABLE contacts (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  first_name VARCHAR(100) NOT NULL,
-  last_name VARCHAR(100) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  phone VARCHAR(20),
-  company VARCHAR(255),
-  message TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Bookings table
-CREATE TABLE bookings (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  client_name VARCHAR(255) NOT NULL,
-  client_email VARCHAR(255) NOT NULL,
-  client_phone VARCHAR(20) NOT NULL,
-  service_id VARCHAR(100) NOT NULL,
-  scheduled_date DATE NOT NULL,
-  scheduled_time TIME NOT NULL,
-  status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
 
 ## 🚀 Deployment
 
