@@ -20,6 +20,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
       <Footer />
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+      <BackToTopButton />
     </div>
   );
 };
