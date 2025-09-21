@@ -15,14 +15,14 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": false,
+    "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
 
     /* Path mapping */
-    "baseUrl": ".",
+    "baseUrl": ".", 
     "paths": {
       "@/*": ["./src/*"]
     }

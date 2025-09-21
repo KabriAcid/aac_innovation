@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useToast } from '@/hooks/useToast';
+import BackToTopButton from '@/components/ui/BackToTopButton';
 
 interface LayoutProps {
   children: React.ReactNode;
