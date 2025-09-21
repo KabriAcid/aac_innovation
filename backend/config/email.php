@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Email Configuration and Helper Functions
  */
@@ -9,15 +10,18 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-class EmailService {
+class EmailService
+{
     private $mailer;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->mailer = new PHPMailer(true);
         $this->configureMailer();
     }
-    
-    private function configureMailer() {
+
+    private function configureMailer()
+    {
         try {
             // Server settings
             $this->mailer->isSMTP();
@@ -27,7 +31,7 @@ class EmailService {
             $this->mailer->Password   = $_ENV['SMTP_PASS'] ?? '';
             $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $this->mailer->Port       = $_ENV['SMTP_PORT'] ?? 587;
-            
+
             // Default sender
             $this->mailer->setFrom(
                 $_ENV['SMTP_USER'] ?? 'noreply@aacinnovation.com',
@@ -37,18 +41,19 @@ class EmailService {
             error_log("Mailer configuration error: " . $e->getMessage());
         }
     }
-    
-    public function sendContactNotification($data) {
+
+    public function sendContactNotification($data)
+    {
         try {
             $this->mailer->clearAddresses();
-            $this->mailer->addAddress('info@aacinnovation.com', 'AAC Innovation');
-            
+            $this->mailer->addAddress('aacinovations43@gmail.com', 'AAC Innovation');
+
             $this->mailer->isHTML(true);
             $this->mailer->Subject = 'New Contact Form Submission';
-            
+
             $body = $this->getContactEmailTemplate($data);
             $this->mailer->Body = $body;
-            
+
             $this->mailer->send();
             return true;
         } catch (Exception $e) {
@@ -56,19 +61,20 @@ class EmailService {
             return false;
         }
     }
-    
-    public function sendBookingConfirmation($data) {
+
+    public function sendBookingConfirmation($data)
+    {
         try {
             $this->mailer->clearAddresses();
             $this->mailer->addAddress($data['email'], $data['firstName'] . ' ' . $data['lastName']);
             $this->mailer->addBCC('bookings@aacinnovation.com', 'AAC Innovation Bookings');
-            
+
             $this->mailer->isHTML(true);
             $this->mailer->Subject = 'Booking Confirmation - AAC Innovation';
-            
+
             $body = $this->getBookingEmailTemplate($data);
             $this->mailer->Body = $body;
-            
+
             $this->mailer->send();
             return true;
         } catch (Exception $e) {
@@ -76,8 +82,9 @@ class EmailService {
             return false;
         }
     }
-    
-    private function getContactEmailTemplate($data) {
+
+    private function getContactEmailTemplate($data)
+    {
         return "
         <html>
         <head>
@@ -126,8 +133,9 @@ class EmailService {
         </html>
         ";
     }
-    
-    private function getBookingEmailTemplate($data) {
+
+    private function getBookingEmailTemplate($data)
+    {
         return "
         <html>
         <head>
@@ -167,7 +175,7 @@ class EmailService {
                         </div>
                     </div>
                     
-                    <p>If you need to make any changes or have questions, please contact us at info@aacinnovation.com or +234 123 456 7890.</p>
+                    <p>If you need to make any changes or have questions, please contact us at aacinovations43@gmail.com or 0707 653 6019.</p>
                     
                     <p>Best regards,<br>The AAC Innovation Team</p>
                 </div>
@@ -179,13 +187,13 @@ class EmailService {
 }
 
 // Simple email function for basic PHP setups (without PHPMailer)
-function sendSimpleEmail($to, $subject, $message, $headers = '') {
+function sendSimpleEmail($to, $subject, $message, $headers = '')
+{
     if (empty($headers)) {
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         $headers .= 'From: AAC Innovation <noreply@aacinnovation.com>' . "\r\n";
     }
-    
+
     return mail($to, $subject, $message, $headers);
 }
-?>

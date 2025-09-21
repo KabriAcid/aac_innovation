@@ -158,8 +158,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 📞 Support
 
 For support and questions:
-- Email: info@aacinnovation.com
-- Phone: +234 123 456 7890
+- Email: aacinovations43@gmail.com
+- Phone: 0707 653 6019
 - Website: https://aacinnovation.com
 
 ## 🙏 Acknowledgments

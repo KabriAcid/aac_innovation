@@ -14,9 +14,9 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img
-                src="/favicon.png"
+                src="/favicon-black-outline.png"
                 alt={COMPANY_INFO.name}
-                className="h-8 w-8"
+                className="h-10 w-10"
               />
               <div>
                 <h3 className="text-xl font-bold">{COMPANY_INFO.name}</h3>

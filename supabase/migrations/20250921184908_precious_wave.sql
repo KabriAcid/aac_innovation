@@ -97,12 +97,12 @@ CREATE TABLE IF NOT EXISTS services (
 INSERT IGNORE INTO services (id, title, description, category, features, pricing) VALUES
 ('penetration-testing', 'Penetration Testing', 'Comprehensive security assessments to identify vulnerabilities in your systems and applications.', 'cybersecurity', 
  JSON_ARRAY('Network penetration testing', 'Web application security testing', 'Mobile app security assessment', 'Social engineering testing', 'Detailed vulnerability reports', 'Remediation recommendations'),
- JSON_OBJECT('model', 'one-time', 'startingPrice', '$2,500', 'description', 'Starting price for basic penetration testing')),
+ JSON_OBJECT('model', 'one-time', 'startingPrice', '₦2,125,000', 'description', 'Starting price for basic penetration testing')),
 
 ('payment-gateway', 'Payment Gateway Integration', 'Seamless integration of secure payment processing solutions for your business.', 'fintech',
  JSON_ARRAY('Multi-currency support', 'Mobile money integration', 'Card payment processing', 'Real-time transaction monitoring', 'Fraud detection and prevention', 'PCI DSS compliance'),
- JSON_OBJECT('model', 'transaction', 'startingPrice', '2.5% + $0.30', 'description', 'Per transaction fee')),
+ JSON_OBJECT('model', 'transaction', 'startingPrice', '2.5% + ₦255', 'description', 'Per transaction fee')),
 
 ('cloud-migration', 'Cloud Migration Services', 'Seamless migration of your infrastructure and applications to the cloud.', 'cloud',
  JSON_ARRAY('AWS, Azure, GCP migration', 'Application modernization', 'Data migration and backup', 'Performance optimization', 'Cost optimization strategies', '24/7 migration support'),
- JSON_OBJECT('model', 'one-time', 'startingPrice', '$5,000', 'description', 'Starting price for basic cloud migration'));
+ JSON_OBJECT('model', 'one-time', 'startingPrice', '₦4,250,000', 'description', 'Starting price for basic cloud migration'));

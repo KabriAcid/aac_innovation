@@ -18,7 +18,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'one-time',
-      startingPrice: '$2,500',
+      startingPrice: '₦2,125,000',
       description: 'Starting price for basic penetration testing'
     }
   },
@@ -38,7 +38,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'consulting',
-      startingPrice: '$150/hour',
+      startingPrice: '₦127,500/hour',
       description: 'Hourly consulting rate for security experts'
     }
   },
@@ -60,7 +60,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'transaction',
-      startingPrice: '2.5% + $0.30',
+      startingPrice: '2.5% + ₦255',
       description: 'Per transaction fee'
     }
   },
@@ -80,7 +80,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'one-time',
-      startingPrice: '$15,000',
+      startingPrice: '₦12,750,000',
       description: 'Complete digital wallet solution'
     }
   },
@@ -102,7 +102,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'one-time',
-      startingPrice: '$5,000',
+      startingPrice: '₦4,250,000',
       description: 'Starting price for basic cloud migration'
     }
   },
@@ -122,7 +122,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'one-time',
-      startingPrice: '$25,000',
+      startingPrice: '₦21,250,000',
       description: 'Starting price for enterprise software projects'
     }
   },
@@ -144,7 +144,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'subscription',
-      startingPrice: '$299/month',
+      startingPrice: '₦254,150/month',
       description: 'Monthly subscription for AI chatbot service'
     }
   },
@@ -164,7 +164,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'one-time',
-      startingPrice: '$3,000',
+      startingPrice: '₦2,550,000',
       description: 'Starting price for automation implementation'
     }
   },
@@ -186,7 +186,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'subscription',
-      startingPrice: '$199/month',
+      startingPrice: '₦169,150/month',
       description: 'Monthly subscription per 100 devices'
     }
   },
@@ -206,7 +206,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'one-time',
-      startingPrice: '$10,000',
+      startingPrice: '₦8,500,000',
       description: 'Starting price for smart building implementation'
     }
   },
@@ -228,7 +228,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'consulting',
-      startingPrice: '$200/hour',
+      startingPrice: '₦170,000/hour',
       description: 'Hourly rate for senior consultants'
     }
   },
@@ -248,7 +248,7 @@ export const services: Service[] = [
     ],
     pricing: {
       model: 'one-time',
-      startingPrice: '$1,500',
+      startingPrice: '₦1,275,000',
       description: 'Starting price for technology audit'
     }
   }

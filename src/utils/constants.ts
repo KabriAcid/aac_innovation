@@ -2,8 +2,8 @@ export const COMPANY_INFO = {
   name: 'AAC Innovation',
   tagline: 'Driving Africa\'s Tech Future',
   description: 'Innovative, scalable, and accessible digital services in cybersecurity, fintech, cloud computing, AI, IoT, and strategic consulting.',
-  email: 'info@aacinnovation.com',
-  phone: '+234 123 456 7890',
+  email: 'aacinovations43@gmail.com',
+  phone: '0707 653 6019',
   address: 'Lagos, Nigeria',
   socialLinks: {
     linkedin: 'https://linkedin.com/company/aac-innovation',

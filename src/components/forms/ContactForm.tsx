@@ -92,7 +92,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
           type="tel"
           {...register('phone')}
           error={errors.phone?.message}
-          placeholder="+234 123 456 7890"
+          placeholder="0707 653 6019"
         />
       </div>
 

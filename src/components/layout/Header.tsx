@@ -44,7 +44,7 @@ export const Header: React.FC = () => {
             <img
               src="/favicon.png"
               alt={COMPANY_INFO.name}
-              className="h-8 w-8"
+              className="h-10 w-10"
             />
             <div>
               <h1 className="text-xl font-bold text-secondary-900">
@@ -68,7 +68,7 @@ export const Header: React.FC = () => {
                     ? 'text-primary-600'
                     : isScrolled
                     ? 'text-secondary-700'
-                    : 'text-white'
+                    : 'text-gray-500'
                 )}
               >
                 {item.name}
@@ -82,7 +82,7 @@ export const Header: React.FC = () => {
               href={`tel:${COMPANY_INFO.phone}`}
               className={cn(
                 'flex items-center space-x-2 text-sm transition-colors duration-200 hover:text-primary-600',
-                isScrolled ? 'text-secondary-600' : 'text-white/90'
+                isScrolled ? 'text-secondary-600' : 'text-gray-400'
               )}
             >
               <Phone className="h-4 w-4" />
@@ -102,7 +102,7 @@ export const Header: React.FC = () => {
               'lg:hidden p-2 rounded-md transition-colors duration-200',
               isScrolled
                 ? 'text-secondary-700 hover:bg-secondary-100'
-                : 'text-white hover:bg-white/10'
+                : 'text-gray-600 hover:bg-gray-100/20'
             )}
           >
             {isMenuOpen ? (
@@ -120,7 +120,7 @@ export const Header: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden mt-4 py-4 border-t border-secondary-200"
+              className="lg:hidden mt-4 py-4 bg-white border-t border-secondary-200 rounded-lg shadow-lg"
             >
               <div className="flex flex-col space-y-4">
                 {NAVIGATION_ITEMS.map((item) => (

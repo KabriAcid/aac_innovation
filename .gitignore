@@ -97,3 +97,4 @@ firebase-debug.log
 firebase-debug.*.log
 
 # Keep firebase.json and .firebaserc (configuration files)
+.exe

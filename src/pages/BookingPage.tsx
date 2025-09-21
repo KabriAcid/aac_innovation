@@ -203,14 +203,14 @@ export const BookingPage: React.FC = () => {
                       <div className="space-y-2">
                         <p>
                           <span className="font-medium">Email:</span>{' '}
-                          <a href="mailto:info@aacinnovation.com" className="text-primary-600 hover:text-primary-700">
-                            info@aacinnovation.com
+                          <a href="mailto:aacinovations43@gmail.com" className="text-primary-600 hover:text-primary-700">
+                            aacinovations43@gmail.com
                           </a>
                         </p>
                         <p>
                           <span className="font-medium">Phone:</span>{' '}
                           <a href="tel:+2341234567890" className="text-primary-600 hover:text-primary-700">
-                            +234 123 456 7890
+                            0707 653 6019
                           </a>
                         </p>
                       </div>
