@@ -89,3 +89,11 @@ Thumbs.db
 *.key
 *.crt
 *.p12
+
+# === Firebase ===
+# Firebase cache
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Keep firebase.json and .firebaserc (configuration files)
