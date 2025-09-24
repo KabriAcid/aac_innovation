@@ -1,10 +1,4 @@
 <?php
-
-namespace AAC\Api;
-
-use AAC\Config;
-use PDO;
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');

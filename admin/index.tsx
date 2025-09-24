@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
 import Dashboard from './pages/Dashboard';
 import BookingsList from './pages/Bookings/List';
@@ -10,22 +10,89 @@ import ServicesList from './pages/Services/List';
 import TeamList from './pages/Team/List';
 import Settings from './pages/Settings';
 import AdminLoginPage from './pages/AdminLoginPage';
+import { useAuth } from './context/AuthContext';
 
 const AdminRoutes: React.FC = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
+
+  // Show nothing while loading auth state
+  if (isLoading) return null;
+
   return (
     <Routes>
-      {/* Default route: login page */}
-      <Route path="/" element={<AdminLoginPage />} />
-      {/* All admin pages nested under AdminLayout */}
+      {/* Login route always at /admin/login */}
+      <Route
+        path="login"
+        element={
+          isAuthenticated ? (
+            <Navigate to="/admin/dashboard" replace />
+          ) : (
+            <AdminLoginPage />
+          )
+        }
+      />
+      {/* Default /admin route: redirect to login or dashboard */}
+      <Route
+        path="/"
+        element={
+          isAuthenticated ? (
+            <Navigate to="/admin/dashboard" replace />
+          ) : (
+            <Navigate to="/admin/login" replace />
+          )
+        }
+      />
+      {/* All admin pages nested under AdminLayout, protected */}
       <Route element={<AdminLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="bookings" element={<BookingsList />} />
-        <Route path="bookings/:id" element={<BookingsDetail />} />
-        <Route path="contacts" element={<ContactsList />} />
-        <Route path="contacts/:id" element={<ContactsDetail />} />
-        <Route path="services" element={<ServicesList />} />
-        <Route path="team" element={<TeamList />} />
-        <Route path="settings" element={<Settings />} />
+        <Route
+          path="dashboard"
+          element={
+            isAuthenticated ? <Dashboard /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
+        <Route
+          path="bookings"
+          element={
+            isAuthenticated ? <BookingsList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
+        <Route
+          path="bookings/:id"
+          element={
+            isAuthenticated ? <BookingsDetail /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
+        <Route
+          path="contacts"
+          element={
+            isAuthenticated ? <ContactsList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
+        <Route
+          path="contacts/:id"
+          element={
+            isAuthenticated ? <ContactsDetail /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
+        <Route
+          path="services"
+          element={
+            isAuthenticated ? <ServicesList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
+        <Route
+          path="team"
+          element={
+            isAuthenticated ? <TeamList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
+        <Route
+          path="settings"
+          element={
+            isAuthenticated ? <Settings /> : <Navigate to="/admin/login" replace state={{ from: location }} />
+          }
+        />
       </Route>
     </Routes>
   );

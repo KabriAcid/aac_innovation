@@ -75,16 +75,6 @@ export const HomePage: React.FC = () => {
                   Explore Services
                 </Button>
               </Link>
-              <Link to="/booking">
-                <Button variant="secondary" size="lg" icon={<Calendar className="h-5 w-5" />}>
-                  Book Consultation
-                </Button>
-              </Link>
-              <Link to="/contact">
-                <Button className="!bg-white !text-blue-600 !border-blue-600 hover:!bg-blue-50" size="lg">
-                  Contact Us
-                </Button>
-              </Link>
             </div>
           </motion.div>
         </div>

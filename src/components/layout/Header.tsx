@@ -93,6 +93,11 @@ export const Header: React.FC = () => {
                 Book Consultation
               </Button>
             </Link>
+            <Link to="/admin/login">
+              <Button variant="secondary" size="sm">
+                Admin
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -152,11 +157,6 @@ export const Header: React.FC = () => {
                     <Mail className="h-4 w-4" />
                     <span>{COMPANY_INFO.email}</span>
                   </a>
-                  <Link to="/admin/login" className="block pt-2">
-                    <Button variant="secondary" size="sm" fullWidth>
-                      Admin
-                    </Button>
-                  </Link>
                   <Link to="/booking" className="block pt-2">
                     <Button variant="primary" size="sm" fullWidth>
                       Book Consultation
