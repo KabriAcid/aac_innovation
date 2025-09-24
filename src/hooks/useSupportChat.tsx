@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { ChatNode } from './data';
+import { ChatNode } from '../data/data';
 
 export interface ChatMessage {
   id: string;

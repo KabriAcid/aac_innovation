@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { MessageCircle, X, RefreshCw, ArrowLeft, Send } from 'lucide-react';
-import { useSupportChat } from './useSupportChat';
-import { ChatNode, defaultChatTree, welcomeMessage as defaultWelcomeMessage } from './data';
+import { useSupportChat } from '../hooks/useSupportChat';
+import { ChatNode, defaultChatTree, welcomeMessage as defaultWelcomeMessage } from '../data/data';
 
 export interface SupportChatWidgetProps {
   /** Custom chat tree data to override defaults */
