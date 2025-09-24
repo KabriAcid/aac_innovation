@@ -162,6 +162,11 @@ export const Header: React.FC = () => {
                       Book Consultation
                     </Button>
                   </Link>
+                  <Link to="/admin/login" className="block pt-2 w-full">
+                    <Button variant="secondary" size="sm" className="w-full">
+                      Admin
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </motion.div>
