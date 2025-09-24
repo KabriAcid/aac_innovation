@@ -4,7 +4,7 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { ToastContainer } from '@/components/ui/Toast';
 import { useToast } from '@/hooks/useToast';
-import BackToTopButton from '@/components/ui/BackToTopButton';
+import SupportChatWidget from '@/ui/SupportChatWidget';
 
 export const Layout: React.FC = () => {
   const { toasts, removeToast } = useToast();
@@ -17,7 +17,10 @@ export const Layout: React.FC = () => {
       </main>
       <Footer />
       <ToastContainer toasts={toasts} onRemove={removeToast} />
-      <BackToTopButton />
+      <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end space-y-4">
+        <SupportChatWidget position="bottom-right" />
+      </div>
+      {/* BackToTopButton Removed*/}
     </div>
   );
 };

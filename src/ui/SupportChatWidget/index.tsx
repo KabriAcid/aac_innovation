@@ -195,13 +195,12 @@ const SupportChatWidget: React.FC<SupportChatWidgetProps> = ({
               {isTyping && (
                 <div className="flex justify-start">
                   <div className="max-w-[85%] px-3 py-2 rounded-lg bg-gray-100 text-gray-800">
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center">
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                       </div>
-                      <span className="text-xs text-gray-500 ml-2">typing...</span>
                     </div>
                   </div>
                 </div>
@@ -264,12 +263,12 @@ const SupportChatWidget: React.FC<SupportChatWidgetProps> = ({
       <button
         ref={buttonRef}
         onClick={toggleChat}
-        className={`${primaryColor} text-white p-4 rounded-full shadow-lg transition-all duration-200 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 relative`}
+        className={`${secondaryColor} text-white p-4 rounded-full shadow-lg transition-all duration-200 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 relative cursor-pointer`}
         aria-label={isOpen ? 'Close support chat' : 'Open support chat'}
         aria-expanded={isOpen}
         aria-haspopup="dialog"
       >
-        <MessageCircle size={24} />
+        <MessageCircle size={24} className={`text-blue-500`} />
         
         {/* New Message Indicator */}
         {hasNewMessage && !isOpen && (
@@ -286,4 +285,4 @@ const SupportChatWidget: React.FC<SupportChatWidgetProps> = ({
 };
 
 export default SupportChatWidget;
-export type { SupportChatWidgetProps, ChatNode };
+export type { ChatNode };
