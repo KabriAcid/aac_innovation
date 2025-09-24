@@ -24,75 +24,23 @@ const AdminRoutes: React.FC = () => {
       {/* Login route always at /admin/login */}
       <Route
         path="login"
-        element={
-          isAuthenticated ? (
-            <Navigate to="/admin/dashboard" replace />
-          ) : (
-            <AdminLoginPage />
-          )
-        }
+        element={<AdminLoginPage />}
       />
-      {/* Default /admin route: redirect to login or dashboard */}
+      {/* Default /admin route: redirect to dashboard */}
       <Route
         path="/"
-        element={
-          isAuthenticated ? (
-            <Navigate to="/admin/dashboard" replace />
-          ) : (
-            <Navigate to="/admin/login" replace />
-          )
-        }
+        element={<Navigate to="/admin/dashboard" replace />}
       />
-      {/* All admin pages nested under AdminLayout, protected */}
+      {/* All admin pages nested under AdminLayout, no auth required */}
       <Route element={<AdminLayout />}>
-        <Route
-          path="dashboard"
-          element={
-            isAuthenticated ? <Dashboard /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
-        <Route
-          path="bookings"
-          element={
-            isAuthenticated ? <BookingsList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
-        <Route
-          path="bookings/:id"
-          element={
-            isAuthenticated ? <BookingsDetail /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
-        <Route
-          path="contacts"
-          element={
-            isAuthenticated ? <ContactsList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
-        <Route
-          path="contacts/:id"
-          element={
-            isAuthenticated ? <ContactsDetail /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
-        <Route
-          path="services"
-          element={
-            isAuthenticated ? <ServicesList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
-        <Route
-          path="team"
-          element={
-            isAuthenticated ? <TeamList /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
-        <Route
-          path="settings"
-          element={
-            isAuthenticated ? <Settings /> : <Navigate to="/admin/login" replace state={{ from: location }} />
-          }
-        />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="bookings" element={<BookingsList />} />
+        <Route path="bookings/:id" element={<BookingsDetail />} />
+        <Route path="contacts" element={<ContactsList />} />
+        <Route path="contacts/:id" element={<ContactsDetail />} />
+        <Route path="services" element={<ServicesList />} />
+        <Route path="team" element={<TeamList />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );

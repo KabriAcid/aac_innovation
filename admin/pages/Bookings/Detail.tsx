@@ -105,7 +105,6 @@ const BookingsDetail: React.FC = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900">Booking Details</h1>
         </div>
         
         <div className="flex items-center space-x-3">
@@ -117,12 +116,12 @@ const BookingsDetail: React.FC = () => {
           </span>
         </div>
       </div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Booking Information</h3>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Details */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Booking Information</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
