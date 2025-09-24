@@ -1,2 +1,3 @@
-const morgan = require('morgan');
-module.exports = morgan('dev');
+import morgan from 'morgan';
+const logger = morgan('dev');
+export default logger;

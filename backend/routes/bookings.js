@@ -1,3 +1,7 @@
-const express = require('express');
-const router = require('../api/bookings');
-module.exports = router;
+import express from 'express';
+import bookingsApi from '../api/bookings.js';
+
+const router = express.Router();
+router.use('/', bookingsApi);
+
+export default router;
