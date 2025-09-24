@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import pool from '../config/database.js';
+
 const router = express.Router();
-const pool = require('../config/database');
 
 // GET bookings
 router.get('/', async (req, res, next) => {
@@ -32,4 +33,4 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;
