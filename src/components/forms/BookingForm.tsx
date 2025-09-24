@@ -13,6 +13,7 @@ import { services } from '@/data/services';
 import { teamMembers } from '@/data/team';
 import { TIME_SLOTS } from '@/utils/constants';
 import { useToast } from '@/hooks/useToast';
+import { generateId } from '@/utils/helpers';
 
 const schema: yup.ObjectSchema<BookingFormData> = yup.object({
   firstName: yup.string().required('First name is required'),
@@ -81,19 +82,50 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
   const handleFormSubmit = async (data: BookingFormData) => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Generate or get userId from localStorage
+      let userId = localStorage.getItem('aac_user_id');
+      if (!userId) {
+        userId = generateId();
+        localStorage.setItem('aac_user_id', userId);
+      }
+
+      // Prepare payload
+      const payload = { ...data, userId };
+      console.log('Booking payload:', payload);
+
+      // POST to backend
+      let response, result;
+      try {
+        response = await fetch('/backend/api/bookings.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        result = await response.json();
+        console.log('Booking response:', response, result);
+      } catch (networkError) {
+        console.error('Network error:', networkError);
+        error('Unable to reach backend', 'Please check your internet connection or try again later.');
+        return;
+      }
+
+      if (!response.ok || !result.success) {
+        console.error('Booking error:', result);
+        error('Failed to submit booking', result?.message || 'Please try again or contact us directly.');
+        return;
+      }
+
       if (onSubmit) {
         onSubmit(data);
       }
-      
+
       success(
-        'Booking request submitted!', 
+        'Booking request submitted!',
         'We\'ll confirm your appointment within 2 hours and send you a calendar invite.'
       );
       reset();
     } catch (err) {
+      console.error('Booking form error:', err);
       error('Failed to submit booking', 'Please try again or contact us directly.');
     }
   };

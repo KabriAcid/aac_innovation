@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Booking API Endpoint
- * 
- * Handles consultation booking submissions with validation and email notifications
- */
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -29,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 ORDER BY created_at DESC 
                 LIMIT 50";
 
-        $bookings = fetchAll($sql);
+        $db = getDbConnection();
+        $stmt = $db->query($sql);
+        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo json_encode([
             'success' => true,

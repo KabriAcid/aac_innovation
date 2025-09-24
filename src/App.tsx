@@ -10,12 +10,16 @@ import { AboutPage } from '@/pages/AboutPage';
 import AdminRoutes from '../admin';
 import { AuthProvider } from '../admin/context/AuthContext';
 import ScrollToTop from '@/components/ScrollToTop';
+import { ToastContainer } from '@/components/ui/Toast';
+import { useToast } from '@/hooks/useToast';
 
 function App() {
+  const toast = useToast();
   return (
     <Router>
       <ScrollToTop />
       <AuthProvider>
+        <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
         <Routes>
           {/* Public routes wrapped in Layout */}
           <Route element={<Layout />}> 

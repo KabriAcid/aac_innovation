@@ -1,12 +1,4 @@
 <?php
-
-/**
- * AAC Innovation Database Configuration
- * 
- * Enhanced database connection with helper functions and error handling.
- * Update the values below according to your environment.
- */
-
 // Prevent direct access
 if (!defined('AAC_BACKEND')) {
     define('AAC_BACKEND', true);
@@ -35,8 +27,6 @@ try {
     $dsn = "mysql:host=$host;port=$port;dbname=$db_name;charset=$charset";
     $conn = new PDO($dsn, $username, $password, $options);
 
-    // Test connection
-    $conn->query('SELECT 1');
 } catch (PDOException $e) {
     error_log("Database Connection Error: " . $e->getMessage());
 
