@@ -3,11 +3,25 @@ import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Shield, 
+  ShieldCheck,
   CreditCard, 
+  Wallet,
   Cloud, 
+  Building2,
   Brain, 
+  Bot,
+  Zap,
   Wifi, 
+  Home,
   Target,
+  Search,
+  Smartphone,
+  Palette,
+  Settings,
+  TestTube,
+  Globe,
+  ShoppingCart,
+  Wrench,
   ArrowRight,
   CheckCircle,
   Calendar
@@ -19,11 +33,25 @@ import { services, getServicesByCategory } from '@/data/services';
 
 const iconMap = {
   Shield,
+  ShieldCheck,
   CreditCard,
+  Wallet,
   Cloud,
+  Building2,
   Brain,
+  Bot,
+  Zap,
   Wifi,
+  Home,
   Target,
+  Search,
+  Smartphone,
+  Palette,
+  Settings,
+  TestTube,
+  Globe,
+  ShoppingCart,
+  Wrench,
 };
 
 export const ServicesPage: React.FC = () => {
@@ -43,8 +71,19 @@ export const ServicesPage: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-24 bg-gradient-to-r from-primary-600 to-primary-800 text-white">
-        <div className="container-max section-padding">
+      <section className="relative py-24 text-white">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/img/staff-1-and-2.jpg"
+            alt="AAC Innovation Services Background"
+            className="w-full h-full object-cover object-center"
+            style={{ objectPosition: 'center 20%' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80" />
+        </div>
+        
+        <div className="relative z-10 container-max section-padding">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -216,12 +255,12 @@ export const ServicesPage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/contact">
-                <Button variant="secondary" size="lg" icon={<ArrowRight className="h-5 w-5" />}>
+                <Button className="!bg-white !text-primary-600 !border-white hover:!bg-gray-50" size="lg" icon={<ArrowRight className="h-5 w-5" />}>
                   Discuss Your Needs
                 </Button>
               </Link>
               <Link to="/booking">
-                <Button variant="ghost" size="lg" icon={<Calendar className="h-5 w-5" />}>
+                <Button className="!bg-white !text-primary-600 !border-white hover:!bg-gray-50" size="lg" icon={<Calendar className="h-5 w-5" />}>
                   Schedule Consultation
                 </Button>
               </Link>

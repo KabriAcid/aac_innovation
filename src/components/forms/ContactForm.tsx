@@ -12,15 +12,15 @@ import { ContactFormData } from '@/types';
 import { services } from '@/data/services';
 import { useToast } from '@/hooks/useToast';
 
-const schema = yup.object({
+const schema: yup.ObjectSchema<ContactFormData> = yup.object({
   firstName: yup.string().required('First name is required'),
   lastName: yup.string().required('Last name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  phone: yup.string(),
-  company: yup.string(),
-  serviceInterest: yup.string(),
+  phone: yup.string().optional(),
+  company: yup.string().optional(),
+  serviceInterest: yup.string().optional(),
   message: yup.string().required('Message is required').min(10, 'Message must be at least 10 characters'),
-  consent: yup.boolean().oneOf([true], 'You must agree to the privacy policy'),
+  consent: yup.boolean().oneOf([true], 'You must agree to the privacy policy').required(),
 });
 
 interface ContactFormProps {

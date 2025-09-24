@@ -3,7 +3,8 @@ import { Check } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  // allow rich content (JSX) for labels
+  label?: React.ReactNode;
   error?: string;
   helperText?: string;
 }

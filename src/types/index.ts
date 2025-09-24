@@ -9,7 +9,7 @@ export interface Service {
     startingPrice?: string;
     description?: string;
   };
-  category: 'cybersecurity' | 'fintech' | 'cloud' | 'ai' | 'iot' | 'strategic';
+  category: 'cybersecurity' | 'fintech' | 'cloud' | 'ai' | 'iot' | 'mobile' | 'web' | 'strategic';
 }
 
 export interface TeamMember {

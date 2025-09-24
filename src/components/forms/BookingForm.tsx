@@ -14,18 +14,18 @@ import { teamMembers } from '@/data/team';
 import { TIME_SLOTS } from '@/utils/constants';
 import { useToast } from '@/hooks/useToast';
 
-const schema = yup.object({
+const schema: yup.ObjectSchema<BookingFormData> = yup.object({
   firstName: yup.string().required('First name is required'),
   lastName: yup.string().required('Last name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
   phone: yup.string().required('Phone number is required'),
-  company: yup.string(),
+  company: yup.string().optional(),
   serviceId: yup.string().required('Please select a service'),
-  consultantId: yup.string(),
+  consultantId: yup.string().optional(),
   preferredDate: yup.string().required('Please select a date'),
   preferredTime: yup.string().required('Please select a time'),
-  message: yup.string(),
-  consent: yup.boolean().oneOf([true], 'You must agree to the privacy policy'),
+  message: yup.string().optional(),
+  consent: yup.boolean().oneOf([true], 'You must agree to the privacy policy').required(),
 });
 
 interface BookingFormProps {

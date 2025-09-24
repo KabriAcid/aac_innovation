@@ -9,6 +9,10 @@ import {
   Brain, 
   Wifi, 
   Target,
+  Smartphone,
+  Globe,
+  ShoppingCart,
+  Wrench,
   CheckCircle,
   Star,
   Calendar
@@ -25,6 +29,10 @@ const iconMap = {
   Brain,
   Wifi,
   Target,
+  Smartphone,
+  Globe,
+  ShoppingCart,
+  Wrench,
 };
 
 export const HomePage: React.FC = () => {
@@ -37,9 +45,10 @@ export const HomePage: React.FC = () => {
         {/* Background */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&h=1080&fit=crop&crop=center"
-            alt="Technology Background"
-            className="w-full h-full object-cover"
+            src="/img/hero.jpg"
+            alt="AAC Innovation Hero Background"
+            className="w-full h-full object-cover object-center"
+            style={{ objectPosition: 'center 30%' }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80" />
         </div>
@@ -72,7 +81,7 @@ export const HomePage: React.FC = () => {
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button variant="ghost" size="lg">
+                <Button className="!bg-white !text-blue-600 !border-blue-600 hover:!bg-blue-50" size="lg">
                   Contact Us
                 </Button>
               </Link>
@@ -295,12 +304,12 @@ export const HomePage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/booking">
-                <Button variant="secondary" size="lg" icon={<Calendar className="h-5 w-5" />}>
+                <Button className="!bg-white !text-primary-600 !border-white hover:!bg-gray-50" size="lg" icon={<Calendar className="h-5 w-5" />}>
                   Book Free Consultation
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button variant="ghost" size="lg">
+                <Button className="!bg-white !text-primary-600 !border-white hover:!bg-gray-50" size="lg">
                   Contact Our Team
                 </Button>
               </Link>
@@ -338,7 +347,7 @@ export const HomePage: React.FC = () => {
               },
               {
                 name: 'Michael Okafor',
-                company: 'Lagos Manufacturing Co',
+                company: 'Abuja Manufacturing Co',
                 content: 'Their IoT solutions helped us optimize our production line and reduce costs by 30%. Excellent technical expertise and support.',
                 rating: 5,
               },

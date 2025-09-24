@@ -211,6 +211,148 @@ export const services: Service[] = [
     }
   },
 
+  // Mobile App Development
+  {
+    id: 'mobile-app-development',
+    title: 'Mobile App Development',
+    description: 'Custom mobile applications for iOS and Android platforms with modern technologies.',
+    icon: 'Smartphone',
+    category: 'mobile',
+    features: [
+      'Native iOS and Android development',
+      'Cross-platform solutions (React Native, Flutter)',
+      'Progressive Web Apps (PWAs)',
+      'App Store and Play Store deployment',
+      'Push notifications integration',
+      'Offline functionality support'
+    ],
+    pricing: {
+      model: 'one-time',
+      startingPrice: '₦3,40,000',
+      description: 'Starting price for basic mobile app development'
+    }
+  },
+  {
+    id: 'uiux-design',
+    title: 'UI/UX Design',
+    description: 'User-centered design solutions for web and mobile applications.',
+    icon: 'Palette',
+    category: 'mobile',
+    features: [
+      'User research and personas',
+      'Wireframing and prototyping',
+      'Visual design and branding',
+      'Usability testing',
+      'Design system creation',
+      'Responsive design principles'
+    ],
+    pricing: {
+      model: 'one-time',
+      startingPrice: '₦1,700,000',
+      description: 'Starting price for complete UI/UX design project'
+    }
+  },
+  {
+    id: 'app-maintenance',
+    title: 'App Maintenance & Support',
+    description: 'Ongoing maintenance, updates, and technical support for mobile applications.',
+    icon: 'Settings',
+    category: 'mobile',
+    features: [
+      'Regular app updates and bug fixes',
+      'Performance monitoring and optimization',
+      'Security patches and updates',
+      'OS compatibility updates',
+      'Analytics and crash reporting',
+      '24/7 technical support'
+    ],
+    pricing: {
+      model: 'subscription',
+      startingPrice: '₦212,500/month',
+      description: 'Monthly maintenance and support package'
+    }
+  },
+  {
+    id: 'mobile-testing',
+    title: 'Mobile App Testing',
+    description: 'Comprehensive testing services to ensure app quality and performance.',
+    icon: 'TestTube',
+    category: 'mobile',
+    features: [
+      'Functional and usability testing',
+      'Performance and load testing',
+      'Security testing',
+      'Cross-device compatibility testing',
+      'Automated testing implementation',
+      'Quality assurance reports'
+    ],
+    pricing: {
+      model: 'one-time',
+      startingPrice: '₦850,000',
+      description: 'Starting price for comprehensive app testing'
+    }
+  },
+  {
+    id: 'web-development',
+    title: 'Custom Web Development',
+    description: 'Professional web development services for modern, responsive websites and web applications.',
+    icon: 'Globe',
+    category: 'web',
+    features: [
+      'Responsive web design',
+      'Modern JavaScript frameworks (React, Vue, Angular)',
+      'Backend development (Node.js, PHP, Python)',
+      'Database design and integration',
+      'API development and integration',
+      'Performance optimization'
+    ],
+    pricing: {
+      model: 'one-time',
+      startingPrice: '₦2,125,000',
+      description: 'Starting price for custom web development'
+    }
+  },
+  {
+    id: 'ecommerce-development',
+    title: 'E-commerce Development',
+    description: 'Complete e-commerce solutions with payment integration and inventory management.',
+    icon: 'ShoppingCart',
+    category: 'web',
+    features: [
+      'Custom e-commerce platforms',
+      'Payment gateway integration',
+      'Inventory management systems',
+      'Order tracking and management',
+      'Multi-vendor marketplace support',
+      'Mobile-responsive design'
+    ],
+    pricing: {
+      model: 'one-time',
+      startingPrice: '₦4,250,000',
+      description: 'Starting price for e-commerce platform'
+    }
+  },
+  {
+    id: 'web-maintenance',
+    title: 'Website Maintenance & Support',
+    description: 'Ongoing maintenance, updates, and technical support for websites and web applications.',
+    icon: 'Wrench',
+    category: 'web',
+    features: [
+      'Regular security updates',
+      'Content management and updates',
+      'Performance monitoring',
+      'Backup and recovery services',
+      'SSL certificate management',
+      '24/7 technical support'
+    ],
+    pricing: {
+      model: 'subscription',
+      startingPrice: '₦127,500/month',
+      description: 'Monthly website maintenance package'
+    }
+  },
+
   // Strategic Services
   {
     id: 'digital-transformation',

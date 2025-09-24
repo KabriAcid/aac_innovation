@@ -168,3 +168,7 @@ For support and questions:
 - Icons by Lucide React
 - Images from Unsplash
 - Fonts by Google Fonts
+
+## Social Links
+https://x.com/aacinnovations?s=21
+https://www.linkedin.com/in/aac-innovations-442734335

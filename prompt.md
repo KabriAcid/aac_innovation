@@ -14,7 +14,9 @@ To provide innovative, scalable, and accessible digital services in areas such a
 
 ### Design
 
-Provide a tech-feel design application with premium designs and reusable UI and a well structured directory that is gonna accomodate PHP as the backend.
+Provide a mobile-first, responsive/adaptive, tech-feel design application with premium designs and reusable UI and a well structured directory that is gonna accomodate PHP as the backend.
+
+- Tables should be fully responsive (scrollable on mobile with no scrollbars)
 
 ### Design System & Branding
 
@@ -29,7 +31,7 @@ Provide a tech-feel design application with premium designs and reusable UI and 
 
 ## Deliverables (what the AI / dev team will provide)
 
-- A complete, production-ready frontend built with React + TypeScript (Vite) and Tailwind CSS.
+- A complete, production-ready frontend built with React + TypeScript (Vite) and Tailwind CSS, Lucide, Framer-motion.
 - Complete React project structure with all boilerplate components and layouts.
 - All configuration and scaffold files (see **Configuration & Tooling** section).
 - Reusable UI components using Lucide icons and Framer Motion animations.
@@ -49,232 +51,89 @@ Provide a tech-feel design application with premium designs and reusable UI and 
 
 - Hero section with tagline and CTAs (Explore Services, Book Appointment, Contact Us).
 - About Us section (short intro, mission statement).
-- Service overview grid with icons and "Learn More" links.
-- Quick booking widget (inline date/time picker CTA).
+Goal
 
-### 2. Services Page
+Generate a drop-in `admin` directory (React + TypeScript, Vite) for the AAC Innovation project that I can export/import into this repo and then only wire up in `App.tsx` (i.e., add a Route for `/admin/*` and render the generated admin module). The generated output should be self-contained under `admin/` and conform to the project's existing design system, hooks, and patterns.
 
-Detailed breakdown of categories:
+Scope and deliverables
 
-- Cybersecurity
-- Fintech & Digital Payments
-- Cloud & Enterprise Solutions
-- AI & Automation
-- Smart Tech & IoT
-- Strategic Services
+- Create an `admin/` directory that contains a ready-to-import React module exposing default export `AdminRoutes` (React component) and a single `index.ts` that re-exports. The app should be importable like: `import AdminRoutes from './admin';` and mounted in `App.tsx` at `/admin/*`.
+- The `admin/` module should rely only on existing project dependencies and components in `src/components/*`, `src/components/ui/*`, `src/hooks/*`, and `src/utils/*` where appropriate. Avoid introducing new third-party libraries.
+- Provide pages: Dashboard, Bookings (list + detail), Contacts (list + detail), Services (list + CRUD scaffold), Team (list + edit), Settings (simple form). Each page should use existing UI primitives (Card, Button, Input, Select, Toast) and patterns (useToast), and be responsive.
+- Use the project's Tailwind-based styling and existing utility functions (`cn`, `formatDate`, `formatTime`, `generateId`). Keep classNames consistent with app style.
+- Routing: `AdminRoutes` should use `react-router-dom` v6 routes and nested routing (e.g., `/admin`, `/admin/bookings`, `/admin/bookings/:id`, `/admin/contacts`, `/admin/services`, `/admin/team`, `/admin/settings`). Export `AdminRoutes` as default and also export `adminRoutes` array (route definitions) for potential code-splitting.
+- Data layer: For now, implement a simple client-side mock data provider inside `admin/data/` that reads from `localStorage` with a small adapter API: `listBookings()`, `getBooking(id)`, `createBooking()`, `updateBooking()`, `listContacts()`, etc. Use `generateId()` and persist changes to `localStorage`. Keep types using the existing `src/types` interfaces where possible (e.g., `Appointment` for bookings). Document how to switch the adapter to the real backend (simple fetch examples).
+- Accessibility: Use semantic HTML for tables/lists, buttons, forms; ensure focus management for modals and keyboard navigation where relevant.
+- Tests: Add a minimal smoke test file `admin/__tests__/routes.test.tsx` that mounts `AdminRoutes` (using React Testing Library) and asserts the dashboard renders. Keep tests optional; if the project has no test infra, add instructions to run it.
+- README: Add `admin/README.md` explaining how to import and mount in `src/App.tsx`, how to switch the data adapter to a real backend, and any assumptions.
 
-Each category includes:
+Design philosophy / conventions to follow (extracted from codebase)
 
-- Short intro + benefits
-- Sub-services list
-- Suggested pricing model(s)
-- CTA: Request a Quote / Book Consultation
+- Component-first primitives
+  - Use existing UI primitives in `src/components/ui/` (Card, Button, Input, Select, Textarea, Checkbox, Toast, Modal) for layout and controls.
+  - Keep components small and composable; pages should assemble these primitives rather than reinvent styles.
 
-### 3. Appointments & Booking
+- Hooks & patterns
+  - Use `useToast()` for user feedback (success/error). Reuse `ToastContainer` in Layout for global toasts.
+  - Use form handling via controlled inputs and plain React state; where forms are complex, follow current project patterns (Yup + react-hook-form used in forms, but admin can also use controlled forms if simpler).
+  - Utilities: use `cn()` from `src/utils/helpers.ts` for conditional classes, `formatDate` / `formatTime` for date/time displays, and `generateId()` for mock IDs.
 
-- Booking page for scheduling consultations or demos.
-- Booking flow: select service → choose consultant/team (optional) → pick date & time → provide contact details → confirm.
-- Calendar integration: Google Calendar / iCal export for client & internal team.
-- Admin panel to view, approve, reschedule, or cancel bookings.
-- Automated email confirmations and reminder notifications (configurable times: e.g., immediate, 24 hours, 1 hour).
+- Folder and import conventions
+  - Project uses absolute imports via `@/` alias. Use the same alias when referencing shared components (e.g., `import { Button } from '@/components/ui/Button';`).
+  - Keep all admin files under `admin/` top-level folder to make import/export trivial.
 
-### 4. Contact & Communication
+- TypeScript
+  - Use the existing types in `src/types/index.ts` (for bookings, contacts, etc.). Keep the admin module strongly typed and export types where helpful.
 
-- Contact page with form (Name, Email, Phone, Company, Message, Service of Interest).
-- Direct contact options: phone number, email address, physical address, social links.
-- Support / Contact routing: enquiries → sales, technical → support (email aliases or tagging).
+- Responsiveness and layout
+  - Admin layout should include a left sidebar (collapsible) and a main content area. Reuse the Layout/Header primitives where practical or implement a light admin-specific header. Keep spacing and typography consistent with the app.
 
-### 5. Notifications & Emails
+Concrete implementation notes for the Generator (Bolt Ai)
 
-- Transactional emails for:
+- Files to create under `admin/` (minimum):
+  - `admin/index.tsx` (default export `AdminRoutes`) — mounts `BrowserRouter`-compatible nested routes.
+  - `admin/AdminLayout.tsx` — sidebar + header + content area that wraps admin pages.
+  - `admin/pages/Dashboard.tsx`
+  - `admin/pages/Bookings/List.tsx`
+  - `admin/pages/Bookings/Detail.tsx`
+  - `admin/pages/Contacts/List.tsx`
+  - `admin/pages/Contacts/Detail.tsx`
+  - `admin/pages/Services/List.tsx` (with scaffolded create/edit modal or panel)
+  - `admin/pages/Team/List.tsx` (simple edit drawer/modal)
+  - `admin/pages/Settings.tsx` (form mapping to `system_settings` concept)
+  - `admin/data/adapter.ts` (localStorage adapter + exported `adapter` object with CRUD methods)
+  - `admin/types.ts` (local type aliases referencing `@/types` where possible)
+  - `admin/README.md`
+  - optional: `admin/__tests__/routes.test.tsx`
 
-  - Booking confirmation
-  - Booking reminders
-  - Contact form receipt
+- Code style & exports
+  - `admin/index.tsx` should export default `AdminRoutes` and named `adminRoutes` array:
+    - default export example: `export default AdminRoutes;`
+    - named: `export const adminRoutes = [{ path: '/admin', element: <AdminRoutes/> }, ...]`
 
-- Suggested providers: Gmail
+- Integration instructions (append to README):
+  1. Copy the generated `admin/` folder into the project root.
+  2. In `src/App.tsx`, add:
 
-### 6. Pricing Models (Optional Page)
+```tsx
+import AdminRoutes from './admin';
+...
+<Route path="/admin/*" element={<AdminRoutes/>} />
+```
 
-- Subscription
-- One-time project fees
-- Transaction-based fees
-- Licensing
-- Consulting
+  3. To connect the admin to your real backend, replace the functions in `admin/data/adapter.ts` with fetch calls to your API (examples included).
 
-### 7. Footer
+- Non-goals / constraints
+  - Do not modify `src/App.tsx` or other existing app files in the generator output — the admin module must be import-first and non-invasive.
+  - Avoid adding new dependencies; rely on existing project packages (React, react-router-dom, react-hook-form, yup, lucide-react, tailwind CSS). If a small helper is needed, implement it inside `admin/utils`.
 
-- Quick navigation links.
-- Tagline: AAC Innovations – Driving Africa's Tech Future.
-- Copyright and legal links (Privacy Policy, Terms of Service).
+Deliver the prompt as a single `prompt.md` file ready to paste into Bolt Ai. The prompt should be action-oriented (tell the generator what files to produce, the exact exports, routing structure, and styling constraints) and include code examples for integration and for switching from the localStorage adapter to fetch-based backend.
 
----
+Assumptions
 
-## Admin / Dashboard (For later)
+- The existing project root uses TypeScript, Vite, Tailwind, React 18, react-router-dom v6, and the `@/` import alias.
+- Shared components live under `src/components/*` and primitives under `src/components/ui/*`.
+- Types are defined in `src/types/index.ts`.
 
-- Admin dashboard for managing:
-
-  - Bookings (approve, reschedule, cancel)
-  - Contact leads (view, tag, export)
-  - Service content (add/edit service pages)
-  - Users and team members (roles: admin, sales, support)
-  - Basic analytics (bookings, leads, conversion rates)
-
----
-
-## Tech Stack & Libraries
-
-- **Frontend:** React + TypeScript, Vite
-- **Styling:** Tailwind CSS
-- **Typography:** Plus Jakarta Sans (CDN)
-- **Animations & UI:** Framer Motion, Lucide React (icons)
-- **Form Validation:** React Hook Form with real-time validation
-- **Notifications:** Custom reusable toast component
-- **Backend:** PHP (procedural or with framework — examples provided for both plain PHP and Composer-based approaches)
-- **Database:** MySQL
-- **Emails:** Gmail
-- **Calendar:** Google Calendar API / CalDAV / iCal exports
+End of prompt
 - **Dev Tools:** ESLint, Prettier, TypeScript config
-
----
-
-## Configuration & Tooling (files the AI will generate)
-
-_The project will include fully populated example config files so the developer can run and deploy the system immediately._
-
-### Frontend Configuration Files
-
-- **Package Management & Build:**
-
-  - `package.json` (with scripts: dev, build, preview, lint, format)
-  - `vite.config.ts` (with path aliases, plugins, and optimization)
-  - `tsconfig.json` (strict TypeScript configuration)
-  - `tsconfig.node.json` (Node.js TypeScript config for Vite)
-
-- **Styling & UI:**
-
-  - `tailwind.config.js` (custom theme, colors, fonts)
-  - `postcss.config.js` (Tailwind CSS processing)
-  - `src/index.css` (global styles and Tailwind imports)
-
-- **Code Quality:**
-
-  - `.eslintrc.cjs` (TypeScript + React + Tailwind rules)
-  - `.prettierrc` (formatting configuration)
-  - `.gitignore` (Node.js, build files, environment variables)
-
-- **Environment & Deployment:**
-  - `.env.example` (environment variable template)
-  - `README.md` (setup, run & build instructions)
-  - `Dockerfile` (containerized deployment)
-
-### Frontend Project Structure
-
-```
-src/
-├── components/           # Reusable UI components
-│   ├── ui/              # Base UI components (Button, Input, etc.)
-│   ├── layout/          # Layout components (Header, Footer, etc.)
-│   └── forms/           # Form components with validation
-├── pages/               # Page components
-├── hooks/               # Custom React hooks
-├── utils/               # Helper functions and constants
-├── types/               # TypeScript type definitions
-├── assets/              # Images, icons, and static files
-└── styles/              # Additional CSS/styling files
-```
-
-### Backend (PHP) Configuration
-
-- **Composer & Dependencies:**
-
-  - `composer.json` (if using Composer-based libraries)
-  - `config.example.php` (environment placeholder for DB, SMTP, API keys)
-
-- **API Endpoints:**
-
-  - `api/bookings.php` (booking form handling with validation)
-  - `api/contact.php` (contact form handling with email sending)
-  - `api/services.php` (service data endpoints)
-
-- **Database:**
-  - `migrations/` or `db/schema.sql` (MySQL schema and sample data)
-  - `db/connection.php` (database connection configuration)
-
-### Tests & Quality
-
-- **Frontend Testing:**
-
-  - `vitest.config.ts` (Vitest configuration for unit testing)
-  - `src/__tests__/` (test files for components)
-  - Basic unit test examples for frontend components (Vitest + React Testing Library)
-
-- **Backend Testing:**
-  - Sample PHP test file (if using PHPUnit)
-  - API endpoint testing examples
-
----
-
-## Security & Privacy
-
-- Input validation and server-side sanitization for forms (bookings, contact form).
-- Secure storage of credentials using environment variables (never commit secrets).
-- Privacy: GDPR-friendly contact/lead consent checkbox and privacy policy placement.
-- **Note:** Since this is a blog website for now, advanced security measures are not the primary focus.
-
----
-
-## Accessibility & Performance
-
-- Responsive and adaptive layout and mobile-first design.
-- Image optimization and lazy-loading.
-- Font-size scaling across devices.
-- Lighthouse score considerations and suggested performance budgets.
-
----
-
-## Content & Copy Guidance (for developer / copywriter)
-
-- Keep headings short and benefit-driven.
-- Use service cards with a 1–2 sentence summary and a clear CTA.
-- Include case studies or success stories where possible.
-- Include legal pages: Privacy Policy, Terms of Service, Cookie Policy.
-- Maintain a friendly and approachable tone throughout all content.
-
----
-
-## Suggested Project Milestones
-
-1. **Project Setup & Configuration**
-
-   - Generate all config files and boilerplate structure
-   - Setup development environment and tools
-
-2. **Discovery & Content Finalization**
-
-   - Copy + images preparation
-   - Design system implementation
-
-3. **Core Frontend Development**
-
-   - Scaffold frontend + basic pages (Homepage, Services, Contact)
-   - Implement reusable UI components and layouts
-
-4. **Backend & Integration**
-
-   - Implement booking flow & backend endpoints
-   - Database setup and API integration
-
-5. **Advanced Features**
-
-   - Admin dashboard + notifications
-   - Email integration and calendar sync
-
-6. **Quality Assurance**
-
-   - QA, accessibility checks, and performance tuning
-   - Testing and bug fixes
-
-7. **Deployment**
-   - Deploy to staging → production
-   - Documentation and handover

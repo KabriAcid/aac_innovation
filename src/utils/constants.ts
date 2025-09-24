@@ -4,7 +4,7 @@ export const COMPANY_INFO = {
   description: 'Innovative, scalable, and accessible digital services in cybersecurity, fintech, cloud computing, AI, IoT, and strategic consulting.',
   email: 'aacinovations43@gmail.com',
   phone: '0707 653 6019',
-  address: 'Lagos, Nigeria',
+  address: 'Abuja, Nigeria',
   socialLinks: {
     linkedin: 'https://linkedin.com/company/aac-innovation',
     twitter: 'https://twitter.com/aacinnovation',
@@ -49,6 +49,16 @@ export const SERVICE_CATEGORIES = {
     title: 'Strategic Services',
     description: 'Strategic consulting and digital transformation',
     icon: 'Target',
+  },
+  mobile: {
+    title: 'Mobile App Development',
+    description: 'Custom mobile applications and UI/UX design services',
+    icon: 'Smartphone',
+  },
+  web: {
+    title: 'Web Development',
+    description: 'Professional web development and e-commerce solutions',
+    icon: 'Globe',
   },
 };
 

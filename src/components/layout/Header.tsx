@@ -120,7 +120,7 @@ export const Header: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden mt-4 py-4 bg-white border-t border-secondary-200 rounded-lg shadow-lg"
+              className="lg:hidden mt-4 py-4 px-4 bg-white border-t border-secondary-200 rounded-lg shadow-lg"
             >
               <div className="flex flex-col space-y-4">
                 {NAVIGATION_ITEMS.map((item) => (
@@ -128,7 +128,7 @@ export const Header: React.FC = () => {
                     key={item.name}
                     to={item.href}
                     className={cn(
-                      'text-base font-medium transition-colors duration-200 hover:text-primary-600',
+                      'text-base font-medium transition-colors duration-200 hover:text-primary-600 py-2',
                       isActive(item.href)
                         ? 'text-primary-600'
                         : 'text-secondary-700'
@@ -140,19 +140,19 @@ export const Header: React.FC = () => {
                 <div className="pt-4 border-t border-secondary-200 space-y-3">
                   <a
                     href={`tel:${COMPANY_INFO.phone}`}
-                    className="flex items-center space-x-2 text-secondary-600 hover:text-primary-600 transition-colors duration-200"
+                    className="flex items-center space-x-2 text-secondary-600 hover:text-primary-600 transition-colors duration-200 py-2"
                   >
                     <Phone className="h-4 w-4" />
                     <span>{COMPANY_INFO.phone}</span>
                   </a>
                   <a
                     href={`mailto:${COMPANY_INFO.email}`}
-                    className="flex items-center space-x-2 text-secondary-600 hover:text-primary-600 transition-colors duration-200"
+                    className="flex items-center space-x-2 text-secondary-600 hover:text-primary-600 transition-colors duration-200 py-2"
                   >
                     <Mail className="h-4 w-4" />
                     <span>{COMPANY_INFO.email}</span>
                   </a>
-                  <Link to="/booking" className="block">
+                  <Link to="/booking" className="block pt-2">
                     <Button variant="primary" size="sm" fullWidth>
                       Book Consultation
                     </Button>
