@@ -25,7 +25,7 @@ const AdminLayout: React.FC = () => {
     { name: 'Services', href: '/admin/services', icon: Briefcase },
     { name: 'Team', href: '/admin/team', icon: UserCheck },
     { name: 'Settings', href: '/admin/settings', icon: SettingsIcon },
-    { name: 'Logout', href: '/admin', icon: LogOut, isLogout: true },
+    { name: 'Logout', href: '/admin/', icon: LogOut, isLogout: true },
   ];
 
   const isActive = (href: string) => {

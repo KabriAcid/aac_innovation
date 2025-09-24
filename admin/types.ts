@@ -1,4 +1,3 @@
-// Re-export types from the main app where possible
 export type { Appointment } from '@/types';
 
 // Admin-specific types

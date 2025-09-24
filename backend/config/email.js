@@ -1,6 +1,6 @@
-// Email config using nodemailer
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -12,4 +12,4 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-module.exports = transporter;
+export default transporter;

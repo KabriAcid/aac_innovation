@@ -47,7 +47,7 @@ const AdminRoutes: React.FC = () => {
 };
 
 export const adminRoutes = [
-  { path: '/admin', element: <AdminRoutes /> }
+  { path: '/admin/login', element: <AdminRoutes /> }
 ];
 
 export default AdminRoutes;
