@@ -21,6 +21,8 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { COMPANY_INFO, SERVICE_CATEGORIES } from '@/utils/constants';
 import { services } from '@/data/services';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const iconMap = {
   Shield,
@@ -38,19 +40,44 @@ const iconMap = {
 export const HomePage: React.FC = () => {
   const featuredServices = services.slice(0, 6);
 
+  // Carousel images
+  const heroImages = [
+    '/img/hero.jpg',
+    '/img/staff-1-and-2.jpg',
+    '/img/3-staff.jpg',
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background */}
+        {/* Carousel Background */}
         <div className="absolute inset-0 z-0">
-          <img
-            src="/img/hero.jpg"
-            alt="AAC Innovation Hero Background"
-            className="w-full h-full object-cover object-center"
-            style={{ objectPosition: 'center 30%' }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80" />
+          <Carousel
+            autoPlay
+            infiniteLoop
+            interval={7000}
+            showThumbs={false}
+            showStatus={false}
+            showArrows={true}
+            showIndicators={true}
+            swipeable
+            emulateTouch
+            stopOnHover={false}
+            className="h-full"
+          >
+            {heroImages.map((img, idx) => (
+              <div key={img} className="w-full h-full">
+                <img
+                  src={img}
+                  alt={`AAC Innovation Hero Slide ${idx + 1}`}
+                  className="w-full h-screen object-cover object-center"
+                  style={{ objectPosition: 'center 30%' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80" />
+              </div>
+            ))}
+          </Carousel>
         </div>
 
         {/* Content */}
@@ -76,6 +103,7 @@ export const HomePage: React.FC = () => {
                 </Button>
               </Link>
             </div>
+            {/* Carousel indicators are now handled by react-responsive-carousel */}
           </motion.div>
         </div>
 

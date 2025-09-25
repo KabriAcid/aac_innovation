@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Service } from '@/types';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -24,12 +25,14 @@ import {
   Wrench,
   ArrowRight,
   CheckCircle,
-  Calendar
+  Calendar,
+  Loader,
+  Package
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { SERVICE_CATEGORIES, PRICING_MODELS } from '@/utils/constants';
-import { services, getServicesByCategory } from '@/data/services';
+// import { services, getServicesByCategory } from '@/data/services';
 
 const iconMap = {
   Shield,
@@ -53,16 +56,51 @@ const iconMap = {
   ShoppingCart,
   Wrench,
 };
+const DefaultIcon = Package;
 
 export const ServicesPage: React.FC = () => {
   const { serviceId } = useParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const filteredServices = selectedCategory 
-    ? getServicesByCategory(selectedCategory)
+  useEffect(() => {
+    fetch('http://localhost:4000/api/services')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.data)) {
+          setServices(data.data as Service[]);
+        } else {
+          setError('Failed to load services.');
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Failed to load services.');
+        setLoading(false);
+      });
+  }, []);
+
+  const filteredServices = selectedCategory
+    ? services.filter(s => s.category === selectedCategory)
     : services;
 
   const selectedService = serviceId ? services.find(s => s.id === serviceId) : null;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[40vh]">
+        <Loader className="animate-spin h-8 w-8 text-primary-600" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-600 py-12">{error}</div>
+    );
+  }
 
   if (selectedService) {
     return <ServiceDetailView service={selectedService} />;
@@ -163,9 +201,15 @@ export const ServicesPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredServices.map((service, index) => {
-              const categoryInfo = SERVICE_CATEGORIES[service.category];
-              const Icon = iconMap[categoryInfo.icon as keyof typeof iconMap];
-              
+              const categoryInfo = SERVICE_CATEGORIES[service.category] || { title: service.category, icon: null };
+              let Icon = DefaultIcon;
+              if (service.icon && iconMap[service.icon]) {
+                Icon = iconMap[service.icon];
+              } else if (categoryInfo.icon && iconMap[categoryInfo.icon]) {
+                Icon = iconMap[categoryInfo.icon];
+              } else {
+                Icon = DefaultIcon;
+              }
               return (
                 <motion.div
                   key={service.id}
@@ -191,7 +235,7 @@ export const ServicesPage: React.FC = () => {
                         <div className="space-y-2">
                           <h4 className="font-medium text-secondary-900">Key Features:</h4>
                           <ul className="space-y-1">
-                            {service.features.slice(0, 3).map((feature, idx) => (
+                            {service.features?.slice(0, 3).map((feature, idx) => (
                               <li key={idx} className="flex items-center text-sm text-secondary-600">
                                 <CheckCircle className="h-3 w-3 text-primary-600 mr-2 flex-shrink-0" />
                                 {feature}
@@ -199,28 +243,26 @@ export const ServicesPage: React.FC = () => {
                             ))}
                           </ul>
                         </div>
-                        
-                        {service.pricing && (
+                        {service.pricing?.startingPrice && (
                           <div className="p-3 bg-primary-50 rounded-lg">
                             <div className="flex items-center justify-between">
                               <span className="text-sm text-primary-700">Starting at</span>
                               <span className="font-semibold text-primary-900">
-                                {service.pricing.startingPrice}
+                                {service.pricing?.startingPrice}
                               </span>
                             </div>
                             <p className="text-xs text-primary-600 mt-1">
-                              {PRICING_MODELS[service.pricing.model]}
+                              {service.pricing?.description}
                             </p>
                           </div>
                         )}
-
                         <div className="flex gap-2">
                           <Link to={`/services/${service.id}`} className="flex-1">
                             <Button variant="ghost" size="sm" fullWidth>
                               Learn More
                             </Button>
                           </Link>
-                          <Link to={`/booking?service=${service.id}`}>
+                          <Link to={`/booking?service=${service.id}`}> 
                             <Button variant="primary" size="sm">
                               Book Now
                             </Button>
