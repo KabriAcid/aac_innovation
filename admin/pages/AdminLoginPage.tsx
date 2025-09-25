@@ -59,12 +59,12 @@ const AdminLoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-">
       <div className="w-full max-w-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card rounded-3xl p-8 shadow-xl"
+          className="card rounded-3xl p-8 box-shadow"
         >
           {/* Header */}
           <div className="text-center mb-8">

@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { COMPANY_INFO, NAVIGATION_ITEMS } from '@/utils/constants';
+import { NAVIGATION_ITEMS } from '@/utils/constants';
+import { useCompanySettings } from '@/hooks/useCompanySettings';
 import { cn } from '@/utils/helpers';
 
 export const Header: React.FC = () => {
+  const { settings: COMPANY_INFO, loading } = useCompanySettings();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -28,6 +30,19 @@ export const Header: React.FC = () => {
     return location.pathname === path;
   };
 
+  if (loading) {
+    return (
+      <header className={cn(
+        'fixed top-0 left-0 right-0 z-40 transition-all duration-300',
+        isScrolled
+          ? 'bg-white/95 backdrop-blur-sm shadow-md'
+          : 'bg-transparent'
+      )}>
+        <div className="container-max section-padding py-4 text-center">Loading company info...</div>
+      </header>
+    );
+  }
+
   return (
     <header
       className={cn(
@@ -43,15 +58,15 @@ export const Header: React.FC = () => {
           <Link to="/" className="flex items-center space-x-3">
             <img
               src="/favicon.png"
-              alt={COMPANY_INFO.name}
+              alt={COMPANY_INFO.name ?? 'AAC Innovation'}
               className="h-10 w-10"
             />
             <div>
               <h1 className="text-xl font-bold text-secondary-900">
-                {COMPANY_INFO.name}
+                {COMPANY_INFO.name ?? 'AAC Innovation'}
               </h1>
               <p className="text-xs text-secondary-600 hidden sm:block">
-                {COMPANY_INFO.tagline}
+                {COMPANY_INFO.tagline ?? "Empowering Africa's Digital Transformation"}
               </p>
             </div>
           </Link>
@@ -79,14 +94,14 @@ export const Header: React.FC = () => {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center space-x-4">
             <a
-              href={`tel:${COMPANY_INFO.phone}`}
+              href={`tel:${COMPANY_INFO.phone ?? '0707 653 6019'}`}
               className={cn(
                 'flex items-center space-x-2 text-sm transition-colors duration-200 hover:text-primary-600',
                 isScrolled ? 'text-secondary-600' : 'text-gray-400'
               )}
             >
               <Phone className="h-4 w-4" />
-              <span>{COMPANY_INFO.phone}</span>
+              <span>{COMPANY_INFO.phone ?? '0707 653 6019'}</span>
             </a>
             <Link to="/booking">
               <Button variant="primary" size="sm">
@@ -144,18 +159,18 @@ export const Header: React.FC = () => {
                 ))}
                 <div className="pt-4 border-t border-secondary-200 space-y-3">
                   <a
-                    href={`tel:${COMPANY_INFO.phone}`}
+                    href={`tel:${COMPANY_INFO.phone ?? '0707 653 6019'}`}
                     className="flex items-center space-x-2 text-secondary-600 hover:text-primary-600 transition-colors duration-200 py-2"
                   >
                     <Phone className="h-4 w-4" />
-                    <span>{COMPANY_INFO.phone}</span>
+                    <span>{COMPANY_INFO.phone ?? '0707 653 6019'}</span>
                   </a>
                   <a
-                    href={`mailto:${COMPANY_INFO.email}`}
+                    href={`mailto:${COMPANY_INFO.email ?? 'aacinovations43@gmail.com'}`}
                     className="flex items-center space-x-2 text-secondary-600 hover:text-primary-600 transition-colors duration-200 py-2"
                   >
                     <Mail className="h-4 w-4" />
-                    <span>{COMPANY_INFO.email}</span>
+                    <span>{COMPANY_INFO.email ?? 'aacinovations43@gmail.com'}</span>
                   </a>
                   <Link to="/booking" className="block pt-2">
                     <Button variant="primary" size="sm" fullWidth>
