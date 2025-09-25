@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -54,13 +54,23 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
   const selectedServiceId = watch('serviceId');
 
-  const serviceOptions = [
-    { value: '', label: 'Select a service' },
-    ...services.map(service => ({
-      value: service.id,
-      label: service.title,
-    })),
-  ];
+  const [serviceOptions, setServiceOptions] = useState([{ value: '', label: 'Select a service' }]);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/services')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setServiceOptions([
+            { value: '', label: 'Select a service' },
+            ...data.data.map(service => ({
+              value: service.id,
+              label: service.title,
+            })),
+          ]);
+        }
+      });
+  }, []);
 
   const consultantOptions = [
     { value: '', label: 'Any available consultant' },
@@ -93,10 +103,10 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       const payload = { ...data, userId };
       console.log('Booking payload:', payload);
 
-      // POST to backend
+      // POST to backend Node.js API
       let response, result;
       try {
-        response = await fetch('/backend/api/bookings.php', {
+        response = await fetch('http://localhost:4000/api/bookings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
