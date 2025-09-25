@@ -235,12 +235,14 @@ export const ServicesPage: React.FC = () => {
                         <div className="space-y-2">
                           <h4 className="font-medium text-secondary-900">Key Features:</h4>
                           <ul className="space-y-1">
-                            {service.features?.slice(0, 3).map((feature, idx) => (
-                              <li key={idx} className="flex items-center text-sm text-secondary-600">
-                                <CheckCircle className="h-3 w-3 text-primary-600 mr-2 flex-shrink-0" />
-                                {feature}
-                              </li>
-                            ))}
+                            {Array.isArray(service.features)
+                              ? service.features.slice(0, 3).map((feature, idx) => (
+                                  <li key={idx} className="flex items-center text-sm text-secondary-600">
+                                    <CheckCircle className="h-3 w-3 text-primary-600 mr-2 flex-shrink-0" />
+                                    {feature}
+                                  </li>
+                                ))
+                              : null}
                           </ul>
                         </div>
                         {service.pricing?.startingPrice && (
