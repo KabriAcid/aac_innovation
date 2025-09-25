@@ -40,6 +40,9 @@ const iconMap = {
 };
 
 export const HomePage: React.FC = () => {
+  const [serviceCategories, setServiceCategories] = React.useState<any[]>([]);
+  const [loadingCategories, setLoadingCategories] = React.useState(true);
+  const [servicesData, setServicesData] = React.useState<any[]>([]);
   const featuredServices = services.slice(0, 6);
 
   // Carousel images
@@ -48,6 +51,26 @@ export const HomePage: React.FC = () => {
     '/img/staff-1-and-2.jpg',
     '/img/3-staff.jpg',
   ];
+
+  React.useEffect(() => {
+    fetch('http://localhost:4000/api/services')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.data)) {
+          setServicesData(data.data);
+          // For each unique category, pick the first service as representative
+          const categoryMap: Record<string, any> = {};
+          data.data.forEach((service: any) => {
+            if (!categoryMap[service.category]) {
+              categoryMap[service.category] = service;
+            }
+          });
+          setServiceCategories(Object.values(categoryMap));
+        }
+        setLoadingCategories(false);
+      })
+      .catch(() => setLoadingCategories(false));
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -194,37 +217,41 @@ export const HomePage: React.FC = () => {
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Object.entries(SERVICE_CATEGORIES).map(([key, category], index) => {
-              const Icon = iconMap[category.icon as keyof typeof iconMap];
-              return (
-                <motion.div
-                  key={key}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card hover className="h-full box-shadow">
-                    <CardHeader>
-                      <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                        <Icon className="h-6 w-6 text-primary-600" />
-                      </div>
-                      <CardTitle>{category.title}</CardTitle>
-                      <CardDescription>{category.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <Link to={`/services#${key}`}>
-                        <Button variant="ghost" size="sm" icon={<ArrowRight className="h-4 w-4" />}>
-                          Learn More
-                        </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
+          {loadingCategories ? (
+            <div className="text-center py-8 text-secondary-500">Loading categories...</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {serviceCategories.map((service, index) => {
+                const Icon = iconMap[service.icon as keyof typeof iconMap] || Shield;
+                return (
+                  <motion.div
+                    key={service.category}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <Card hover className="h-full box-shadow">
+                      <CardHeader>
+                        <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                          <Icon className="h-6 w-6 text-primary-600" />
+                        </div>
+                          <CardTitle>{service.category.charAt(0).toUpperCase() + service.category.slice(1)}</CardTitle>
+                        <CardDescription>{service.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Link to={`/services#${service.category}`}>
+                          <Button variant="ghost" size="sm" icon={<ArrowRight className="h-4 w-4" />}>
+                            Learn More
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <Link to="/services">
@@ -275,26 +302,13 @@ export const HomePage: React.FC = () => {
                       <CardDescription>{service.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-secondary-500">Starting at</span>
-                          <span className="font-semibold text-primary-600">
-                            {service.pricing?.startingPrice || 'Contact us'}
-                          </span>
-                        </div>
-                        <div className="flex gap-2">
+                        <div className="space-y-3">
                           <Link to={`/services/${service.id}`} className="flex-1">
                             <Button variant="ghost" size="sm" fullWidth>
                               Learn More
                             </Button>
                           </Link>
-                          <Link to={`/booking?service=${service.id}`}>
-                            <Button variant="primary" size="sm">
-                              Book Now
-                            </Button>
-                          </Link>
                         </div>
-                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>

@@ -2,9 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
 import { COMPANY_INFO, NAVIGATION_ITEMS } from '@/utils/constants';
+import { useCompanySettings } from '@/hooks/useCompanySettings';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const { settings: COMPANY_INFO, loading } = useCompanySettings();
+
+  if (loading) {
+    return (
+      <footer className="bg-secondary-900 text-white">
+        <div className="container-max section-padding text-center py-12">
+          Loading company info...
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="bg-secondary-900 text-white">
@@ -19,18 +31,18 @@ export const Footer: React.FC = () => {
                 className="h-10 w-10"
               />
               <div>
-                <h3 className="text-xl font-bold">{COMPANY_INFO.name}</h3>
+                <h3 className="text-xl font-bold">{COMPANY_INFO.name ?? 'AAC Innovation'}</h3>
                 <p className="text-sm text-secondary-300">
-                  {COMPANY_INFO.tagline}
+                  {COMPANY_INFO.tagline ?? 'Empowering Africa\'s Digital Transformation'}
                 </p>
               </div>
             </div>
             <p className="text-secondary-300 mb-6 max-w-md">
-              {COMPANY_INFO.description}
+              {COMPANY_INFO.description ?? 'Driving technological advancement across Africa with expert solutions.'}
             </p>
             <div className="flex space-x-4">
               <a
-                href={COMPANY_INFO.socialLinks.linkedin}
+                href={COMPANY_INFO.socialLinks?.linkedin ?? '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-secondary-400 hover:text-white transition-colors duration-200"
@@ -38,7 +50,7 @@ export const Footer: React.FC = () => {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a
-                href={COMPANY_INFO.socialLinks.twitter}
+                href={COMPANY_INFO.socialLinks?.twitter ?? '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-secondary-400 hover:text-white transition-colors duration-200"
@@ -46,7 +58,7 @@ export const Footer: React.FC = () => {
                 <Twitter className="h-5 w-5" />
               </a>
               <a
-                href={COMPANY_INFO.socialLinks.facebook}
+                href={COMPANY_INFO.socialLinks?.facebook ?? '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-secondary-400 hover:text-white transition-colors duration-200"
@@ -102,22 +114,22 @@ export const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
             <div className="space-y-3">
               <a
-                href={`mailto:${COMPANY_INFO.email}`}
+                href={`mailto:${COMPANY_INFO.email ?? 'aacinovations43@gmail.com'}`}
                 className="flex items-center space-x-3 text-secondary-300 hover:text-white transition-colors duration-200"
               >
                 <Mail className="h-4 w-4 flex-shrink-0" />
-                <span>{COMPANY_INFO.email}</span>
+                <span>{COMPANY_INFO.email ?? 'aacinovations43@gmail.com'}</span>
               </a>
               <a
-                href={`tel:${COMPANY_INFO.phone}`}
+                href={`tel:${COMPANY_INFO.phone ?? '0707 653 6019'}`}
                 className="flex items-center space-x-3 text-secondary-300 hover:text-white transition-colors duration-200"
               >
                 <Phone className="h-4 w-4 flex-shrink-0" />
-                <span>{COMPANY_INFO.phone}</span>
+                <span>{COMPANY_INFO.phone ?? '0707 653 6019'}</span>
               </a>
               <div className="flex items-center space-x-3 text-secondary-300">
                 <MapPin className="h-4 w-4 flex-shrink-0" />
-                <span>{COMPANY_INFO.address}</span>
+                <span>{COMPANY_INFO.address ?? 'Abuja, Nigeria'}</span>
               </div>
             </div>
           </div>
@@ -126,10 +138,10 @@ export const Footer: React.FC = () => {
         <div className="border-t border-secondary-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-secondary-400 text-sm">
-              © {currentYear} {COMPANY_INFO.name}. All rights reserved.
+              © {currentYear} {COMPANY_INFO.name ?? 'AAC Innovation'}. All rights reserved.
             </p>
             <p className="text-secondary-400 text-sm mt-2 md:mt-0">
-              {COMPANY_INFO.tagline}
+              {COMPANY_INFO.tagline ?? "Empowering Africa's Digital Transformation"}
             </p>
           </div>
         </div>
