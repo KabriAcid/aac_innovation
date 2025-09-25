@@ -24,7 +24,7 @@ export const Card: React.FC<CardProps> = ({
   };
 
   const cardClasses = cn(
-    'rounded-xl border border-secondary-200 bg-white shadow-sm transition-all duration-200',
+    'rounded-xl border border-0 bg-white shadow-sm transition-all duration-200',
     hover && 'hover:shadow-md hover:border-secondary-300',
     onClick && 'cursor-pointer',
     paddingClasses[padding],

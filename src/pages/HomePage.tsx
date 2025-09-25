@@ -205,7 +205,7 @@ export const HomePage: React.FC = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card hover className="h-full">
+                  <Card hover className="h-full box-shadow">
                     <CardHeader>
                       <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
                         <Icon className="h-6 w-6 text-primary-600" />
@@ -266,7 +266,7 @@ export const HomePage: React.FC = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card hover className="h-full">
+                  <Card hover className="h-full box-shadow">
                     <CardHeader>
                       <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center mb-3">
                         <Icon className="h-5 w-5 text-primary-600" />
@@ -384,7 +384,7 @@ export const HomePage: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full">
+                <Card className="h-full box-shadow">
                   <CardContent className="pt-6">
                     <div className="flex mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (

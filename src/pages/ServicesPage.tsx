@@ -64,13 +64,20 @@ export const ServicesPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  // Dynamic categories from services
+  const categories = Array.from(new Set(services.map(s => s.category)));
 
   useEffect(() => {
     fetch('http://localhost:4000/api/services')
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
-          setServices(data.data as Service[]);
+          // Parse features column from JSON string to array
+          const parsed = data.data.map((service: any) => ({
+            ...service,
+            features: typeof service.features === 'string' ? JSON.parse(service.features) : service.features,
+          }));
+          setServices(parsed as Service[]);
         } else {
           setError('Failed to load services.');
         }
@@ -140,7 +147,7 @@ export const ServicesPage: React.FC = () => {
       </section>
 
       {/* Service Categories Filter */}
-      <section className="section-padding bg-white border-b border-secondary-200">
+      <section className="section-padding bg-white border-b border-secondary-200 shadow-md">
         <div className="container-max">
           <div className="flex flex-wrap gap-4 justify-center">
             <Button
@@ -149,13 +156,13 @@ export const ServicesPage: React.FC = () => {
             >
               All Services
             </Button>
-            {Object.entries(SERVICE_CATEGORIES).map(([key, category]) => (
+            {categories.map(category => (
               <Button
-                key={key}
-                variant={selectedCategory === key ? 'primary' : 'ghost'}
-                onClick={() => setSelectedCategory(key)}
+                key={category}
+                variant={selectedCategory === category ? 'primary' : 'ghost'}
+                onClick={() => setSelectedCategory(category)}
               >
-                {category.title}
+                {category.charAt(0).toUpperCase() + category.slice(1)}
               </Button>
             ))}
           </div>
@@ -217,7 +224,7 @@ export const ServicesPage: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  <Card hover className="h-full">
+                  <Card hover className="h-full box-shadow">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-3">
                         <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">

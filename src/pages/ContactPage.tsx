@@ -72,7 +72,7 @@ export const ContactPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="text-center h-full">
+                <Card className="text-center h-full box-shadow">
                   <CardContent className="pt-6">
                     <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                       <item.icon className="h-6 w-6 text-primary-600" />
@@ -109,7 +109,7 @@ export const ContactPage: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <Card>
+                <Card className='box-shadow'>
                   <CardHeader>
                     <CardTitle>Send us a Message</CardTitle>
                     <CardDescription>
@@ -131,7 +131,7 @@ export const ContactPage: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                <Card>
+                <Card className='box-shadow'>
                   <CardHeader>
                     <CardTitle>Why Choose AAC Innovation?</CardTitle>
                   </CardHeader>
@@ -175,7 +175,7 @@ export const ContactPage: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
-                <Card>
+                <Card className='box-shadow'>
                   <CardHeader>
                     <CardTitle>Frequently Asked Questions</CardTitle>
                   </CardHeader>

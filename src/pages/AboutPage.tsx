@@ -77,7 +77,7 @@ export const AboutPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="text-center h-full">
+                <Card className="text-center h-full box-shadow">
                   <CardContent className="pt-6">
                     <div className="w-16 h-16 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-6">
                       <item.icon className="h-8 w-8 text-primary-600" />
@@ -220,7 +220,7 @@ export const AboutPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="text-center">
+                <Card className="text-center box-shadow">
                   <CardContent className="pt-6">
                     <img
                       src={member.avatar}
