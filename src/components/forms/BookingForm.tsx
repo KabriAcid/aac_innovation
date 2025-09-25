@@ -12,7 +12,7 @@ import { BookingFormData } from '@/types';
 import { services } from '@/data/services';
 import { teamMembers } from '@/data/team';
 import { TIME_SLOTS } from '@/utils/constants';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/context/ToastContext';
 import { generateId } from '@/utils/helpers';
 
 const schema: yup.ObjectSchema<BookingFormData> = yup.object({
