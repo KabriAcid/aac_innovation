@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import jwt_decode from 'jwt-decode';
 import { AdminUser as User } from '../types/AdminUser';
 
 interface AuthState {
@@ -71,17 +72,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Check for stored token on app load
     const token = localStorage.getItem('auth_token');
     const userData = localStorage.getItem('user_data');
-    
+    let valid = false;
     if (token && userData) {
       try {
-        const user = JSON.parse(userData);
-        dispatch({ type: 'LOGIN_SUCCESS', payload: { user, token } });
+        // Basic JWT expiration check
+        const decoded = jwt_decode(token);
+        if (decoded && decoded.exp && Date.now() < decoded.exp * 1000) {
+          const user = JSON.parse(userData);
+          valid = true;
+          dispatch({ type: 'LOGIN_SUCCESS', payload: { user, token } });
+        } else {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user_data');
+        }
       } catch (error) {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_data');
       }
     }
-    
+    if (!valid) {
+      dispatch({ type: 'LOGOUT' });
+    }
     dispatch({ type: 'SET_LOADING', payload: false });
   }, []);
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useToast } from '@/context/ToastContext';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +15,7 @@ const AdminLoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { login, isLoading } = useAuth();
+  const { error: showToastError, success: showToastSuccess } = useToast();
   const [submitting, setSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,12 +53,13 @@ const AdminLoginPage: React.FC = () => {
     if (!validateForm()) return;
     setSubmitting(true);
     try {
-      // Simulate delay for UX (like BookingForm)
       await new Promise(resolve => setTimeout(resolve, 1200));
-  await login(formData.email, formData.password, formData.rememberMe);
-  window.location.href = '/admin/dashboard';
-    } catch (error) {
+      await login(formData.email, formData.password, formData.rememberMe);
+      showToastSuccess('Login successful', 'Welcome back!');
+      window.location.href = '/admin/dashboard';
+    } catch (err) {
       setErrors({ general: 'Invalid email or password' });
+      showToastError('Login failed', 'Invalid email or password');
     } finally {
       setSubmitting(false);
     }
