@@ -11,15 +11,15 @@ import AdminRoutes from '../admin';
 import { AuthProvider } from '../admin/context/AuthContext';
 import ScrollToTop from '@/components/ScrollToTop';
 import { ToastContainer } from '@/components/ui/Toast';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/context/ToastContext';
 
 function App() {
-  const toast = useToast();
+  const { toasts, removeToast } = useToast();
   return (
     <Router>
       <ScrollToTop />
       <AuthProvider>
-        <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
         <Routes>
           {/* Public routes wrapped in Layout */}
           <Route element={<Layout />}> 

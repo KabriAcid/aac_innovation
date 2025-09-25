@@ -1,3 +1,7 @@
+
+// WARNING: Do NOT use this hook for global toast notifications.
+// Use useToast from src/context/ToastContext.tsx instead for app-wide toasts.
+// This hook is only for local, component-level toasts and should be removed/refactored.
 import { useState, useCallback } from 'react';
 import { ToastNotification } from '@/types';
 import { generateId } from '@/utils/helpers';
