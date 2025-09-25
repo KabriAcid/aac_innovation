@@ -58,8 +58,14 @@ const AdminLoginPage: React.FC = () => {
       showToastSuccess('Login successful', 'Welcome back!');
       window.location.href = '/admin/dashboard';
     } catch (err) {
-      setErrors({ general: 'Invalid email or password' });
-      showToastError('Login failed', 'Invalid email or password');
+      let errorMsg = 'Invalid email or password';
+      if (err instanceof Error && err.message) {
+        errorMsg = err.message;
+      } else if (typeof err === 'string') {
+        errorMsg = err;
+      }
+      setErrors({ general: errorMsg });
+      showToastError('Login failed', errorMsg);
     } finally {
       setSubmitting(false);
     }

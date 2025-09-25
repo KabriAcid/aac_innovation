@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { AdminUser as User } from '../types/AdminUser';
 
 interface AuthState {
@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (token && userData) {
       try {
         // Basic JWT expiration check
-        const decoded = jwt_decode(token);
+        const decoded = jwtDecode(token);
         if (decoded && decoded.exp && Date.now() < decoded.exp * 1000) {
           const user = JSON.parse(userData);
           valid = true;
