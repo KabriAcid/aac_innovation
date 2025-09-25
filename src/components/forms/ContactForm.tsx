@@ -10,7 +10,7 @@ import { Select } from '@/components/ui/Select';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { ContactFormData } from '@/types';
 import { services } from '@/data/services';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/context/ToastContext';
 
 const schema: yup.ObjectSchema<ContactFormData> = yup.object({
   firstName: yup.string().required('First name is required'),
@@ -48,13 +48,19 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
 
   const handleFormSubmit = async (data: ContactFormData) => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const response = await fetch('http://localhost:4000/api/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        error('Failed to send message', result?.message || 'Please try again or contact us directly.');
+        return;
+      }
       if (onSubmit) {
         onSubmit(data);
       }
-      
       success('Message sent successfully!', 'We\'ll get back to you within 24 hours.');
       reset();
     } catch (err) {
