@@ -213,17 +213,29 @@ export const ContactPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Map Section (Placeholder) */}
-      <section className="h-96 bg-secondary-200 relative overflow-hidden">
+      {/* Map Section */}
+      <section className="h-96 relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <MapPin className="h-12 w-12 text-secondary-400 mx-auto mb-4" />
+          <div className="text-center w-full h-full">
+            <MapPin className="h-8 w-8 text-secondary-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-secondary-700 mb-2">
               Find Us Here
             </h3>
-            <p className="text-secondary-600">
+            <p className="text-secondary-600 mb-4">
               {COMPANY_INFO.address}
             </p>
+            <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg">
+              <iframe
+                title="Google Map"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(COMPANY_INFO.address)}&output=embed`}
+              />
+            </div>
           </div>
         </div>
       </section>
