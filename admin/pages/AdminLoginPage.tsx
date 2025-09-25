@@ -14,6 +14,7 @@ const AdminLoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { login, isLoading } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -47,14 +48,17 @@ const AdminLoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
+    setSubmitting(true);
     try {
-  await login(formData.email, formData.password, formData.rememberMe);
-  window.location.href = '/admin/dashboard';
+      // Simulate delay for UX (like BookingForm)
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      await login(formData.email, formData.password, formData.rememberMe);
+      window.location.href = '/admin/dashboard';
     } catch (error) {
       setErrors({ general: 'Invalid email or password' });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -121,9 +125,15 @@ const AdminLoginPage: React.FC = () => {
               variant="primary"
               size="md"
               className="w-full cursor-pointer"
-              loading={isLoading}
+              loading={isLoading || submitting}
             >
-              Sign In
+              {submitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  Signing In...
+                </span>
+              ) : (
+                'Sign In'
+              )}
             </Button>
 
             {/* ...no social login, no register link... */}
