@@ -21,8 +21,9 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { COMPANY_INFO, SERVICE_CATEGORIES } from '@/utils/constants';
 import { services } from '@/data/services';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 
 const iconMap = {
   Shield,
@@ -51,33 +52,32 @@ export const HomePage: React.FC = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Carousel Background */}
+        {/* Swiper Carousel Background */}
         <div className="absolute inset-0 z-0">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            interval={7000}
-            showThumbs={false}
-            showStatus={false}
-            showArrows={true}
-            showIndicators={true}
-            swipeable
-            emulateTouch
-            stopOnHover={false}
-            className="h-full"
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={0}
+            slidesPerView={1}
+            loop={true}
+            autoplay={{ delay: 2000, disableOnInteraction: false }}
+            speed={1200}
+            allowTouchMove={false}
+            style={{ height: '100vh' }}
           >
             {heroImages.map((img, idx) => (
-              <div key={img} className="w-full h-full">
-                <img
-                  src={img}
-                  alt={`AAC Innovation Hero Slide ${idx + 1}`}
-                  className="w-full h-screen object-cover object-center"
-                  style={{ objectPosition: 'center 30%' }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80" />
-              </div>
+              <SwiperSlide key={img}>
+                <div className="w-full h-full relative overflow-hidden">
+                  <img
+                    src={img}
+                    alt={`AAC Innovation Hero Slide ${idx + 1}`}
+                    className="w-full h-screen object-cover object-center hero-zoom"
+                    style={{ objectPosition: 'center 30%' }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-800/80" />
+                </div>
+              </SwiperSlide>
             ))}
-          </Carousel>
+          </Swiper>
         </div>
 
         {/* Content */}
