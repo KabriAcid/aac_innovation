@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { AdminUser as User } from '../types';
+import { AdminUser as User } from '../types/AdminUser';
 
 interface AuthState {
   user: User | null;
@@ -89,21 +89,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string, rememberMe = false) => {
     dispatch({ type: 'LOGIN_START' });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        role: 'admin',
-        lastLogin: new Date().toISOString(),
-      };
-      const token = 'mock_jwt_token';
-      if (rememberMe) {
-        localStorage.setItem('auth_token', token);
-        localStorage.setItem('user_data', JSON.stringify(mockUser));
+      const response = await fetch('http://localhost:4000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success || !result.token || !result.user) {
+        throw new Error(result.message || 'Invalid credentials');
       }
-      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: mockUser, token } });
+      if (rememberMe) {
+        localStorage.setItem('auth_token', result.token);
+        localStorage.setItem('user_data', JSON.stringify(result.user));
+      }
+      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: result.user, token: result.token } });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
       throw error;

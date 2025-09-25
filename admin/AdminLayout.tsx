@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from './context/AuthContext';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -17,6 +18,7 @@ import { cn } from '@/utils/helpers';
 const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const { logout } = useAuth();
 
   const navigation = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
@@ -69,7 +71,7 @@ const AdminLayout: React.FC = () => {
                       "group flex items-center w-full px-3 py-2 text-sm font-medium rounded-md transition-colors",
                       "text-gray-700 hover:text-red-600 hover:bg-red-50"
                     )}
-                    onClick={() => { window.location.href = item.href; setSidebarOpen(false); }}
+                    onClick={() => { logout(); setSidebarOpen(false); }}
                   >
                     <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
                     {item.name}

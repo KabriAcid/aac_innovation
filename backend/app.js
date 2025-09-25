@@ -7,6 +7,7 @@ import bookingsRoute from './routes/bookings.js';
 import servicesRoute from './api/services.js';
 import contactsRoute from './api/contacts.js';
 import settingsRoute from './api/settings.js';
+import authRoute from './api/auth.js';
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ app.use('/api/bookings', bookingsRoute);
 app.use('/api/services', servicesRoute);
 app.use('/api/contacts', contactsRoute);
 app.use('/api/settings', settingsRoute);
+app.use('/api/auth', authRoute);
 
 app.use(errorHandler);
 

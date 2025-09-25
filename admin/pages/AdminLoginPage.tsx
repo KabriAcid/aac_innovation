@@ -53,8 +53,8 @@ const AdminLoginPage: React.FC = () => {
     try {
       // Simulate delay for UX (like BookingForm)
       await new Promise(resolve => setTimeout(resolve, 1200));
-      await login(formData.email, formData.password, formData.rememberMe);
-      window.location.href = '/admin/dashboard';
+  await login(formData.email, formData.password, formData.rememberMe);
+  window.location.href = '/admin/dashboard';
     } catch (error) {
       setErrors({ general: 'Invalid email or password' });
     } finally {
