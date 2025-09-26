@@ -11,6 +11,7 @@ import ServicesList from './pages/Services/List';
 import TeamList from './pages/Team/List';
 import Settings from './pages/Settings';
 import AdminLoginPage from './pages/AdminLoginPage';
+import AdminRegisterPage from './pages/AdminRegisterPage';
 import { useAuth } from './context/AuthContext';
 
 const AdminRoutes: React.FC = () => {
@@ -21,23 +22,18 @@ const AdminRoutes: React.FC = () => {
   if (isLoading) return null;
 
   // Only allow access to admin pages if authenticated
-  if (!isAuthenticated && location.pathname !== '/admin/login') {
+  if (!isAuthenticated && location.pathname !== '/admin/login' && location.pathname !== '/admin/register') {
     logout();
     return <Navigate to="/admin/login" replace />;
   }
 
   return (
     <Routes>
-      {/* Login route always at /admin/login */}
-      <Route
-        path="login"
-        element={<AdminLoginPage />}
-      />
+      {/* Login and Register routes always available */}
+      <Route path="login" element={<AdminLoginPage />} />
+      <Route path="register" element={<AdminRegisterPage />} />
       {/* Default /admin route: redirect to dashboard */}
-      <Route
-        path="/"
-        element={<Navigate to="/admin/dashboard" replace />}
-      />
+      <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
       {/* All admin pages nested under AdminLayout, only if authenticated */}
       {isAuthenticated && (
         <Route element={<AdminLayout />}>

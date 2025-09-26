@@ -50,3 +50,33 @@ router.post('/login', async (req, res) => {
 });
 
 export default router;
+
+// POST /api/auth/register
+router.post('/register', async (req, res) => {
+  const { email, password, first_name, last_name, role } = req.body;
+  if (!email || !password || !first_name || !last_name) {
+    return res.status(400).json({ success: false, message: 'All fields are required.' });
+  }
+  // Generate username from email (before @)
+  const username = email.split('@')[0];
+  try {
+    // Check if user already exists
+    const [existing] = await pool.query(
+      'SELECT id FROM admin_users WHERE email = ? LIMIT 1',
+      [email]
+    );
+    if (existing.length) {
+      return res.status(409).json({ success: false, message: 'Email already registered.' });
+    }
+    // Hash password
+    const password_hash = await argon2.hash(password);
+    // Insert user (include username)
+    const [result] = await pool.query(
+      'INSERT INTO admin_users (username, email, password_hash, first_name, last_name, role, is_active, created_at) VALUES (?, ?, ?, ?, ?, ?, 1, NOW())',
+      [username, email, password_hash, first_name, last_name, role || 'user']
+    );
+    res.status(201).json({ success: true, message: 'User registered successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error', error: err.message });
+  }
+});

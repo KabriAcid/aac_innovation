@@ -146,7 +146,11 @@ const AdminLoginPage: React.FC = () => {
               )}
             </Button>
 
-            {/* ...no social login, no register link... */}
+            <div className="text-center mt-4">
+              <a href="/admin/register" className="text-primary-600 hover:underline text-sm">
+                Don&apos;t have an account? Register
+              </a>
+            </div>
           </form>
         </motion.div>
       </div>
