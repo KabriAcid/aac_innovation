@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
-import { useToast } from '../../src/context/ToastContext';
+import { useToast } from '../../../src/context/ToastContext';
 import { adapter } from '../../data/adapter';
 import { generateId } from '@/utils/helpers';
 
@@ -59,9 +59,9 @@ const TeamList: React.FC = () => {
 
   const loadTeam = async () => {
     try {
-      const data = await adapter.listTeam();
-      setTeam(data);
-      setFilteredTeam(data);
+  const data = await adapter.listTeam();
+  setTeam(data as TeamMember[]);
+  setFilteredTeam(data as TeamMember[]);
     } catch (error) {
       console.error('Error loading team:', error);
   showToastError('Error loading team members');
@@ -198,7 +198,7 @@ const TeamList: React.FC = () => {
               
               <div className="flex space-x-2">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => handleEdit(member)}
                   className="flex-1"
@@ -207,7 +207,7 @@ const TeamList: React.FC = () => {
                   Edit
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => handleDelete(member)}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50"
@@ -353,7 +353,7 @@ const TeamList: React.FC = () => {
             <Button type="submit" className="flex-1">
               {editingMember ? 'Update Member' : 'Add Member'}
             </Button>
-            <Button type="button" variant="outline" onClick={handleCloseModal}>
+            <Button type="button" variant="secondary" onClick={handleCloseModal}>
               Cancel
             </Button>
           </div>

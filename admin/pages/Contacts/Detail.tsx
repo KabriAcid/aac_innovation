@@ -4,7 +4,7 @@ import { ArrowLeft, Mail, User, Calendar, MessageSquare, Phone } from 'lucide-re
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
-import { useToast } from '../../src/context/ToastContext';
+import { useToast } from '../../../src/context/ToastContext';
 import { adapter } from '../../data/adapter';
 import { formatDate, cn } from '@/utils/helpers';
 
@@ -37,7 +37,7 @@ const ContactsDetail: React.FC = () => {
     };
 
     loadContact();
-  }, [id, navigate, showToast]);
+  }, [id, navigate, showToastError, showToastSuccess]);
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!contact) return;
@@ -73,7 +73,7 @@ const ContactsDetail: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={() => navigate('/admin/contacts')}>
+          <Button variant="secondary" onClick={() => navigate('/admin/contacts')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
@@ -101,7 +101,7 @@ const ContactsDetail: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={() => navigate('/admin/contacts')}>
+          <Button variant="secondary" onClick={() => navigate('/admin/contacts')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
@@ -197,12 +197,13 @@ const ContactsDetail: React.FC = () => {
                   value={contact.status || 'new'}
                   onChange={(e) => handleStatusUpdate(e.target.value)}
                   disabled={updating}
-                >
-                  <option value="new">New</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="replied">Replied</option>
-                  <option value="closed">Closed</option>
-                </Select>
+                  options={[
+                    { value: 'new', label: 'New' },
+                    { value: 'in-progress', label: 'In Progress' },
+                    { value: 'replied', label: 'Replied' },
+                    { value: 'closed', label: 'Closed' }
+                  ]}
+                />
               </div>
               
               <div className="pt-4 border-t border-gray-200">
@@ -216,7 +217,7 @@ const ContactsDetail: React.FC = () => {
                 
                 {contact.phone && (
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     className="w-full"
                     onClick={() => window.open(`tel:${contact.phone}`)}
                   >
