@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '../../src/context/ToastContext';
 import { adapter } from '../../data/adapter';
 import { generateId } from '@/utils/helpers';
 
@@ -38,7 +38,7 @@ const TeamList: React.FC = () => {
     twitter: '',
     active: true
   });
-  const { showToast } = useToast();
+  const { error: showToastError, success: showToastSuccess } = useToast();
 
   useEffect(() => {
     loadTeam();
@@ -64,7 +64,7 @@ const TeamList: React.FC = () => {
       setFilteredTeam(data);
     } catch (error) {
       console.error('Error loading team:', error);
-      showToast('Error loading team members', 'error');
+  showToastError('Error loading team members');
     } finally {
       setLoading(false);
     }
@@ -77,18 +77,18 @@ const TeamList: React.FC = () => {
       if (editingMember) {
         const updatedMember = { ...editingMember, ...formData };
         await adapter.updateTeamMember(editingMember.id, updatedMember);
-        showToast('Team member updated successfully', 'success');
+  showToastSuccess('Team member updated successfully');
       } else {
         const newMember = { ...formData, id: generateId() };
         await adapter.createTeamMember(newMember);
-        showToast('Team member added successfully', 'success');
+  showToastSuccess('Team member added successfully');
       }
       
       await loadTeam();
       handleCloseModal();
     } catch (error) {
       console.error('Error saving team member:', error);
-      showToast('Error saving team member', 'error');
+  showToastError('Error saving team member');
     }
   };
 
@@ -112,11 +112,11 @@ const TeamList: React.FC = () => {
     
     try {
       await adapter.deleteTeamMember(member.id);
-      showToast('Team member removed successfully', 'success');
+  showToastSuccess('Team member removed successfully');
       await loadTeam();
     } catch (error) {
       console.error('Error deleting team member:', error);
-      showToast('Error removing team member', 'error');
+  showToastError('Error removing team member');
     }
   };
 

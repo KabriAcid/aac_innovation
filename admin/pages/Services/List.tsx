@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/context/ToastContext';
 import { adapter } from '../../data/adapter';
 import { generateId, cn } from '@/utils/helpers';
 
@@ -34,7 +34,7 @@ const ServicesList: React.FC = () => {
     category: '',
     active: true
   });
-  const { showToast } = useToast();
+  const { error: showToastError, success: showToastSuccess } = useToast();
 
   useEffect(() => {
     loadServices();
@@ -55,12 +55,12 @@ const ServicesList: React.FC = () => {
 
   const loadServices = async () => {
     try {
-      const data = await adapter.listServices();
-      setServices(data);
-      setFilteredServices(data);
+  const data = await adapter.listServices();
+  setServices(data as Service[]);
+  setFilteredServices(data as Service[]);
     } catch (error) {
       console.error('Error loading services:', error);
-      showToast('Error loading services', 'error');
+  showToastError('Error loading services');
     } finally {
       setLoading(false);
     }
@@ -73,18 +73,18 @@ const ServicesList: React.FC = () => {
       if (editingService) {
         const updatedService = { ...editingService, ...formData };
         await adapter.updateService(editingService.id, updatedService);
-        showToast('Service updated successfully', 'success');
+  showToastSuccess('Service updated successfully');
       } else {
         const newService = { ...formData, id: generateId() };
         await adapter.createService(newService);
-        showToast('Service created successfully', 'success');
+  showToastSuccess('Service created successfully');
       }
       
       await loadServices();
       handleCloseModal();
     } catch (error) {
       console.error('Error saving service:', error);
-      showToast('Error saving service', 'error');
+  showToastError('Error saving service');
     }
   };
 
@@ -106,11 +106,11 @@ const ServicesList: React.FC = () => {
     
     try {
       await adapter.deleteService(service.id);
-      showToast('Service deleted successfully', 'success');
+  showToastSuccess('Service deleted successfully');
       await loadServices();
     } catch (error) {
       console.error('Error deleting service:', error);
-      showToast('Error deleting service', 'error');
+  showToastError('Error deleting service');
     }
   };
 
@@ -195,7 +195,7 @@ const ServicesList: React.FC = () => {
               
               <div className="flex space-x-2">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => handleEdit(service)}
                   className="flex-1"
@@ -204,7 +204,7 @@ const ServicesList: React.FC = () => {
                   Edit
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="danger"
                   size="sm"
                   onClick={() => handleDelete(service)}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50"
@@ -325,7 +325,7 @@ const ServicesList: React.FC = () => {
             <Button type="submit" className="flex-1">
               {editingService ? 'Update Service' : 'Create Service'}
             </Button>
-            <Button type="button" variant="outline" onClick={handleCloseModal}>
+            <Button type="button" variant="secondary" onClick={handleCloseModal}>
               Cancel
             </Button>
           </div>

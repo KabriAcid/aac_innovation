@@ -4,14 +4,14 @@ import { ArrowLeft, Mail, User, Calendar, MessageSquare, Phone } from 'lucide-re
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '../../src/context/ToastContext';
 import { adapter } from '../../data/adapter';
 import { formatDate, cn } from '@/utils/helpers';
 
 const ContactsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { showToast } = useToast();
+  const { error: showToastError, success: showToastSuccess } = useToast();
   const [contact, setContact] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -25,12 +25,12 @@ const ContactsDetail: React.FC = () => {
         if (data) {
           setContact(data);
         } else {
-          showToast('Contact not found', 'error');
+          showToastError('Contact not found');
           navigate('/admin/contacts');
         }
       } catch (error) {
         console.error('Error loading contact:', error);
-        showToast('Error loading contact', 'error');
+  showToastError('Error loading contact');
       } finally {
         setLoading(false);
       }
@@ -47,10 +47,10 @@ const ContactsDetail: React.FC = () => {
       const updatedContact = { ...contact, status: newStatus };
       await adapter.updateContact(contact.id, updatedContact);
       setContact(updatedContact);
-      showToast('Contact status updated successfully', 'success');
+  showToastSuccess('Contact status updated successfully');
     } catch (error) {
       console.error('Error updating contact:', error);
-      showToast('Error updating contact status', 'error');
+  showToastError('Error updating contact status');
     } finally {
       setUpdating(false);
     }

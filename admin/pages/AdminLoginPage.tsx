@@ -3,8 +3,8 @@ import { useToast } from '@/context/ToastContext';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import Button from '../ui/Input';
-import Input from '../ui/Button';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
 
 const AdminLoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -64,8 +64,9 @@ const AdminLoginPage: React.FC = () => {
       } else if (typeof err === 'string') {
         errorMsg = err;
       }
-      setErrors({ general: errorMsg });
+      setErrors(prev => ({ ...prev, general: errorMsg }));
       showToastError('Login failed', errorMsg);
+      // Do NOT reset formData here, so values persist
     } finally {
       setSubmitting(false);
     }

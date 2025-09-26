@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '../../src/context/ToastContext';
 import { adapter } from '../data/adapter';
 
 interface SystemSettings {
@@ -77,7 +77,7 @@ const Settings: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const { showToast } = useToast();
+  const { error: showToastError, success: showToastSuccess } = useToast();
 
   useEffect(() => {
     loadSettings();
@@ -102,10 +102,10 @@ const Settings: React.FC = () => {
     
     try {
       await adapter.updateSettings(settings);
-      showToast('Settings saved successfully', 'success');
+  showToastSuccess('Settings saved successfully');
     } catch (error) {
       console.error('Error saving settings:', error);
-      showToast('Error saving settings', 'error');
+  showToastError('Error saving settings');
     } finally {
       setSaving(false);
     }

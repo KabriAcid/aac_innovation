@@ -4,14 +4,14 @@ import { ArrowLeft, Calendar, Clock, User, Mail, Phone, MessageSquare, Edit } fr
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/context/ToastContext';
 import { adapter } from '../../data/adapter';
 import { formatDate, formatTime, cn } from '@/utils/helpers';
 
 const BookingsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { showToast } = useToast();
+  const { error: showToastError, success: showToastSuccess } = useToast();
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -25,19 +25,19 @@ const BookingsDetail: React.FC = () => {
         if (data) {
           setBooking(data);
         } else {
-          showToast('Booking not found', 'error');
+          showToastError('Booking not found');
           navigate('/admin/bookings');
         }
       } catch (error) {
         console.error('Error loading booking:', error);
-        showToast('Error loading booking', 'error');
+  showToastError('Error loading booking');
       } finally {
         setLoading(false);
       }
     };
 
     loadBooking();
-  }, [id, navigate, showToast]);
+  }, [id, navigate, showToastError, showToastSuccess]);
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!booking) return;
@@ -47,10 +47,10 @@ const BookingsDetail: React.FC = () => {
       const updatedBooking = { ...booking, status: newStatus };
       await adapter.updateBooking(booking.id, updatedBooking);
       setBooking(updatedBooking);
-      showToast('Booking status updated successfully', 'success');
+  showToastSuccess('Booking status updated successfully');
     } catch (error) {
       console.error('Error updating booking:', error);
-      showToast('Error updating booking status', 'error');
+  showToastError('Error updating booking status');
     } finally {
       setUpdating(false);
     }
@@ -73,7 +73,7 @@ const BookingsDetail: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={() => navigate('/admin/bookings')}>
+          <Button variant="secondary" onClick={() => navigate('/admin/bookings')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
@@ -101,7 +101,7 @@ const BookingsDetail: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" onClick={() => navigate('/admin/bookings')}>
+          <Button variant="secondary" onClick={() => navigate('/admin/bookings')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
@@ -205,16 +205,17 @@ const BookingsDetail: React.FC = () => {
                   value={booking.status}
                   onChange={(e) => handleStatusUpdate(e.target.value)}
                   disabled={updating}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="cancelled">Cancelled</option>
-                </Select>
+                  options={[
+                    { value: 'pending', label: 'Pending' },
+                    { value: 'confirmed', label: 'Confirmed' },
+                    { value: 'cancelled', label: 'Cancelled' }
+                  ]}
+                />
               </div>
               
               <div className="pt-4 border-t border-gray-200">
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   className="w-full mb-2"
                   onClick={() => window.open(`mailto:${booking.email}`)}
                 >
@@ -224,7 +225,7 @@ const BookingsDetail: React.FC = () => {
                 
                 {booking.phone && (
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     className="w-full"
                     onClick={() => window.open(`tel:${booking.phone}`)}
                   >
