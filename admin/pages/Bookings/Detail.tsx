@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { useToast } from '@/context/ToastContext';
 
+
+import { Modal } from '@/components/ui/Modal';
 import { formatDate, formatTime, cn } from '@/utils/helpers';
 
 const BookingsDetail: React.FC = () => {
@@ -16,6 +18,12 @@ const BookingsDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailForm, setEmailForm] = useState({
+    to: '',
+    subject: '',
+    message: ''
+  });
 
   useEffect(() => {
     const fetchBooking = async () => {
@@ -71,6 +79,16 @@ const BookingsDetail: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (booking) {
+      setEmailForm({
+        to: booking.client_email || '',
+        subject: '',
+        message: ''
+      });
+    }
+  }, [booking]);
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -114,7 +132,7 @@ const BookingsDetail: React.FC = () => {
             "px-3 py-1 text-sm font-medium rounded-full border",
             getStatusColor(booking.status)
           )}>
-            {booking.status}
+            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
           </span>
         </div>
       </div>
@@ -215,27 +233,71 @@ const BookingsDetail: React.FC = () => {
                 />
               </div>
               
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 space-y-2">
                 <Button 
                   variant="secondary" 
                   className="w-full mb-2"
-                  onClick={() => window.open(`mailto:${booking.client_email}`)}
+                  onClick={() => setShowEmailModal(true)}
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Send Email
                 </Button>
-                
+
                 {booking.client_phone && (
-                  <Button 
-                    variant="secondary" 
-                    className="w-full"
-                    onClick={() => window.open(`tel:${booking.client_phone}`)}
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Client
-                  </Button>
+                  <a href={`tel:${booking.client_phone}`} className="block">
+                    <Button 
+                      variant="secondary" 
+                      className="w-full"
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call Client
+                    </Button>
+                  </a>
                 )}
               </div>
+      {/* Email Modal */}
+      <Modal isOpen={showEmailModal} onClose={() => setShowEmailModal(false)} title="Send Email" size="md">
+        <form className="space-y-4" onSubmit={e => { e.preventDefault(); /* functionality to be added */ }}>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">To</label>
+            <input
+              type="email"
+              className="w-full border rounded px-3 py-2 bg-gray-50"
+              value={emailForm.to}
+              disabled
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+            <input
+              type="text"
+              className="w-full border rounded px-3 py-2 bg-gray-50"
+              value={emailForm.subject}
+              onChange={e => setEmailForm(f => ({ ...f, subject: e.target.value }))}
+              placeholder="Subject"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+            <textarea
+              className="w-full border rounded px-3 py-2 min-h-[100px] bg-gray-50"
+              value={emailForm.message}
+              onChange={e => setEmailForm(f => ({ ...f, message: e.target.value }))}
+              placeholder="Type your message..."
+              required
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="secondary" onClick={() => setShowEmailModal(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" disabled>
+              Send (Coming Soon)
+            </Button>
+          </div>
+        </form>
+      </Modal>
             </div>
           </Card>
 

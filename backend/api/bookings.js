@@ -54,4 +54,52 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+// PUT booking status by ID
+router.put('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    // Allowed enum values from schema
+    const allowedStatus = ['pending','confirmed','rescheduled','cancelled','completed','no_show'];
+    const allowedBookingType = ['consultation','demo','follow_up','technical_review'];
+    // Only allow updating these fields
+    const updatableFields = [
+      'client_name', 'client_email', 'client_phone', 'company', 'service_id', 'consultant_id',
+      'scheduled_date', 'scheduled_time', 'message', 'status', 'booking_type', 'duration_minutes',
+      'meeting_link', 'meeting_notes', 'reminder_sent', 'confirmation_sent', 'calendar_event_id',
+      'assigned_to'
+    ];
+    const updates = {};
+    for (const key of updatableFields) {
+      if (req.body[key] !== undefined) updates[key] = req.body[key];
+    }
+    // Validate enums
+    if (updates.status && !allowedStatus.includes(updates.status)) {
+      return res.status(400).json({ success: false, message: 'Invalid status value' });
+    }
+    if (updates.booking_type && !allowedBookingType.includes(updates.booking_type)) {
+      return res.status(400).json({ success: false, message: 'Invalid booking_type value' });
+    }
+    // If nothing to update
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ success: false, message: 'No valid fields to update' });
+    }
+    // Set changed_by for booking_history trigger (must be a valid team_members.id or NULL)
+    // For now, default to NULL (system) if not provided
+    await pool.query('SET @changed_by = NULL');
+    // Build query
+    const setClause = Object.keys(updates).map(f => `${f} = ?`).join(', ');
+    const values = Object.values(updates);
+    const [result] = await pool.query(
+      `UPDATE bookings SET ${setClause}, updated_at = NOW() WHERE id = ?`,
+      [...values, id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+    res.json({ success: true, message: 'Booking updated' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
