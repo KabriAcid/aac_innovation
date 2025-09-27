@@ -8,6 +8,7 @@ import servicesRoute from './api/services.js';
 import contactsRoute from './api/contacts.js';
 import settingsRoute from './api/settings.js';
 import authRoute from './api/auth.js';
+import dashboardRoute from './api/dashboard.js';
 
 dotenv.config();
 const app = express();
@@ -16,11 +17,15 @@ app.use(cors());
 app.use(express.json());
 app.use(logger);
 
+// client routes
 app.use('/api/bookings', bookingsRoute);
 app.use('/api/services', servicesRoute);
 app.use('/api/contacts', contactsRoute);
 app.use('/api/settings', settingsRoute);
+
+// admin routes
 app.use('/api/auth', authRoute);
+app.use('/api/dashboard', dashboardRoute);
 
 app.use(errorHandler);
 

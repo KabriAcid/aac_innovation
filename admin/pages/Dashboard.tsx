@@ -1,80 +1,115 @@
+
 import React, { useEffect, useState } from 'react';
 import { Calendar, Users, Briefcase, TrendingUp } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
-import { adapter } from '../data/adapter';
 import { formatDate } from '@/utils/helpers';
 
-interface DashboardStats {
-  totalBookings: number;
-  totalContacts: number;
-  totalServices: number;
-  recentBookings: any[];
+interface KpiData {
+  total_bookings: number;
+  pending_bookings: number;
+  confirmed_bookings: number;
+  total_contacts: number;
+  total_services: number;
 }
 
+interface Booking {
+  id: string;
+  client_name: string;
+  client_email: string;
+  scheduled_date: string;
+  scheduled_time: string;
+  status: string;
+  service_title: string;
+}
+
+interface Contact {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  company?: string;
+  service_interest?: string;
+  message: string;
+  status: string;
+  created_at: string;
+}
+
+
+
+
 const Dashboard: React.FC = () => {
-  const [stats, setStats] = useState<DashboardStats>({
-    totalBookings: 0,
-    totalContacts: 0,
-    totalServices: 0,
-    recentBookings: []
-  });
+  const [kpis, setKpis] = useState<KpiData | null>(null);
+  const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
+  const [recentContacts, setRecentContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
 
   useEffect(() => {
-    const loadDashboardData = async () => {
+    const fetchDashboard = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const [bookings, contacts, services] = await Promise.all([
-          adapter.listBookings(),
-          adapter.listContacts(),
-          adapter.listServices()
+        const [kpiRes, bookingsRes, contactsRes] = await Promise.all([
+          fetch('http://localhost:4000/api/dashboard/kpis'),
+          fetch('http://localhost:4000/api/dashboard/recent-bookings'),
+          fetch('http://localhost:4000/api/dashboard/recent-contacts'),
         ]);
 
-        setStats({
-          totalBookings: bookings.length,
-          totalContacts: contacts.length,
-          totalServices: services.length,
-          recentBookings: bookings.slice(0, 5)
-        });
-      } catch (error) {
-        console.error('Error loading dashboard data:', error);
+        if (!kpiRes.ok) throw new Error('Failed to load KPIs');
+        if (!bookingsRes.ok) throw new Error('Failed to load recent bookings');
+        if (!contactsRes.ok) throw new Error('Failed to load recent contacts');
+
+        const kpiData = await kpiRes.json();
+        const bookingsData = await bookingsRes.json();
+        const contactsData = await contactsRes.json();
+
+        setKpis(kpiData.data);
+        setRecentBookings(bookingsData.data);
+        setRecentContacts(contactsData.data);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load dashboard data');
       } finally {
         setLoading(false);
       }
     };
-
-    loadDashboardData();
+    fetchDashboard();
   }, []);
 
-  const statCards = [
-    {
-      title: 'Total Bookings',
-      value: stats.totalBookings,
-      icon: Calendar,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
-    },
-    {
-      title: 'Total Contacts',
-      value: stats.totalContacts,
-      icon: Users,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
-    },
-    {
-      title: 'Active Services',
-      value: stats.totalServices,
-      icon: Briefcase,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
-    },
-    {
-      title: 'Growth Rate',
-      value: '+12%',
-      icon: TrendingUp,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
-    }
-  ];
+
+  const statCards = kpis
+    ? [
+        {
+          title: 'Total Bookings',
+          value: kpis.total_bookings,
+          icon: Calendar,
+          color: 'text-blue-600',
+          bgColor: 'bg-blue-50',
+        },
+        {
+          title: 'Total Contacts',
+          value: kpis.total_contacts,
+          icon: Users,
+          color: 'text-green-600',
+          bgColor: 'bg-green-50',
+        },
+        {
+          title: 'Active Services',
+          value: kpis.total_services,
+          icon: Briefcase,
+          color: 'text-purple-600',
+          bgColor: 'bg-purple-50',
+        },
+        {
+          title: 'Growth Rate',
+          value: '+12%', // Placeholder, replace with real metric if available
+          icon: TrendingUp,
+          color: 'text-orange-600',
+          bgColor: 'bg-orange-50',
+        },
+      ]
+    : [];
+
 
   if (loading) {
     return (
@@ -91,6 +126,15 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <div className="bg-red-100 text-red-700 p-4 rounded-lg">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -102,7 +146,7 @@ const Dashboard: React.FC = () => {
         {statCards.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={index} className="p-6">
+            <Card key={index} className="p-6 box-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">{stat.title}</p>
@@ -119,19 +163,19 @@ const Dashboard: React.FC = () => {
 
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
+        <Card className="p-6 box-shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Bookings</h3>
           <div className="space-y-3">
-            {stats.recentBookings.length > 0 ? (
-              stats.recentBookings.map((booking) => (
+            {recentBookings.length > 0 ? (
+              recentBookings.map((booking) => (
                 <div key={booking.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                   <div>
-                    <p className="font-medium text-gray-900">{booking.name}</p>
-                    <p className="text-sm text-gray-500">{booking.service}</p>
+                    <p className="font-medium text-gray-900">{booking.client_name}</p>
+                    <p className="text-sm text-gray-500">{booking.service_title}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">{formatDate(booking.date)}</p>
-                    <p className="text-sm text-gray-500">{booking.time}</p>
+                    <p className="text-sm font-medium text-gray-900">{formatDate(booking.scheduled_date)}</p>
+                    <p className="text-sm text-gray-500">{booking.scheduled_time}</p>
                   </div>
                 </div>
               ))
@@ -141,23 +185,29 @@ const Dashboard: React.FC = () => {
           </div>
         </Card>
 
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <Card className="p-6 box-shadow">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Contacts</h3>
           <div className="space-y-3">
-            <button className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-              <div className="font-medium text-gray-900">View All Bookings</div>
-              <div className="text-sm text-gray-500">Manage appointments and schedules</div>
-            </button>
-            <button className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-              <div className="font-medium text-gray-900">Manage Services</div>
-              <div className="text-sm text-gray-500">Add or edit service offerings</div>
-            </button>
-            <button className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-              <div className="font-medium text-gray-900">Team Management</div>
-              <div className="text-sm text-gray-500">Update team member information</div>
-            </button>
+            {recentContacts.length > 0 ? (
+              recentContacts.map((contact) => (
+                <div key={contact.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                  <div>
+                    <p className="font-medium text-gray-900">{contact.first_name} {contact.last_name}</p>
+                    <p className="text-sm text-gray-500">{contact.email}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-gray-900">{formatDate(contact.created_at)}</p>
+                    <p className="text-sm text-gray-500">{contact.status}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-4">No recent contacts</p>
+            )}
           </div>
         </Card>
+
+        {/* Quick Actions can be added here as a third card if needed */}
       </div>
     </div>
   );
