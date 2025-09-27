@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import bookingsRoute from './routes/bookings.js';
+import emailRoute from './api/email.js';
 import servicesRoute from './api/services.js';
 import contactsRoute from './api/contacts.js';
 import settingsRoute from './api/settings.js';
@@ -21,6 +22,8 @@ app.use(logger);
 app.use('/api/bookings', bookingsRoute);
 app.use('/api/services', servicesRoute);
 app.use('/api/contacts', contactsRoute);
+
+app.use('/api/email', emailRoute);
 app.use('/api/settings', settingsRoute);
 
 // admin routes

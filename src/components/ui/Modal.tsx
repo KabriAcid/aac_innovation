@@ -41,10 +41,10 @@ export const Modal: React.FC<ModalProps> = ({
   }, [isOpen, onClose]);
 
   const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl',
+    sm: 'w-[80vw] max-w-md',
+    md: 'w-[80vw] max-w-lg',
+    lg: 'w-[80vw] max-w-2xl',
+    xl: 'w-[80vw] max-w-4xl',
   };
 
   return (
@@ -52,22 +52,22 @@ export const Modal: React.FC<ModalProps> = ({
       {isOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            {/* Overlay */}
+            {/* Overlay with blur and transparency */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-secondary-500 bg-opacity-75 transition-opacity"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
               onClick={closeOnOverlayClick ? onClose : undefined}
             />
 
-            {/* Modal */}
+            {/* Modal with solid white bg and backdrop blur */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className={cn(
-                'relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6',
+                'relative transform overflow-hidden rounded-lg bg-white backdrop-blur-md px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6',
                 sizeClasses[size]
               )}
             >

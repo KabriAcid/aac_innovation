@@ -126,7 +126,7 @@ const BookingsDetail: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <span
-            className="flex items-center text-gray-700 cursor-pointer hover:underline select-none"
+            className="flex items-center text-gray-700 cursor-pointer select-none"
             onClick={() => navigate('/admin/bookings')}
             role="button"
             tabIndex={0}
@@ -264,33 +264,55 @@ const BookingsDetail: React.FC = () => {
                   </a>
                 )}
               </div>
-      {/* Email Modal */}
+      {/* Email Modal using global Modal component */}
       <Modal isOpen={showEmailModal} onClose={() => setShowEmailModal(false)} title="Send Email" size="md">
-        <form className="space-y-4" onSubmit={e => { e.preventDefault(); /* functionality to be added */ }}>
-          <div>
+        <form
+          onSubmit={async e => {
+            e.preventDefault();
+            try {
+              const res = await fetch('http://localhost:4000/api/email/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  to: emailForm.to,
+                  subject: emailForm.subject,
+                  message: emailForm.message
+                })
+              });
+              const result = await res.json();
+              if (!res.ok || !result.success) throw new Error(result.message || 'Failed to send email');
+              showToastSuccess('Email sent successfully');
+              setShowEmailModal(false);
+            } catch (err: any) {
+              showToastError(err.message || 'Error sending email');
+            }
+          }}
+          className="bg-white/70 backdrop-blur rounded-xl p-4 shadow-inner"
+        >
+          <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">To</label>
             <input
               type="email"
-              className="w-full border rounded px-3 py-2 bg-gray-50"
+              className="w-full rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-gray-100/70 px-3 py-2 transition-all outline-none text-gray-700 placeholder-gray-400"
               value={emailForm.to}
               disabled
             />
           </div>
-          <div>
+          <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
             <input
               type="text"
-              className="w-full border rounded px-3 py-2 bg-gray-50"
+              className="w-full rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-gray-100/70 px-3 py-2 transition-all outline-none text-gray-700 placeholder-gray-400"
               value={emailForm.subject}
               onChange={e => setEmailForm(f => ({ ...f, subject: e.target.value }))}
               placeholder="Subject"
               required
             />
           </div>
-          <div>
+          <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
             <textarea
-              className="w-full border rounded px-3 py-2 min-h-[100px] bg-gray-50"
+              className="w-full rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-gray-100/70 px-3 py-2 min-h-[100px] transition-all outline-none text-gray-700 placeholder-gray-400"
               value={emailForm.message}
               onChange={e => setEmailForm(f => ({ ...f, message: e.target.value }))}
               placeholder="Type your message..."
@@ -298,12 +320,12 @@ const BookingsDetail: React.FC = () => {
             />
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="secondary" onClick={() => setShowEmailModal(false)}>
+            <button type="button" className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" onClick={() => setShowEmailModal(false)}>
               Cancel
-            </Button>
-            <Button type="submit" variant="primary" disabled>
-              Send (Coming Soon)
-            </Button>
+            </button>
+            <button type="submit" className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">
+              Send
+            </button>
           </div>
         </form>
       </Modal>
