@@ -109,10 +109,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (!response.ok || !result.success || !result.token || !result.user) {
         throw new Error(result.message || 'Invalid credentials');
       }
-      if (rememberMe) {
-        localStorage.setItem('auth_token', result.token);
-        localStorage.setItem('user_data', JSON.stringify(result.user));
-      }
+      // Always persist token and user in localStorage
+      localStorage.setItem('auth_token', result.token);
+      localStorage.setItem('user_data', JSON.stringify(result.user));
       dispatch({ type: 'LOGIN_SUCCESS', payload: { user: result.user, token: result.token } });
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });

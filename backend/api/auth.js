@@ -12,6 +12,7 @@ const JWT_EXPIRES_IN = '7d';
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
+    console.error('[LOGIN] Missing email or password');
     return res.status(400).json({ success: false, message: 'Email and password required.' });
   }
   try {
@@ -20,12 +21,19 @@ router.post('/login', async (req, res) => {
       [email]
     );
     if (!rows.length) {
+      console.error(`[LOGIN] No user found for email: ${email}`);
       return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
     const user = rows[0];
-    const valid = await argon2.verify(user.password_hash, password);
-    if (!valid) {
-      return res.status(401).json({ success: false, message: 'Invalid email or password.' });
+    try {
+      const valid = await argon2.verify(user.password_hash, password);
+      if (!valid) {
+        console.error(`[LOGIN] Password mismatch for email: ${email}`);
+        return res.status(401).json({ success: false, message: 'Invalid email or password.' });
+      }
+    } catch (verifyErr) {
+      console.error(`[LOGIN] Argon2 verification error for email: ${email}`, verifyErr);
+      return res.status(401).json({ success: false, message: 'Invalid email or password.', error: verifyErr.message });
     }
     // Prepare user data for frontend
     const userData = {
@@ -45,6 +53,7 @@ router.post('/login', async (req, res) => {
     await pool.query('UPDATE admin_users SET last_login = NOW() WHERE id = ?', [user.id]);
     res.json({ success: true, token, user: userData });
   } catch (err) {
+    console.error('[LOGIN] Server error:', err);
     res.status(500).json({ success: false, message: 'Server error', error: err.message });
   }
 });
