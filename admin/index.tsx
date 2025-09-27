@@ -8,6 +8,7 @@ import BookingsDetail from './pages/Bookings/Detail';
 import ContactsList from './pages/Contacts/List';
 import ContactsDetail from './pages/Contacts/Detail';
 import ServicesList from './pages/Services/List';
+import ServiceDetails from './pages/Services/Details';
 import TeamList from './pages/Team/List';
 import Settings from './pages/Settings';
 import AdminLoginPage from './pages/AdminLoginPage';
@@ -43,6 +44,7 @@ const AdminRoutes: React.FC = () => {
           <Route path="contacts" element={<ContactsList />} />
           <Route path="contacts/:id" element={<ContactsDetail />} />
           <Route path="services" element={<ServicesList />} />
+          <Route path="services/:id" element={<ServiceDetails />} />
           <Route path="team" element={<TeamList />} />
           <Route path="settings" element={<Settings />} />
         </Route>

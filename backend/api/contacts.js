@@ -17,38 +17,23 @@ router.post('/', async (req, res, next) => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'new', NOW())`,
       [data.firstName, data.lastName, data.email, data.phone || '', data.company || '', data.serviceInterest || '', data.message, data.consent ? 1 : 0]
     );
-    // Log contact body (for demonstration)
-    console.log('Contact form submitted:', data);
     res.json({ success: true, message: 'Contact form submitted successfully', data: { id: result.insertId, status: 'new' } });
   } catch (err) {
     next(err);
   }
 });
 
-// GET all contacts
+// GET all contacts - return raw DB rows
 router.get('/', async (req, res, next) => {
   try {
     const [rows] = await pool.query('SELECT * FROM contacts ORDER BY created_at DESC LIMIT 100');
-    // Map DB fields to frontend shape
-    const mapped = rows.map(row => ({
-      id: row.id,
-      name: row.first_name + (row.last_name ? ' ' + row.last_name : ''),
-      email: row.email,
-      phone: row.phone,
-      company: row.company,
-      subject: row.service_interest || '',
-      message: row.message,
-      status: row.status === 'in_progress' ? 'in-progress' : row.status === 'responded' ? 'replied' : row.status,
-      createdAt: row.created_at,
-      // Add more fields as needed
-    }));
-    res.json({ success: true, data: mapped });
+    res.json({ success: true, data: rows });
   } catch (err) {
     next(err);
   }
 });
 
-// GET contact by ID
+// GET contact by ID - return raw DB row
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -56,20 +41,7 @@ router.get('/:id', async (req, res, next) => {
     if (!rows.length) {
       return res.status(404).json({ success: false, message: 'Contact not found' });
     }
-    const row = rows[0];
-    const mapped = {
-      id: row.id,
-      name: row.first_name + (row.last_name ? ' ' + row.last_name : ''),
-      email: row.email,
-      phone: row.phone,
-      company: row.company,
-      subject: row.service_interest || '',
-      message: row.message,
-      status: row.status === 'in_progress' ? 'in-progress' : row.status === 'responded' ? 'replied' : row.status,
-      createdAt: row.created_at,
-      // Add more fields as needed
-    };
-    res.json({ success: true, data: mapped });
+    res.json({ success: true, data: rows[0] });
   } catch (err) {
     next(err);
   }

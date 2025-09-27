@@ -1,349 +1,185 @@
-import { generateId } from '@/utils/helpers';
 
-// Mock data storage using localStorage
-const STORAGE_KEYS = {
-  BOOKINGS: 'admin_bookings',
-  CONTACTS: 'admin_contacts',
-  SERVICES: 'admin_services',
-  TEAM: 'admin_team',
-  SETTINGS: 'admin_settings'
-};
 
-// Initialize with sample data if localStorage is empty
-const initializeData = () => {
-  // Sample bookings
-  if (!localStorage.getItem(STORAGE_KEYS.BOOKINGS)) {
-    const sampleBookings = [
-      {
-        id: generateId(),
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '+1 (555) 123-4567',
-        service: 'Cybersecurity Consultation',
-        date: '2024-01-15',
-        time: '10:00',
-        message: 'Looking for a comprehensive security audit for our startup.',
-        status: 'confirmed',
-        createdAt: '2024-01-10'
-      },
-      {
-        id: generateId(),
-        name: 'Jane Smith',
-        email: 'jane@company.com',
-        phone: '+1 (555) 987-6543',
-        service: 'Cloud Migration',
-        date: '2024-01-20',
-        time: '14:00',
-        message: 'Need help migrating our infrastructure to AWS.',
-        status: 'pending',
-        createdAt: '2024-01-12'
-      }
-    ];
-    localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(sampleBookings));
-  }
-
-  // Sample contacts
-  if (!localStorage.getItem(STORAGE_KEYS.CONTACTS)) {
-    const sampleContacts = [
-      {
-        id: generateId(),
-        name: 'Alice Johnson',
-        email: 'alice@startup.com',
-        subject: 'Partnership Inquiry',
-        message: 'We are interested in exploring partnership opportunities with AAC Innovation.',
-        status: 'new',
-        createdAt: '2024-01-14'
-      },
-      {
-        id: generateId(),
-        name: 'Bob Wilson',
-        email: 'bob@enterprise.com',
-        phone: '+1 (555) 456-7890',
-        subject: 'Enterprise Solutions',
-        message: 'Looking for enterprise-level cybersecurity solutions for our organization.',
-        status: 'in-progress',
-        createdAt: '2024-01-13'
-      }
-    ];
-    localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(sampleContacts));
-  }
-
-  // Sample services
-  if (!localStorage.getItem(STORAGE_KEYS.SERVICES)) {
-    const sampleServices = [
-      {
-        id: generateId(),
-        name: 'Cybersecurity Audit',
-        description: 'Comprehensive security assessment of your digital infrastructure.',
-        price: '$2,500 - $5,000',
-        duration: '2-3 weeks',
-        category: 'Cybersecurity',
-        active: true
-      },
-      {
-        id: generateId(),
-        name: 'Cloud Migration',
-        description: 'Seamless migration of your applications and data to the cloud.',
-        price: '$5,000 - $15,000',
-        duration: '4-8 weeks',
-        category: 'Cloud Computing',
-        active: true
-      },
-      {
-        id: generateId(),
-        name: 'AI Implementation',
-        description: 'Custom AI solutions to automate and optimize your business processes.',
-        price: 'Contact for quote',
-        duration: '6-12 weeks',
-        category: 'Artificial Intelligence',
-        active: true
-      }
-    ];
-    localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(sampleServices));
-  }
-
-  // Sample team
-  if (!localStorage.getItem(STORAGE_KEYS.TEAM)) {
-    const sampleTeam = [
-      {
-        id: generateId(),
-        name: 'Dr. Amara Okafor',
-        position: 'CEO & Founder',
-        bio: 'Visionary leader with 15+ years in technology and innovation across Africa.',
-        email: 'amara@aacinnovation.com',
-        image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400',
-        linkedin: 'https://linkedin.com/in/amaraokafor',
-        active: true
-      },
-      {
-        id: generateId(),
-        name: 'Kwame Asante',
-        position: 'CTO',
-        bio: 'Expert in cybersecurity and cloud architecture with a passion for African tech.',
-        email: 'kwame@aacinnovation.com',
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400',
-        linkedin: 'https://linkedin.com/in/kwameasante',
-        active: true
-      }
-    ];
-    localStorage.setItem(STORAGE_KEYS.TEAM, JSON.stringify(sampleTeam));
-  }
-};
-
-// Initialize data on first load
-initializeData();
-
-// Generic storage functions
-const getFromStorage = <T>(key: string): T[] => {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : [];
-  } catch (error) {
-    console.error(`Error reading from localStorage key ${key}:`, error);
-    return [];
-  }
-};
-
-const saveToStorage = <T>(key: string, data: T[]): void => {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (error) {
-    console.error(`Error saving to localStorage key ${key}:`, error);
-    throw new Error('Failed to save data');
-  }
-};
-
-// Adapter interface - replace these functions with actual API calls
+// Adapter interface - all methods use backend API only
 export const adapter = {
   // Bookings
   async listBookings() {
-    return getFromStorage(STORAGE_KEYS.BOOKINGS);
+    const response = await fetch('/api/bookings');
+    if (!response.ok) throw new Error('Failed to fetch bookings');
+    const result = await response.json();
+    return result.data || [];
   },
 
   async getBooking(id: string) {
-    const bookings = getFromStorage(STORAGE_KEYS.BOOKINGS);
-    return bookings.find((booking: any) => booking.id === id);
+    const response = await fetch(`/api/bookings/${id}`);
+    if (!response.ok) throw new Error('Failed to fetch booking');
+    const result = await response.json();
+    return result.data;
   },
 
   async createBooking(booking: any) {
-    const bookings = getFromStorage(STORAGE_KEYS.BOOKINGS);
-    const newBooking = { ...booking, id: generateId(), createdAt: new Date().toISOString() };
-    bookings.push(newBooking);
-    saveToStorage(STORAGE_KEYS.BOOKINGS, bookings);
-    return newBooking;
+    const response = await fetch('/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(booking)
+    });
+    if (!response.ok) throw new Error('Failed to create booking');
+    const result = await response.json();
+    return result.data;
   },
 
   async updateBooking(id: string, updates: any) {
-    const bookings = getFromStorage(STORAGE_KEYS.BOOKINGS);
-    const index = bookings.findIndex((booking: any) => booking.id === id);
-    if (index === -1) throw new Error('Booking not found');
-    
-  bookings[index] = { ...(bookings[index] || {}), ...updates };
-    saveToStorage(STORAGE_KEYS.BOOKINGS, bookings);
-    return bookings[index];
+    const response = await fetch(`/api/bookings/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    if (!response.ok) throw new Error('Failed to update booking');
+    const result = await response.json();
+    return result.data;
   },
 
   async deleteBooking(id: string) {
-    const bookings = getFromStorage(STORAGE_KEYS.BOOKINGS);
-    const filtered = bookings.filter((booking: any) => booking.id !== id);
-    saveToStorage(STORAGE_KEYS.BOOKINGS, filtered);
+    const response = await fetch(`/api/bookings/${id}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Failed to delete booking');
+    return true;
   },
 
   // Contacts
   async listContacts() {
-    try {
-      console.log('[adapter] Fetching contacts...');
-      const response = await fetch('/api/contacts');
-      console.log('[adapter] Response status:', response.status);
-      const text = await response.text();
-      try {
-        const result = JSON.parse(text);
-        console.log('[adapter] Contacts API result:', result);
-        if (!response.ok) throw new Error(result.message || 'Failed to fetch contacts');
-        return result.data;
-      } catch (jsonErr) {
-        console.error('[adapter] Failed to parse contacts API response as JSON:', text);
-        throw new Error('Contacts API did not return valid JSON');
-      }
-    } catch (err) {
-      console.error('[adapter] listContacts error:', err);
-      throw err;
-    }
+    const response = await fetch('/api/contacts');
+    if (!response.ok) throw new Error('Failed to fetch contacts');
+    const result = await response.json();
+    return result.data || [];
   },
 
   async getContact(id: string) {
-    try {
-      console.log(`[adapter] Fetching contact ${id}...`);
-      const response = await fetch(`/api/contacts/${id}`);
-      console.log('[adapter] Response status:', response.status);
-      const text = await response.text();
-      try {
-        const result = JSON.parse(text);
-        console.log('[adapter] Contact API result:', result);
-        if (!response.ok) throw new Error(result.message || 'Failed to fetch contact');
-        return result.data;
-      } catch (jsonErr) {
-        console.error('[adapter] Failed to parse contact API response as JSON:', text);
-        throw new Error('Contact API did not return valid JSON');
-      }
-    } catch (err) {
-      console.error('[adapter] getContact error:', err);
-      throw err;
-    }
+    const response = await fetch(`/api/contacts/${id}`);
+    if (!response.ok) throw new Error('Failed to fetch contact');
+    const result = await response.json();
+    return result.data;
   },
 
   async updateContact(id: string, updates: any) {
-    try {
-      console.log(`[adapter] Updating contact ${id} with:`, updates);
-      const response = await fetch(`/api/contacts/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
-      console.log('[adapter] Response status:', response.status);
-      const text = await response.text();
-      try {
-        const result = JSON.parse(text);
-        console.log('[adapter] Update contact API result:', result);
-        if (!response.ok) throw new Error(result.message || 'Failed to update contact');
-        return result;
-      } catch (jsonErr) {
-        console.error('[adapter] Failed to parse update contact API response as JSON:', text);
-        throw new Error('Update contact API did not return valid JSON');
-      }
-    } catch (err) {
-      console.error('[adapter] updateContact error:', err);
-      throw err;
-    }
+    const response = await fetch(`/api/contacts/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    if (!response.ok) throw new Error('Failed to update contact');
+    const result = await response.json();
+    return result.data;
   },
 
   // Services
   async listServices() {
-    return getFromStorage(STORAGE_KEYS.SERVICES);
+    const response = await fetch('/api/services');
+    if (!response.ok) throw new Error('Failed to fetch services');
+    const result = await response.json();
+    return result.data || [];
   },
 
   async getService(id: string) {
-    const services = getFromStorage(STORAGE_KEYS.SERVICES);
-    return services.find((service: any) => service.id === id);
+    const response = await fetch(`/api/services/${id}`);
+    if (!response.ok) throw new Error('Failed to fetch service');
+    const result = await response.json();
+    return result.data;
   },
 
   async createService(service: any) {
-    const services = getFromStorage(STORAGE_KEYS.SERVICES);
-    const newService = { ...service, id: generateId() };
-    services.push(newService);
-    saveToStorage(STORAGE_KEYS.SERVICES, services);
-    return newService;
+    const response = await fetch('/api/services', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(service)
+    });
+    if (!response.ok) throw new Error('Failed to create service');
+    const result = await response.json();
+    return result.data;
   },
 
   async updateService(id: string, updates: any) {
-    const services = getFromStorage(STORAGE_KEYS.SERVICES);
-    const index = services.findIndex((service: any) => service.id === id);
-    if (index === -1) throw new Error('Service not found');
-    
-  services[index] = { ...(services[index] || {}), ...updates };
-    saveToStorage(STORAGE_KEYS.SERVICES, services);
-    return services[index];
+    const response = await fetch(`/api/services/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    if (!response.ok) throw new Error('Failed to update service');
+    const result = await response.json();
+    return result.data;
   },
 
   async deleteService(id: string) {
-    const services = getFromStorage(STORAGE_KEYS.SERVICES);
-    const filtered = services.filter((service: any) => service.id !== id);
-    saveToStorage(STORAGE_KEYS.SERVICES, filtered);
+    const response = await fetch(`/api/services/${id}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Failed to delete service');
+    return true;
   },
 
   // Team
   async listTeam() {
-    return getFromStorage(STORAGE_KEYS.TEAM);
+    const response = await fetch('/api/team');
+    if (!response.ok) throw new Error('Failed to fetch team');
+    const result = await response.json();
+    return result.data || [];
   },
 
   async getTeamMember(id: string) {
-    const team = getFromStorage(STORAGE_KEYS.TEAM);
-    return team.find((member: any) => member.id === id);
+    const response = await fetch(`/api/team/${id}`);
+    if (!response.ok) throw new Error('Failed to fetch team member');
+    const result = await response.json();
+    return result.data;
   },
 
   async createTeamMember(member: any) {
-    const team = getFromStorage(STORAGE_KEYS.TEAM);
-    const newMember = { ...member, id: generateId() };
-    team.push(newMember);
-    saveToStorage(STORAGE_KEYS.TEAM, team);
-    return newMember;
+    const response = await fetch('/api/team', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(member)
+    });
+    if (!response.ok) throw new Error('Failed to create team member');
+    const result = await response.json();
+    return result.data;
   },
 
   async updateTeamMember(id: string, updates: any) {
-    const team = getFromStorage(STORAGE_KEYS.TEAM);
-    const index = team.findIndex((member: any) => member.id === id);
-    if (index === -1) throw new Error('Team member not found');
-    
-  team[index] = { ...(team[index] || {}), ...updates };
-    saveToStorage(STORAGE_KEYS.TEAM, team);
-    return team[index];
+    const response = await fetch(`/api/team/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    if (!response.ok) throw new Error('Failed to update team member');
+    const result = await response.json();
+    return result.data;
   },
 
   async deleteTeamMember(id: string) {
-    const team = getFromStorage(STORAGE_KEYS.TEAM);
-    const filtered = team.filter((member: any) => member.id !== id);
-    saveToStorage(STORAGE_KEYS.TEAM, filtered);
+    const response = await fetch(`/api/team/${id}`, {
+      method: 'DELETE'
+    });
+    if (!response.ok) throw new Error('Failed to delete team member');
+    return true;
   },
 
   // Settings
   async getSettings() {
-    try {
-      const settings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-      return settings ? JSON.parse(settings) : null;
-    } catch (error) {
-      console.error('Error reading settings:', error);
-      return null;
-    }
+    const response = await fetch('/api/settings');
+    if (!response.ok) throw new Error('Failed to fetch settings');
+    const result = await response.json();
+    return result.data;
   },
 
   async updateSettings(settings: any) {
-    try {
-      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-      return settings;
-    } catch (error) {
-      console.error('Error saving settings:', error);
-      throw new Error('Failed to save settings');
-    }
+    const response = await fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(settings)
+    });
+    if (!response.ok) throw new Error('Failed to update settings');
+    const result = await response.json();
+    return result.data;
   }
 };
 

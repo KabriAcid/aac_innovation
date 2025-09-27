@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Edit, Trash2, Search, Briefcase } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -7,7 +8,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
 import { useToast } from '@/context/ToastContext';
 import { adapter } from '../../data/adapter';
-import { generateId, cn } from '@/utils/helpers';
+import { cn } from '@/utils/helpers';
 
 interface Service {
   id: string;
@@ -21,6 +22,7 @@ interface Service {
 
 const ServicesList: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
+  const navigate = useNavigate();
   const [filteredServices, setFilteredServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -68,23 +70,19 @@ const ServicesList: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       if (editingService) {
-        const updatedService = { ...editingService, ...formData };
-        await adapter.updateService(editingService.id, updatedService);
-  showToastSuccess('Service updated successfully');
+        await adapter.updateService(editingService.id, formData);
+        showToastSuccess('Service updated successfully');
       } else {
-        const newService = { ...formData, id: generateId() };
-        await adapter.createService(newService);
-  showToastSuccess('Service created successfully');
+        await adapter.createService(formData);
+        showToastSuccess('Service created successfully');
       }
-      
       await loadServices();
       handleCloseModal();
     } catch (error) {
       console.error('Error saving service:', error);
-  showToastError('Error saving service');
+      showToastError('Error saving service');
     }
   };
 
@@ -168,7 +166,11 @@ const ServicesList: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredServices.length > 0 ? (
           filteredServices.map((service) => (
-            <Card key={service.id} className="p-6 hover:shadow-md transition-shadow">
+            <Card
+              key={service.id}
+              className="p-6 hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => navigate(`/admin/services/${service.id}`)}
+            >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
@@ -185,19 +187,16 @@ const ServicesList: React.FC = () => {
                   <p className="text-sm text-gray-600 mb-3">{service.category}</p>
                 </div>
               </div>
-              
               <p className="text-gray-700 text-sm mb-4 line-clamp-3">{service.description}</p>
-              
               <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
                 <span className="font-medium">{service.price}</span>
                 <span>{service.duration}</span>
               </div>
-              
               <div className="flex space-x-2">
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={() => handleEdit(service)}
+                  onClick={e => { e.stopPropagation(); handleEdit(service); }}
                   className="flex-1"
                 >
                   <Edit className="w-4 h-4 mr-1" />
@@ -206,7 +205,7 @@ const ServicesList: React.FC = () => {
                 <Button
                   variant="danger"
                   size="sm"
-                  onClick={() => handleDelete(service)}
+                  onClick={e => { e.stopPropagation(); handleDelete(service); }}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   <Trash2 className="w-4 h-4" />
