@@ -5,6 +5,8 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { useToast } from '../../../src/context/ToastContext';
+import { Modal } from '@/components/ui/Modal';
+import { Spinner } from '../../components/Spinner';
 import { adapter } from '../../data/adapter';
 import { formatDate, cn } from '@/utils/helpers';
 
@@ -15,27 +17,38 @@ const ContactsDetail: React.FC = () => {
   const [contact, setContact] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailForm, setEmailForm] = useState({
+    to: '',
+    subject: '',
+    message: ''
+  });
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   useEffect(() => {
     const loadContact = async () => {
       if (!id) return;
-      
       try {
         const data = await adapter.getContact(id);
         if (data) {
-          setContact(data);
+          const contactData = data as any;
+          setContact(contactData);
+          setEmailForm({
+            to: contactData.email || '',
+            subject: '',
+            message: ''
+          });
         } else {
           showToastError('Contact not found');
           navigate('/admin/contacts');
         }
       } catch (error) {
         console.error('Error loading contact:', error);
-  showToastError('Error loading contact');
+        showToastError('Error loading contact');
       } finally {
         setLoading(false);
       }
     };
-
     loadContact();
   }, [id, navigate, showToastError, showToastSuccess]);
 
@@ -121,7 +134,7 @@ const ContactsDetail: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Details */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="p-6">
+          <Card className="p-6 box-shadow">
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
@@ -172,7 +185,7 @@ const ContactsDetail: React.FC = () => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 box-shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <MessageSquare className="w-5 h-5 mr-2" />
               Message
@@ -185,7 +198,7 @@ const ContactsDetail: React.FC = () => {
 
         {/* Actions Sidebar */}
         <div className="space-y-6">
-          <Card className="p-6">
+          <Card className="p-6 box-shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
             
             <div className="space-y-4">
@@ -206,25 +219,95 @@ const ContactsDetail: React.FC = () => {
                 />
               </div>
               
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 space-y-2">
                 <Button 
+                  variant="secondary"
                   className="w-full mb-2"
-                  onClick={() => window.open(`mailto:${contact.email}?subject=Re: ${contact.subject}`)}
+                  onClick={() => setShowEmailModal(true)}
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Reply via Email
                 </Button>
-                
                 {contact.phone && (
-                  <Button 
-                    variant="secondary" 
-                    className="w-full"
-                    onClick={() => window.open(`tel:${contact.phone}`)}
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Contact
-                  </Button>
+                  <a href={`tel:${contact.phone}`} className="block">
+                    <Button 
+                      variant="secondary" 
+                      className="w-full"
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call Contact
+                    </Button>
+                  </a>
                 )}
+                {/* Email Modal */}
+                <Modal isOpen={showEmailModal} onClose={() => setShowEmailModal(false)} title="Reply via Email" size="md">
+                  <form
+                    onSubmit={async e => {
+                      e.preventDefault();
+                      setSendingEmail(true);
+                      try {
+                        const res = await fetch('http://localhost:4000/api/email/send', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            to: emailForm.to,
+                            subject: emailForm.subject,
+                            message: emailForm.message
+                          })
+                        });
+                        const result = await res.json();
+                        if (!res.ok || !result.success) throw new Error(result.message || 'Failed to send email');
+                        showToastSuccess('Email sent successfully');
+                        setShowEmailModal(false);
+                      } catch (err: any) {
+                        showToastError(err.message || 'Error sending email');
+                      } finally {
+                        setSendingEmail(false);
+                      }
+                    }}
+                    className="bg-white/70 backdrop-blur rounded-xl p-4 shadow-inner"
+                  >
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">To</label>
+                      <input
+                        type="email"
+                        className="w-full rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-gray-100/70 px-3 py-2 transition-all outline-none text-gray-700 placeholder-gray-400"
+                        value={emailForm.to}
+                        disabled
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-gray-100/70 px-3 py-2 transition-all outline-none text-gray-700 placeholder-gray-400"
+                        value={emailForm.subject}
+                        onChange={e => setEmailForm(f => ({ ...f, subject: e.target.value }))}
+                        placeholder={`Re: ${contact.subject || ''}`}
+                        required
+                      />
+                    </div>
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                      <textarea
+                        className="w-full rounded-lg border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-gray-100/70 px-3 py-2 min-h-[100px] transition-all outline-none text-gray-700 placeholder-gray-400"
+                        value={emailForm.message}
+                        onChange={e => setEmailForm(f => ({ ...f, message: e.target.value }))}
+                        placeholder="Type your message..."
+                        required
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <button type="button" className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" onClick={() => setShowEmailModal(false)} disabled={sendingEmail}>
+                        Cancel
+                      </button>
+                      <button type="submit" className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors flex items-center justify-center min-w-[80px]" disabled={sendingEmail}>
+                        {sendingEmail ? <Spinner className="mr-2" /> : null}
+                        {sendingEmail ? 'Sending...' : 'Send'}
+                      </button>
+                    </div>
+                  </form>
+                </Modal>
               </div>
             </div>
           </Card>

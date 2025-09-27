@@ -65,7 +65,7 @@ const ContactsList: React.FC = () => {
       </div>
 
       {/* Search */}
-      <Card className="p-4">
+  <Card className="p-4 box-shadow">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
@@ -82,7 +82,7 @@ const ContactsList: React.FC = () => {
       <div className="space-y-4">
         {filteredContacts.length > 0 ? (
           filteredContacts.map((contact) => (
-            <Card key={contact.id} className="p-6 hover:shadow-md transition-shadow">
+            <Card key={contact.id} className="p-6 box-shadow hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-3 mb-2">
@@ -118,7 +118,7 @@ const ContactsList: React.FC = () => {
                 
                 <div className="ml-4">
                   <Link to={`/admin/contacts/${contact.id}`}>
-                    <Button variant="outline" size="sm">
+                    <Button variant="secondary" size="sm">
                       <Eye className="w-4 h-4 mr-2" />
                       View
                     </Button>
@@ -128,7 +128,7 @@ const ContactsList: React.FC = () => {
             </Card>
           ))
         ) : (
-          <Card className="p-12 text-center">
+          <Card className="p-12 text-center box-shadow">
             <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No contacts found</h3>
             <p className="text-gray-500">
