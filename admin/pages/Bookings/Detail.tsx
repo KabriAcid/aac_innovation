@@ -8,8 +8,9 @@ import { Select } from '@/components/ui/Select';
 import { useToast } from '@/context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 
-
 import { Modal } from '@/components/ui/Modal';
+import { Spinner } from '../../components/Spinner';
+
 import { formatDate, formatTime, cn } from '@/utils/helpers';
 
 const BookingsDetail: React.FC = () => {
@@ -26,6 +27,7 @@ const BookingsDetail: React.FC = () => {
     subject: '',
     message: ''
   });
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   useEffect(() => {
     const fetchBooking = async () => {
@@ -269,6 +271,7 @@ const BookingsDetail: React.FC = () => {
         <form
           onSubmit={async e => {
             e.preventDefault();
+            setSendingEmail(true);
             try {
               const res = await fetch('http://localhost:4000/api/email/send', {
                 method: 'POST',
@@ -285,6 +288,8 @@ const BookingsDetail: React.FC = () => {
               setShowEmailModal(false);
             } catch (err: any) {
               showToastError(err.message || 'Error sending email');
+            } finally {
+              setSendingEmail(false);
             }
           }}
           className="bg-white/70 backdrop-blur rounded-xl p-4 shadow-inner"
@@ -320,11 +325,12 @@ const BookingsDetail: React.FC = () => {
             />
           </div>
           <div className="flex justify-end gap-2">
-            <button type="button" className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" onClick={() => setShowEmailModal(false)}>
+            <button type="button" className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" onClick={() => setShowEmailModal(false)} disabled={sendingEmail}>
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">
-              Send
+            <button type="submit" className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors flex items-center justify-center min-w-[80px]" disabled={sendingEmail}>
+              {sendingEmail ? <Spinner className="mr-2" /> : null}
+              {sendingEmail ? 'Sending...' : 'Send'}
             </button>
           </div>
         </form>
