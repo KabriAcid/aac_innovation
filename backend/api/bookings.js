@@ -83,9 +83,10 @@ router.put('/:id', async (req, res, next) => {
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ success: false, message: 'No valid fields to update' });
     }
-    // Set changed_by for booking_history trigger (must be a valid team_members.id or NULL)
-    // For now, default to NULL (system) if not provided
-    await pool.query('SET @changed_by = NULL');
+  // Set changed_by for booking_history trigger (must be a valid team_members.id or NULL)
+  // Use provided changed_by or default to 'system'
+  const changedBy = req.body.changed_by || 'system';
+  await pool.query('SET @changed_by = ?', [changedBy]);
     // Build query
     const setClause = Object.keys(updates).map(f => `${f} = ?`).join(', ');
     const values = Object.values(updates);

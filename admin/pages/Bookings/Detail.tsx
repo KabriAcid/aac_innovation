@@ -4,7 +4,9 @@ import { ArrowLeft, Calendar, Clock, User, Mail, Phone, MessageSquare, Edit } fr
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
+
 import { useToast } from '@/context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
 
 
 import { Modal } from '@/components/ui/Modal';
@@ -46,14 +48,16 @@ const BookingsDetail: React.FC = () => {
     fetchBooking();
   }, [id, navigate, showToastError]);
 
+  const { user } = useAuth();
+
   const handleStatusUpdate = async (newStatus: string) => {
-    if (!booking) return;
+    if (!booking || !user) return;
     setUpdating(true);
     try {
       const res = await fetch(`http://localhost:4000/api/bookings/${booking.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ status: newStatus, changed_by: user.id }),
       });
       if (!res.ok) throw new Error('Failed to update booking status');
       const result = await res.json();
@@ -121,12 +125,17 @@ const BookingsDetail: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="secondary" onClick={() => navigate('/admin/bookings')}>
+          <span
+            className="flex items-center text-gray-700 cursor-pointer hover:underline select-none"
+            onClick={() => navigate('/admin/bookings')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/admin/bookings'); }}
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
-          </Button>
+          </span>
         </div>
-        
         <div className="flex items-center space-x-3">
           <span className={cn(
             "px-3 py-1 text-sm font-medium rounded-full border",
