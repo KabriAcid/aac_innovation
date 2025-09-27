@@ -267,6 +267,53 @@ const Settings: React.FC = () => {
           </div>
         </Card>
 
+        {/* Email (SMTP) Settings */}
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Email (SMTP) Settings</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
+              <Input
+                type="text"
+                value={settings.emailSettings.smtpHost}
+                onChange={e => updateSettings('emailSettings.smtpHost', e.target.value)}
+                placeholder="smtp.example.com"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Port</label>
+              <Input
+                type="text"
+                value={settings.emailSettings.smtpPort}
+                onChange={e => updateSettings('emailSettings.smtpPort', e.target.value)}
+                placeholder="587"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">SMTP User</label>
+              <Input
+                type="text"
+                value={settings.emailSettings.smtpUser}
+                onChange={e => updateSettings('emailSettings.smtpUser', e.target.value)}
+                placeholder="user@example.com"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Password</label>
+              <Input
+                type="password"
+                value={settings.emailSettings.smtpPassword}
+                onChange={e => updateSettings('emailSettings.smtpPassword', e.target.value)}
+                placeholder="Password"
+                required
+              />
+            </div>
+          </div>
+        </Card>
+
         {/* SEO Settings */}
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">SEO Settings</h3>
