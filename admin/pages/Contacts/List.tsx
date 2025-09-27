@@ -90,7 +90,7 @@ const ContactsList: React.FC = () => {
                       {contact.name}
                     </h3>
                     <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                      {contact.status || 'new'}
+                      {(contact.status || 'new').charAt(0).toUpperCase() + (contact.status || 'new').slice(1)}
                     </span>
                   </div>
                   

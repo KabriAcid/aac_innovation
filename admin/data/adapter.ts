@@ -178,7 +178,7 @@ export const adapter = {
     const index = bookings.findIndex((booking: any) => booking.id === id);
     if (index === -1) throw new Error('Booking not found');
     
-    bookings[index] = { ...bookings[index], ...updates };
+  bookings[index] = { ...(bookings[index] || {}), ...updates };
     saveToStorage(STORAGE_KEYS.BOOKINGS, bookings);
     return bookings[index];
   },
@@ -191,36 +191,70 @@ export const adapter = {
 
   // Contacts
   async listContacts() {
-    return getFromStorage(STORAGE_KEYS.CONTACTS);
+    try {
+      console.log('[adapter] Fetching contacts...');
+      const response = await fetch('/api/contacts');
+      console.log('[adapter] Response status:', response.status);
+      const text = await response.text();
+      try {
+        const result = JSON.parse(text);
+        console.log('[adapter] Contacts API result:', result);
+        if (!response.ok) throw new Error(result.message || 'Failed to fetch contacts');
+        return result.data;
+      } catch (jsonErr) {
+        console.error('[adapter] Failed to parse contacts API response as JSON:', text);
+        throw new Error('Contacts API did not return valid JSON');
+      }
+    } catch (err) {
+      console.error('[adapter] listContacts error:', err);
+      throw err;
+    }
   },
 
   async getContact(id: string) {
-    const contacts = getFromStorage(STORAGE_KEYS.CONTACTS);
-    return contacts.find((contact: any) => contact.id === id);
-  },
-
-  async createContact(contact: any) {
-    const contacts = getFromStorage(STORAGE_KEYS.CONTACTS);
-    const newContact = { ...contact, id: generateId(), createdAt: new Date().toISOString() };
-    contacts.push(newContact);
-    saveToStorage(STORAGE_KEYS.CONTACTS, contacts);
-    return newContact;
+    try {
+      console.log(`[adapter] Fetching contact ${id}...`);
+      const response = await fetch(`/api/contacts/${id}`);
+      console.log('[adapter] Response status:', response.status);
+      const text = await response.text();
+      try {
+        const result = JSON.parse(text);
+        console.log('[adapter] Contact API result:', result);
+        if (!response.ok) throw new Error(result.message || 'Failed to fetch contact');
+        return result.data;
+      } catch (jsonErr) {
+        console.error('[adapter] Failed to parse contact API response as JSON:', text);
+        throw new Error('Contact API did not return valid JSON');
+      }
+    } catch (err) {
+      console.error('[adapter] getContact error:', err);
+      throw err;
+    }
   },
 
   async updateContact(id: string, updates: any) {
-    const contacts = getFromStorage(STORAGE_KEYS.CONTACTS);
-    const index = contacts.findIndex((contact: any) => contact.id === id);
-    if (index === -1) throw new Error('Contact not found');
-    
-    contacts[index] = { ...contacts[index], ...updates };
-    saveToStorage(STORAGE_KEYS.CONTACTS, contacts);
-    return contacts[index];
-  },
-
-  async deleteContact(id: string) {
-    const contacts = getFromStorage(STORAGE_KEYS.CONTACTS);
-    const filtered = contacts.filter((contact: any) => contact.id !== id);
-    saveToStorage(STORAGE_KEYS.CONTACTS, filtered);
+    try {
+      console.log(`[adapter] Updating contact ${id} with:`, updates);
+      const response = await fetch(`/api/contacts/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      console.log('[adapter] Response status:', response.status);
+      const text = await response.text();
+      try {
+        const result = JSON.parse(text);
+        console.log('[adapter] Update contact API result:', result);
+        if (!response.ok) throw new Error(result.message || 'Failed to update contact');
+        return result;
+      } catch (jsonErr) {
+        console.error('[adapter] Failed to parse update contact API response as JSON:', text);
+        throw new Error('Update contact API did not return valid JSON');
+      }
+    } catch (err) {
+      console.error('[adapter] updateContact error:', err);
+      throw err;
+    }
   },
 
   // Services
@@ -246,7 +280,7 @@ export const adapter = {
     const index = services.findIndex((service: any) => service.id === id);
     if (index === -1) throw new Error('Service not found');
     
-    services[index] = { ...services[index], ...updates };
+  services[index] = { ...(services[index] || {}), ...updates };
     saveToStorage(STORAGE_KEYS.SERVICES, services);
     return services[index];
   },
@@ -280,7 +314,7 @@ export const adapter = {
     const index = team.findIndex((member: any) => member.id === id);
     if (index === -1) throw new Error('Team member not found');
     
-    team[index] = { ...team[index], ...updates };
+  team[index] = { ...(team[index] || {}), ...updates };
     saveToStorage(STORAGE_KEYS.TEAM, team);
     return team[index];
   },

@@ -54,16 +54,14 @@ const ContactsDetail: React.FC = () => {
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!contact) return;
-
     setUpdating(true);
     try {
-      const updatedContact = { ...contact, status: newStatus };
-      await adapter.updateContact(contact.id, updatedContact);
-      setContact(updatedContact);
-  showToastSuccess('Contact status updated successfully');
+      await adapter.updateContact(contact.id, { status: newStatus });
+      setContact({ ...contact, status: newStatus });
+      showToastSuccess('Contact status updated successfully');
     } catch (error) {
       console.error('Error updating contact:', error);
-  showToastError('Error updating contact status');
+      showToastError('Error updating contact status');
     } finally {
       setUpdating(false);
     }
@@ -114,18 +112,23 @@ const ContactsDetail: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="secondary" onClick={() => navigate('/admin/contacts')}>
+          <span
+            className="flex items-center text-gray-700 cursor-pointer select-none hover:underline"
+            onClick={() => navigate('/admin/contacts')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/admin/contacts'); }}
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
-          </Button>
+          </span>
         </div>
-        
         <div className="flex items-center space-x-3">
           <span className={cn(
             "px-3 py-1 text-sm font-medium rounded-full border",
             getStatusColor(contact.status || 'new')
           )}>
-            {contact.status || 'new'}
+            {(contact.status || 'new').charAt(0).toUpperCase() + (contact.status || 'new').slice(1)}
           </span>
         </div>
       </div>
