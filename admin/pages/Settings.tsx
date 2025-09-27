@@ -19,60 +19,32 @@ interface SystemSettings {
     linkedin: string;
     instagram: string;
   };
-  businessHours: {
-    monday: string;
-    tuesday: string;
-    wednesday: string;
-    thursday: string;
-    friday: string;
-    saturday: string;
-    sunday: string;
-  };
   emailSettings: {
     smtpHost: string;
     smtpPort: string;
     smtpUser: string;
     smtpPassword: string;
   };
-  seoSettings: {
-    metaTitle: string;
-    metaDescription: string;
-    keywords: string;
-  };
 }
 
 const Settings: React.FC = () => {
   const [settings, setSettings] = useState<SystemSettings>({
-    companyName: 'AAC Innovation',
-    companyEmail: 'info@aacinnovation.com',
-    companyPhone: '+1 (555) 123-4567',
-    companyAddress: '123 Tech Street, Innovation City, IC 12345',
-    websiteUrl: 'https://aacinnovation.com',
+    companyName: '',
+    companyEmail: '',
+    companyPhone: '',
+    companyAddress: '',
+    websiteUrl: '',
     socialMedia: {
       facebook: '',
       twitter: '',
       linkedin: '',
       instagram: ''
     },
-    businessHours: {
-      monday: '9:00 AM - 6:00 PM',
-      tuesday: '9:00 AM - 6:00 PM',
-      wednesday: '9:00 AM - 6:00 PM',
-      thursday: '9:00 AM - 6:00 PM',
-      friday: '9:00 AM - 6:00 PM',
-      saturday: '10:00 AM - 4:00 PM',
-      sunday: 'Closed'
-    },
     emailSettings: {
       smtpHost: '',
-      smtpPort: '587',
+      smtpPort: '',
       smtpUser: '',
       smtpPassword: ''
-    },
-    seoSettings: {
-      metaTitle: 'AAC Innovation - Driving Africa\'s Tech Future',
-      metaDescription: 'Leading technology services provider in Africa, specializing in cybersecurity, fintech, cloud computing, AI, and IoT solutions.',
-      keywords: 'technology, cybersecurity, fintech, cloud computing, AI, IoT, Africa'
     }
   });
   const [loading, setLoading] = useState(true);
@@ -87,7 +59,7 @@ const Settings: React.FC = () => {
     try {
       const data = await adapter.getSettings();
       if (data) {
-        setSettings({ ...settings, ...data });
+        setSettings(data);
       }
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -148,7 +120,7 @@ const Settings: React.FC = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Company Information */}
-        <Card className="p-6">
+        <Card className="p-6 box-shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -214,7 +186,7 @@ const Settings: React.FC = () => {
         </Card>
 
         {/* Social Media */}
-        <Card className="p-6">
+        <Card className="p-6 box-shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Social Media</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -268,7 +240,7 @@ const Settings: React.FC = () => {
         </Card>
 
         {/* Email (SMTP) Settings */}
-        <Card className="p-6">
+        <Card className="p-6 box-shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Email (SMTP) Settings</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -314,76 +286,9 @@ const Settings: React.FC = () => {
           </div>
         </Card>
 
-        {/* SEO Settings */}
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">SEO Settings</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Meta Title
-              </label>
-              <Input
-                type="text"
-                value={settings.seoSettings.metaTitle}
-                onChange={(e) => updateSettings('seoSettings.metaTitle', e.target.value)}
-                maxLength={60}
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {settings.seoSettings.metaTitle.length}/60 characters
-              </p>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Meta Description
-              </label>
-              <Textarea
-                value={settings.seoSettings.metaDescription}
-                onChange={(e) => updateSettings('seoSettings.metaDescription', e.target.value)}
-                rows={3}
-                maxLength={160}
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {settings.seoSettings.metaDescription.length}/160 characters
-              </p>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Keywords
-              </label>
-              <Input
-                type="text"
-                value={settings.seoSettings.keywords}
-                onChange={(e) => updateSettings('seoSettings.keywords', e.target.value)}
-                placeholder="keyword1, keyword2, keyword3"
-                required
-              />
-            </div>
-          </div>
-        </Card>
+        {/* SEO Settings removed */}
 
-        {/* Business Hours */}
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Hours</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(settings.businessHours).map(([day, hours]) => (
-              <div key={day}>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-                  {day}
-                </label>
-                <Input
-                  type="text"
-                  value={hours}
-                  onChange={(e) => updateSettings(`businessHours.${day}`, e.target.value)}
-                  placeholder="9:00 AM - 6:00 PM or Closed"
-                />
-              </div>
-            ))}
-          </div>
-        </Card>
+
 
         {/* Save Button */}
         <div className="flex justify-end">

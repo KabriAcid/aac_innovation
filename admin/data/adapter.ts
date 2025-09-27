@@ -1,6 +1,3 @@
-
-
-// Adapter interface - all methods use backend API only
 export const adapter = {
   // Bookings
   async listBookings() {
@@ -172,47 +169,22 @@ export const adapter = {
   },
 
   async updateSettings(settings: any) {
+    // Only send the fields the backend expects
+    const payload = {
+      companyName: settings.companyName,
+      companyEmail: settings.companyEmail,
+      companyPhone: settings.companyPhone,
+      companyAddress: settings.companyAddress,
+      websiteUrl: settings.websiteUrl,
+      socialMedia: settings.socialMedia,
+      emailSettings: settings.emailSettings
+    };
     const response = await fetch('/api/settings', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(settings)
+      body: JSON.stringify(payload)
     });
     if (!response.ok) throw new Error('Failed to update settings');
-    const result = await response.json();
-    return result.data;
+    return (await response.json()).success;
   }
 };
-
-/* 
-  BACKEND INTEGRATION EXAMPLES:
-  
-  Replace the localStorage functions above with actual API calls:
-
-  async listBookings() {
-    const response = await fetch('/api/bookings');
-    if (!response.ok) throw new Error('Failed to fetch bookings');
-    return response.json();
-  },
-
-  async createBooking(booking) {
-    const response = await fetch('/api/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(booking)
-    });
-    if (!response.ok) throw new Error('Failed to create booking');
-    return response.json();
-  },
-
-  async updateBooking(id, updates) {
-    const response = await fetch(`/api/bookings/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
-    });
-    if (!response.ok) throw new Error('Failed to update booking');
-    return response.json();
-  },
-
-  // Similar patterns for contacts, services, team, and settings...
-*/
