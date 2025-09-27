@@ -13,6 +13,27 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+// GET booking by ID
+router.get('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await pool.query(
+      `SELECT b.*, s.title AS service_title
+       FROM bookings b
+       LEFT JOIN services s ON b.service_id = s.id
+       WHERE b.id = ?
+       LIMIT 1`,
+      [id]
+    );
+    if (!rows.length) {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+    res.json({ success: true, data: rows[0] });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // POST booking
 router.post('/', async (req, res, next) => {
   try {

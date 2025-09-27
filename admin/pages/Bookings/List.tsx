@@ -5,30 +5,45 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { adapter } from '../../data/adapter';
+
 import { formatDate, formatTime, cn } from '@/utils/helpers';
 
+
+interface Booking {
+  id: string;
+  client_name: string;
+  client_email: string;
+  service_title: string;
+  scheduled_date: string;
+  scheduled_time: string;
+  status: string;
+}
+
 const BookingsList: React.FC = () => {
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
-    const loadBookings = async () => {
+    const fetchBookings = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const data = await adapter.listBookings();
-        setBookings(data);
-        setFilteredBookings(data);
-      } catch (error) {
-        console.error('Error loading bookings:', error);
+        const res = await fetch('http://localhost:4000/api/dashboard/recent-bookings');
+        if (!res.ok) throw new Error('Failed to fetch bookings');
+        const result = await res.json();
+        setBookings(result.data || []);
+        setFilteredBookings(result.data || []);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load bookings');
       } finally {
         setLoading(false);
       }
     };
-
-    loadBookings();
+    fetchBookings();
   }, []);
 
   useEffect(() => {
@@ -36,9 +51,9 @@ const BookingsList: React.FC = () => {
 
     if (searchTerm) {
       filtered = filtered.filter(booking =>
-        booking.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.service.toLowerCase().includes(searchTerm.toLowerCase())
+        booking.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        booking.client_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (booking.service_title || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -75,6 +90,15 @@ const BookingsList: React.FC = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-gray-900">Bookings</h1>
+        <div className="bg-red-100 text-red-700 p-4 rounded-lg">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -85,7 +109,7 @@ const BookingsList: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <Card className="p-4">
+      <Card className="p-4 box-shadow">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -118,12 +142,12 @@ const BookingsList: React.FC = () => {
       <div className="space-y-4">
         {filteredBookings.length > 0 ? (
           filteredBookings.map((booking) => (
-            <Card key={booking.id} className="p-6 hover:shadow-md transition-shadow">
+            <Card key={booking.id} className="p-6 hover:shadow-md box-shadow transition-shadow">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-3 mb-2">
                     <h3 className="text-lg font-semibold text-gray-900 truncate">
-                      {booking.name}
+                      {booking.client_name}
                     </h3>
                     <span className={cn(
                       "px-2 py-1 text-xs font-medium rounded-full",
@@ -132,27 +156,25 @@ const BookingsList: React.FC = () => {
                       {booking.status}
                     </span>
                   </div>
-                  
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
                     <div className="flex items-center">
                       <User className="w-4 h-4 mr-2" />
-                      {booking.email}
+                      {booking.client_email}
                     </div>
                     <div className="flex items-center">
                       <Briefcase className="w-4 h-4 mr-2" />
-                      {booking.service}
+                      {booking.service_title}
                     </div>
                     <div className="flex items-center">
                       <Calendar className="w-4 h-4 mr-2" />
-                      {formatDate(booking.date)}
+                      {formatDate(booking.scheduled_date)}
                     </div>
                     <div className="flex items-center">
                       <Clock className="w-4 h-4 mr-2" />
-                      {formatTime(booking.time)}
+                      {formatTime(booking.scheduled_time)}
                     </div>
                   </div>
                 </div>
-                
                 <div className="ml-4">
                   <Link to={`/admin/bookings/${booking.id}`}>
                     <Button variant="secondary" size="sm">

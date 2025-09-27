@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { useToast } from '@/context/ToastContext';
-import { adapter } from '../../data/adapter';
+
 import { formatDate, formatTime, cn } from '@/utils/helpers';
 
 const BookingsDetail: React.FC = () => {
@@ -15,42 +15,44 @@ const BookingsDetail: React.FC = () => {
   const [booking, setBooking] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadBooking = async () => {
+    const fetchBooking = async () => {
       if (!id) return;
-      
+      setLoading(true);
+      setError(null);
       try {
-        const data = await adapter.getBooking(id);
-        if (data) {
-          setBooking(data);
-        } else {
-          showToastError('Booking not found');
-          navigate('/admin/bookings');
-        }
-      } catch (error) {
-        console.error('Error loading booking:', error);
-  showToastError('Error loading booking');
+        const res = await fetch(`http://localhost:4000/api/bookings/${id}`);
+        if (!res.ok) throw new Error('Booking not found');
+        const result = await res.json();
+        setBooking(result.data);
+      } catch (err: any) {
+        setError(err.message || 'Error loading booking');
+        showToastError(err.message || 'Error loading booking');
+        setTimeout(() => navigate('/admin/bookings'), 2000);
       } finally {
         setLoading(false);
       }
     };
-
-    loadBooking();
-  }, [id, navigate, showToastError, showToastSuccess]);
+    fetchBooking();
+  }, [id, navigate, showToastError]);
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!booking) return;
-
     setUpdating(true);
     try {
-      const updatedBooking = { ...booking, status: newStatus };
-      await adapter.updateBooking(booking.id, updatedBooking);
-      setBooking(updatedBooking);
-  showToastSuccess('Booking status updated successfully');
-    } catch (error) {
-      console.error('Error updating booking:', error);
-  showToastError('Error updating booking status');
+      const res = await fetch(`http://localhost:4000/api/bookings/${booking.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error('Failed to update booking status');
+      const result = await res.json();
+      setBooking({ ...booking, status: newStatus });
+      showToastSuccess('Booking status updated successfully');
+    } catch (err: any) {
+      showToastError(err.message || 'Error updating booking status');
     } finally {
       setUpdating(false);
     }
@@ -86,10 +88,10 @@ const BookingsDetail: React.FC = () => {
     );
   }
 
-  if (!booking) {
+  if (error || !booking) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-xl font-semibold text-gray-900">Booking not found</h2>
+        <h2 className="text-xl font-semibold text-gray-900">{error || 'Booking not found'}</h2>
         <Button className="mt-4" onClick={() => navigate('/admin/bookings')}>
           Back to Bookings
         </Button>
@@ -121,7 +123,7 @@ const BookingsDetail: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Details */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="p-6">
+          <Card className="p-6 box-shadow">
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
@@ -129,7 +131,7 @@ const BookingsDetail: React.FC = () => {
                   <User className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">Client Name</p>
-                    <p className="font-medium text-gray-900">{booking.name}</p>
+                    <p className="font-medium text-gray-900">{booking.client_name}</p>
                   </div>
                 </div>
                 
@@ -137,16 +139,16 @@ const BookingsDetail: React.FC = () => {
                   <Mail className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-medium text-gray-900">{booking.email}</p>
+                    <p className="font-medium text-gray-900">{booking.client_email}</p>
                   </div>
                 </div>
                 
-                {booking.phone && (
+                {booking.client_phone && (
                   <div className="flex items-center space-x-3">
                     <Phone className="w-5 h-5 text-gray-400" />
                     <div>
                       <p className="text-sm text-gray-500">Phone</p>
-                      <p className="font-medium text-gray-900">{booking.phone}</p>
+                      <p className="font-medium text-gray-900">{booking.client_phone}</p>
                     </div>
                   </div>
                 )}
@@ -157,7 +159,7 @@ const BookingsDetail: React.FC = () => {
                   <Calendar className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium text-gray-900">{formatDate(booking.date)}</p>
+                    <p className="font-medium text-gray-900">{formatDate(booking.scheduled_date)}</p>
                   </div>
                 </div>
                 
@@ -165,7 +167,7 @@ const BookingsDetail: React.FC = () => {
                   <Clock className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">Time</p>
-                    <p className="font-medium text-gray-900">{formatTime(booking.time)}</p>
+                    <p className="font-medium text-gray-900">{formatTime(booking.scheduled_time)}</p>
                   </div>
                 </div>
                 
@@ -173,7 +175,7 @@ const BookingsDetail: React.FC = () => {
                   <Edit className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">Service</p>
-                    <p className="font-medium text-gray-900">{booking.service}</p>
+                    <p className="font-medium text-gray-900">{booking.service_title}</p>
                   </div>
                 </div>
               </div>
@@ -181,7 +183,7 @@ const BookingsDetail: React.FC = () => {
           </Card>
 
           {booking.message && (
-            <Card className="p-6">
+            <Card className="p-6 box-shadow">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <MessageSquare className="w-5 h-5 mr-2" />
                 Message
@@ -193,7 +195,7 @@ const BookingsDetail: React.FC = () => {
 
         {/* Actions Sidebar */}
         <div className="space-y-6">
-          <Card className="p-6">
+          <Card className="p-6 box-shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
             
             <div className="space-y-4">
@@ -217,17 +219,17 @@ const BookingsDetail: React.FC = () => {
                 <Button 
                   variant="secondary" 
                   className="w-full mb-2"
-                  onClick={() => window.open(`mailto:${booking.email}`)}
+                  onClick={() => window.open(`mailto:${booking.client_email}`)}
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Send Email
                 </Button>
                 
-                {booking.phone && (
+                {booking.client_phone && (
                   <Button 
                     variant="secondary" 
                     className="w-full"
-                    onClick={() => window.open(`tel:${booking.phone}`)}
+                    onClick={() => window.open(`tel:${booking.client_phone}`)}
                   >
                     <Phone className="w-4 h-4 mr-2" />
                     Call Client
@@ -237,7 +239,7 @@ const BookingsDetail: React.FC = () => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 box-shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Booking Details</h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
@@ -246,7 +248,7 @@ const BookingsDetail: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Created:</span>
-                <span className="text-gray-900">{formatDate(booking.createdAt || booking.date)}</span>
+                <span className="text-gray-900">{formatDate(booking.created_at || booking.scheduled_date)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Status:</span>
