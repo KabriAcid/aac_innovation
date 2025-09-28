@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, Calendar, Clock, User, Search, Filter, Briefcase } from 'lucide-react';
@@ -5,8 +7,8 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-
 import { formatDate, formatTime, cn } from '@/utils/helpers';
+import { adapter } from '../../data/adapter';
 
 
 interface Booking {
@@ -32,11 +34,9 @@ const BookingsList: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('http://localhost:4000/api/dashboard/recent-bookings');
-        if (!res.ok) throw new Error('Failed to fetch bookings');
-        const result = await res.json();
-        setBookings(result.data || []);
-        setFilteredBookings(result.data || []);
+        const data = await adapter.getRecentBookings();
+        setBookings(data || []);
+        setFilteredBookings(data || []);
       } catch (err: any) {
         setError(err.message || 'Failed to load bookings');
       } finally {

@@ -1,8 +1,10 @@
 
+
 import React, { useEffect, useState } from 'react';
 import { Calendar, Users, Briefcase, TrendingUp } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { formatDate } from '@/utils/helpers';
+import { adapter } from '../data/adapter';
 
 interface KpiData {
   total_bookings: number;
@@ -50,23 +52,15 @@ const Dashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const [kpiRes, bookingsRes, contactsRes] = await Promise.all([
-          fetch('http://localhost:4000/api/dashboard/kpis'),
-          fetch('http://localhost:4000/api/dashboard/recent-bookings'),
-          fetch('http://localhost:4000/api/dashboard/recent-contacts'),
+        // Use adapter for all dashboard API calls
+        const [kpis, recentBookings, recentContacts] = await Promise.all([
+          adapter.getDashboardKpis(),
+          adapter.getRecentBookings(),
+          adapter.getRecentContacts(),
         ]);
-
-        if (!kpiRes.ok) throw new Error('Failed to load KPIs');
-        if (!bookingsRes.ok) throw new Error('Failed to load recent bookings');
-        if (!contactsRes.ok) throw new Error('Failed to load recent contacts');
-
-        const kpiData = await kpiRes.json();
-        const bookingsData = await bookingsRes.json();
-        const contactsData = await contactsRes.json();
-
-        setKpis(kpiData.data);
-        setRecentBookings(bookingsData.data);
-        setRecentContacts(contactsData.data);
+        setKpis(kpis);
+        setRecentBookings(recentBookings);
+        setRecentContacts(recentContacts);
       } catch (err: any) {
         setError(err.message || 'Failed to load dashboard data');
       } finally {

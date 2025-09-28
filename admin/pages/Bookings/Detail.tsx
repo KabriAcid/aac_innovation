@@ -35,10 +35,8 @@ const BookingsDetail: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`http://localhost:4000/api/bookings/${id}`);
-        if (!res.ok) throw new Error('Booking not found');
-        const result = await res.json();
-        setBooking(result.data);
+        const data = await require('../../data/adapter').adapter.getBooking(id);
+        setBooking(data);
       } catch (err: any) {
         setError(err.message || 'Error loading booking');
         showToastError(err.message || 'Error loading booking');
@@ -56,13 +54,7 @@ const BookingsDetail: React.FC = () => {
     if (!booking || !user) return;
     setUpdating(true);
     try {
-      const res = await fetch(`http://localhost:4000/api/bookings/${booking.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus, changed_by: user.id }),
-      });
-      if (!res.ok) throw new Error('Failed to update booking status');
-      const result = await res.json();
+      const updated = await require('../../data/adapter').adapter.updateBooking(booking.id, { status: newStatus, changed_by: user.id });
       setBooking({ ...booking, status: newStatus });
       showToastSuccess('Booking status updated successfully');
     } catch (err: any) {

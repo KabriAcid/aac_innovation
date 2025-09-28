@@ -170,6 +170,25 @@ export const adapter = {
     return true;
   },
 
+  // Dashboard
+  async getDashboardKpis() {
+    const response = await fetch('/api/dashboard/kpis', { headers: getAuthHeaders() });
+    if (!response.ok) throw new Error('Failed to load KPIs');
+    const result = await response.json();
+    return result.data;
+  },
+  async getRecentBookings() {
+    const response = await fetch('/api/dashboard/recent-bookings', { headers: getAuthHeaders() });
+    if (!response.ok) throw new Error('Failed to load recent bookings');
+    const result = await response.json();
+    return result.data;
+  },
+  async getRecentContacts() {
+    const response = await fetch('/api/dashboard/recent-contacts', { headers: getAuthHeaders() });
+    if (!response.ok) throw new Error('Failed to load recent contacts');
+    const result = await response.json();
+    return result.data;
+  },
   // Settings
   async getSettings() {
   const response = await fetch('/api/settings', { headers: getAuthHeaders() });
