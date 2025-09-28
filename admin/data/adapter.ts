@@ -1,44 +1,49 @@
+function getAuthHeaders(contentType = 'application/json') {
+  const token = localStorage.getItem('auth_token');
+  const headers: Record<string, string> = {};
+  if (contentType) headers['Content-Type'] = contentType;
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  return headers;
+}
+
 export const adapter = {
   // Bookings
   async listBookings() {
-    const response = await fetch('/api/bookings');
+  const response = await fetch('/api/bookings', { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch bookings');
     const result = await response.json();
     return result.data || [];
   },
-
   async getBooking(id: string) {
-    const response = await fetch(`/api/bookings/${id}`);
+  const response = await fetch(`/api/bookings/${id}`, { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch booking');
     const result = await response.json();
     return result.data;
   },
-
   async createBooking(booking: any) {
     const response = await fetch('/api/bookings', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(booking)
     });
     if (!response.ok) throw new Error('Failed to create booking');
     const result = await response.json();
     return result.data;
   },
-
   async updateBooking(id: string, updates: any) {
     const response = await fetch(`/api/bookings/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(updates)
     });
     if (!response.ok) throw new Error('Failed to update booking');
     const result = await response.json();
     return result.data;
   },
-
   async deleteBooking(id: string) {
     const response = await fetch(`/api/bookings/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+  headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to delete booking');
     return true;
@@ -46,70 +51,83 @@ export const adapter = {
 
   // Contacts
   async listContacts() {
-    const response = await fetch('/api/contacts');
+  const response = await fetch('/api/contacts', { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch contacts');
     const result = await response.json();
     return result.data || [];
   },
-
   async getContact(id: string) {
-    const response = await fetch(`/api/contacts/${id}`);
+  const response = await fetch(`/api/contacts/${id}`, { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch contact');
     const result = await response.json();
     return result.data;
   },
-
+  async createContact(contact: any) {
+    const response = await fetch('/api/contacts', {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(contact)
+    });
+    if (!response.ok) throw new Error('Failed to create contact');
+    const result = await response.json();
+    return result.data;
+  },
   async updateContact(id: string, updates: any) {
     const response = await fetch(`/api/contacts/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(updates)
     });
     if (!response.ok) throw new Error('Failed to update contact');
     const result = await response.json();
     return result.data;
   },
+  async deleteContact(id: string) {
+    const response = await fetch(`/api/contacts/${id}`, {
+      method: 'DELETE',
+  headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to delete contact');
+    return true;
+  },
 
   // Services
   async listServices() {
-    const response = await fetch('/api/services');
+  const response = await fetch('/api/services', { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch services');
     const result = await response.json();
     return result.data || [];
   },
-
   async getService(id: string) {
-    const response = await fetch(`/api/services/${id}`);
+  const response = await fetch(`/api/services/${id}`, { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch service');
     const result = await response.json();
     return result.data;
   },
-
   async createService(service: any) {
     const response = await fetch('/api/services', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(service)
     });
     if (!response.ok) throw new Error('Failed to create service');
     const result = await response.json();
     return result.data;
   },
-
   async updateService(id: string, updates: any) {
     const response = await fetch(`/api/services/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(updates)
     });
     if (!response.ok) throw new Error('Failed to update service');
     const result = await response.json();
     return result.data;
   },
-
   async deleteService(id: string) {
     const response = await fetch(`/api/services/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+  headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to delete service');
     return true;
@@ -117,59 +135,49 @@ export const adapter = {
 
   // Team
   async listTeam() {
-    const response = await fetch('/api/team');
-    if (!response.ok) throw new Error('Failed to fetch team');
+  const response = await fetch('/api/team', { headers: getAuthHeaders() });
     const result = await response.json();
     return result.data || [];
   },
-
   async getTeamMember(id: string) {
-    const response = await fetch(`/api/team/${id}`);
-    if (!response.ok) throw new Error('Failed to fetch team member');
+  const response = await fetch(`/api/team/${id}`, { headers: getAuthHeaders() });
     const result = await response.json();
     return result.data;
   },
-
   async createTeamMember(member: any) {
     const response = await fetch('/api/team', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(member)
     });
-    if (!response.ok) throw new Error('Failed to create team member');
     const result = await response.json();
     return result.data;
   },
-
   async updateTeamMember(id: string, updates: any) {
     const response = await fetch(`/api/team/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(updates)
     });
-    if (!response.ok) throw new Error('Failed to update team member');
     const result = await response.json();
     return result.data;
   },
-
   async deleteTeamMember(id: string) {
     const response = await fetch(`/api/team/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+  headers: getAuthHeaders()
     });
-    if (!response.ok) throw new Error('Failed to delete team member');
     return true;
   },
 
   // Settings
   async getSettings() {
-    const response = await fetch('/api/settings');
+  const response = await fetch('/api/settings', { headers: getAuthHeaders() });
     if (!response.ok) throw new Error('Failed to fetch settings');
     const result = await response.json();
     return result.data;
   },
-
   async updateSettings(settings: any) {
-    // Only send the fields the backend expects
     const payload = {
       companyName: settings.companyName,
       companyEmail: settings.companyEmail,
@@ -181,7 +189,7 @@ export const adapter = {
     };
     const response = await fetch('/api/settings', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(payload)
     });
     if (!response.ok) throw new Error('Failed to update settings');

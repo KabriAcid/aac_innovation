@@ -1,10 +1,12 @@
+
 import express from 'express';
 import pool from '../config/database.js';
+import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
 
 // POST contact form
-router.post('/', async (req, res, next) => {
+router.post('/', authMiddleware, async (req, res, next) => {
   try {
     const data = req.body;
     // Basic validation
@@ -24,7 +26,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // GET all contacts - return raw DB rows
-router.get('/', async (req, res, next) => {
+router.get('/', authMiddleware, async (req, res, next) => {
   try {
     const [rows] = await pool.query('SELECT * FROM contacts ORDER BY created_at DESC LIMIT 100');
     res.json({ success: true, data: rows });
@@ -34,7 +36,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET contact by ID - return raw DB row
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authMiddleware, async (req, res, next) => {
   try {
     const { id } = req.params;
     const [rows] = await pool.query('SELECT * FROM contacts WHERE id = ? LIMIT 1', [id]);
@@ -48,7 +50,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // PUT update contact status by ID
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', authMiddleware, async (req, res, next) => {
   try {
     const { id } = req.params;
     // Accept both frontend and DB status values

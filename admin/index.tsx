@@ -11,6 +11,7 @@ import ServicesList from './pages/Services/List';
 import ServiceDetails from './pages/Services/Details';
 import TeamList from './pages/Team/List';
 import Settings from './pages/Settings';
+import Profile from './pages/Profile';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminRegisterPage from './pages/AdminRegisterPage';
 import { useAuth } from './context/AuthContext';
@@ -47,6 +48,7 @@ const AdminRoutes: React.FC = () => {
           <Route path="services/:id" element={<ServiceDetails />} />
           <Route path="team" element={<TeamList />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       )}
     </Routes>

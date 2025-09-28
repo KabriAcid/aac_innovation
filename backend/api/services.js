@@ -1,12 +1,14 @@
+
 import express from 'express';
 import pool from '../config/database.js';
+import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
 
 
 // List all active services
 // List all active services, return raw DB rows
-router.get('/', async (req, res, next) => {
+router.get('/', authMiddleware, async (req, res, next) => {
   try {
     const [rows] = await pool.query('SELECT * FROM services WHERE is_active = 1');
     res.json({ success: true, data: rows });
@@ -17,7 +19,7 @@ router.get('/', async (req, res, next) => {
 
 // Get a single service by ID
 // Get a single service by ID, return raw DB row
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authMiddleware, async (req, res, next) => {
   try {
     const [rows] = await pool.query('SELECT * FROM services WHERE id = ?', [req.params.id]);
     if (rows.length === 0) return res.status(404).json({ success: false, message: 'Service not found' });
@@ -28,7 +30,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // Create a new service
-router.post('/', async (req, res, next) => {
+router.post('/', authMiddleware, async (req, res, next) => {
   try {
     const { name, description, price, duration, category, active } = req.body;
     const [result] = await pool.query(
@@ -43,7 +45,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // Update a service
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', authMiddleware, async (req, res, next) => {
   try {
     const { name, description, price, duration, category, active } = req.body;
     const [result] = await pool.query(
@@ -59,7 +61,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 // Delete a service
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', authMiddleware, async (req, res, next) => {
   try {
     const [result] = await pool.query('DELETE FROM services WHERE id = ?', [req.params.id]);
     if (result.affectedRows === 0) return res.status(404).json({ success: false, message: 'Service not found' });

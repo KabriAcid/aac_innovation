@@ -10,7 +10,7 @@ import {
   Settings as SettingsIcon,
   Menu,
   X,
-  Bell,
+  User,
   LogOut
 } from 'lucide-react';
 import { cn } from '@/utils/helpers';
@@ -103,16 +103,21 @@ const AdminLayout: React.FC = () => {
       <div className="flex-1 flex flex-col min-h-screen lg:ml-0 lg:pl-0">
         {/* Top bar */}
         <div className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
-          <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center h-16 px-4 sm:px-6 lg:px-8">
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-500"><Bell/></span>
-            </div>
+            <div className="flex-1" />
+            <Link
+              to="/admin/profile"
+              className="ml-auto flex items-center justify-center rounded-full hover:bg-gray-100 p-2 transition-colors"
+              title="Profile"
+            >
+              <User className="w-6 h-6 text-gray-600" />
+            </Link>
           </div>
         </div>
         {/* Page content */}

@@ -1,10 +1,12 @@
+
 import express from 'express';
 import pool from '../config/database.js';
+import authMiddleware from '../middleware/auth.js';
 const router = express.Router();
 
 
 // GET /api/settings
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT setting_key, setting_value FROM system_settings WHERE is_public = 1 OR category IN ('company','social','smtp')"
@@ -54,7 +56,7 @@ router.get('/', async (req, res) => {
 });
 
 // PUT /api/settings
-router.put('/', async (req, res) => {
+router.put('/', authMiddleware, async (req, res) => {
   const {
     companyName,
     companyEmail,

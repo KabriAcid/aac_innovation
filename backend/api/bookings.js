@@ -1,10 +1,12 @@
+
 import express from 'express';
 import pool from '../config/database.js';
+import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
 
 // GET bookings
-router.get('/', async (req, res, next) => {
+router.get('/', authMiddleware, async (req, res, next) => {
   try {
     const [rows] = await pool.query('SELECT * FROM bookings ORDER BY created_at DESC LIMIT 50');
     res.json({ success: true, data: rows });
@@ -14,7 +16,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET booking by ID
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authMiddleware, async (req, res, next) => {
   try {
     const { id } = req.params;
     const [rows] = await pool.query(
@@ -35,7 +37,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // POST booking
-router.post('/', async (req, res, next) => {
+router.post('/', authMiddleware, async (req, res, next) => {
   try {
     const data = req.body;
     // Basic validation
@@ -55,7 +57,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // PUT booking status by ID
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', authMiddleware, async (req, res, next) => {
   try {
     const { id } = req.params;
     // Allowed enum values from schema

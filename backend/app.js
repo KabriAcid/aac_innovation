@@ -9,6 +9,7 @@ import servicesRoute from './api/services.js';
 import contactsRoute from './api/contacts.js';
 import settingsRoute from './api/settings.js';
 import authRoute from './api/auth.js';
+import adminRoute from './api/admin.js';
 import dashboardRoute from './api/dashboard.js';
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use('/api/settings', settingsRoute);
 
 // admin routes
 app.use('/api/auth', authRoute);
+app.use('/api/admin', adminRoute);
 app.use('/api/dashboard', dashboardRoute);
 
 app.use(errorHandler);
