@@ -12,7 +12,10 @@ import authRoute from './api/auth.js';
 import adminRoute from './api/admin.js';
 import dashboardRoute from './api/dashboard.js';
 
-dotenv.config();
+// Dynamically load .env file based on NODE_ENV
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env';
+dotenv.config({ path: envFile });
+
 const app = express();
 
 app.use(cors());
@@ -36,5 +39,5 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
 });
