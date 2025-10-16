@@ -14,6 +14,7 @@ import { teamMembers } from '@/data/team';
 import { TIME_SLOTS } from '@/utils/constants';
 import { useToast } from '@/context/ToastContext';
 import { generateId } from '@/utils/helpers';
+import API_BASE_URL from '@/utils/apiConfig';
 
 const schema: yup.ObjectSchema<BookingFormData> = yup.object({
   firstName: yup.string().required('First name is required'),
@@ -57,7 +58,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const [serviceOptions, setServiceOptions] = useState([{ value: '', label: 'Select a service' }]);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/services')
+    fetch(`${API_BASE_URL}/services`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -106,7 +107,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       // POST to backend Node.js API
       let response, result;
       try {
-        response = await fetch('http://localhost:4000/api/bookings', {
+        response = await fetch(`${API_BASE_URL}/bookings`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

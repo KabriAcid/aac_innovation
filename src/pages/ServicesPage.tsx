@@ -32,6 +32,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { SERVICE_CATEGORIES, PRICING_MODELS } from '@/utils/constants';
+import API_BASE_URL from '@/utils/apiConfig';
 // import { services, getServicesByCategory } from '@/data/services';
 
 const iconMap = {
@@ -68,7 +69,7 @@ export const ServicesPage: React.FC = () => {
   const categories = Array.from(new Set(services.map(s => s.category)));
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/services')
+    fetch(`${API_BASE_URL}/services`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {

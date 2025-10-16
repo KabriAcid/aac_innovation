@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import { ContactFormData } from '@/types';
 import { services } from '@/data/services';
 import { useToast } from '@/context/ToastContext';
+import API_BASE_URL from '@/utils/apiConfig';
 
 const schema: yup.ObjectSchema<ContactFormData> = yup.object({
   firstName: yup.string().required('First name is required'),
@@ -48,7 +49,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
 
   const handleFormSubmit = async (data: ContactFormData) => {
     try {
-      const response = await fetch('http://localhost:4000/api/contacts', {
+      const response = await fetch(`${API_BASE_URL}/contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

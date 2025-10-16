@@ -25,6 +25,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import './HomePage.module.css';
+import API_BASE_URL from '@/utils/apiConfig';
 
 const iconMap = {
   Shield,
@@ -53,7 +54,7 @@ export const HomePage: React.FC = () => {
   ];
 
   React.useEffect(() => {
-    fetch('http://localhost:4000/api/services')
+    fetch(`${API_BASE_URL}/services`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
