@@ -25,7 +25,10 @@
     "baseUrl": ".", 
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    "composite": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

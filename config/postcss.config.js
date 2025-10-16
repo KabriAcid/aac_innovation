@@ -3,6 +3,4 @@ export default {
     '@tailwindcss/postcss': {},
     autoprefixer: {},
   },
-}
-
-// Moved to `config/postcss.config.js` for better organization.
+};

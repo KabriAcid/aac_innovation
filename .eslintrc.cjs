@@ -1,3 +1,6 @@
+// This file is redundant as `eslint.config.js` is the primary configuration file.
+// Please use `eslint.config.js` for all ESLint-related configurations.
+
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },

@@ -1,20 +1,2 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-// import path from 'path'
-// https://vitejs.dev/config/
-export default defineConfig({
-    plugins: [react()],
-    resolve: {
-        alias: {
-            '@': new URL('./src', import.meta.url).pathname,
-        },
-    },
-    server: {
-        port: 3000,
-        host: true,
-    },
-    build: {
-        outDir: 'dist',
-        sourcemap: true,
-    },
-});
+// This file is redundant as `vite.config.ts` is the primary configuration file.
+// Please use `vite.config.ts` for all Vite-related configurations.
