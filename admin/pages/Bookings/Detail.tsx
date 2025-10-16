@@ -12,6 +12,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Spinner } from '../../components/Spinner';
 
 import { formatDate, formatTime, cn } from '@/utils/helpers';
+import API_BASE_URL from '../../config/apiConfig';
 
 const BookingsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -265,7 +266,7 @@ const BookingsDetail: React.FC = () => {
             e.preventDefault();
             setSendingEmail(true);
             try {
-              const res = await fetch('http://localhost:4000/api/email/send', {
+              const res = await fetch(`${API_BASE_URL}/email/send`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

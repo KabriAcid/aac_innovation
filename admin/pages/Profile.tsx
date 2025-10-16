@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useToast } from '../../src/context/ToastContext';
+import API_BASE_URL from '../config/apiConfig';
 
 // Profile fields based on admin_users schema
 interface ProfileData {
@@ -35,7 +36,7 @@ const Profile: React.FC = () => {
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/profile', { credentials: 'include' });
+      const res = await fetch(`${API_BASE_URL}/admin/profile`, { credentials: 'include' });
       const data = await res.json();
       if (data.success) {
         setProfile(prev => ({
@@ -68,7 +69,7 @@ const Profile: React.FC = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await fetch('/api/admin/profile', {
+      const res = await fetch(`${API_BASE_URL}/admin/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -100,7 +101,7 @@ const Profile: React.FC = () => {
     }
     setSaving(true);
     try {
-      const res = await fetch('/api/admin/profile/password', {
+      const res = await fetch(`${API_BASE_URL}/admin/profile/password`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

@@ -3,6 +3,7 @@ import { useToast } from '../../src/context/ToastContext';
 import { motion } from 'framer-motion';
 import Button from '../ui/Input';
 import Input from '../ui/Button';
+import API_BASE_URL from '../config/apiConfig';
 
 const AdminRegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -43,7 +44,7 @@ const AdminRegisterPage: React.FC = () => {
     if (!validateForm()) return;
     setSubmitting(true);
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

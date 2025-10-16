@@ -30,6 +30,6 @@
     "composite": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
+  "include": ["src", "admin"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
