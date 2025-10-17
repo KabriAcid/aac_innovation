@@ -50,7 +50,7 @@ const AdminRegisterPage: React.FC = () => {
     body: JSON.stringify({
         email: formData.email,
         password: formData.password,
-        first_name: formData.first_name,
+        first_name: formData.first_name,  
         last_name: formData.last_name,
         role: formData.role,
     }),
