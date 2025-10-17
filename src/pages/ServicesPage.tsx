@@ -69,7 +69,7 @@ export const ServicesPage: React.FC = () => {
   const categories = Array.from(new Set(services.map(s => s.category)));
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/services`)
+    fetch(`${API_BASE_URL}/services.php`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
