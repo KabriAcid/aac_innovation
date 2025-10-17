@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { NAVIGATION_ITEMS } from '@/utils/constants';
 import { useCompanySettings } from '@/hooks/useCompanySettings';
 import { cn } from '@/utils/helpers';
-import { Spinner } from 'admin/components/Spinner';
+import { Spinner } from '../ui/Spinner';
 
 export const Header: React.FC = () => {
   const { settings: COMPANY_INFO, loading } = useCompanySettings();

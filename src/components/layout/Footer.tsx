@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
 import { COMPANY_INFO, NAVIGATION_ITEMS } from '@/utils/constants';
 import { useCompanySettings } from '@/hooks/useCompanySettings';
-import { Spinner } from 'admin/components/Spinner';
+import { Spinner } from '../ui/Spinner';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
