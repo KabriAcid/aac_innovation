@@ -44,17 +44,17 @@ const AdminRegisterPage: React.FC = () => {
     if (!validateForm()) return;
     setSubmitting(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          role: formData.role,
-        }),
-      });
+      const res = await fetch(`${API_BASE_URL}/auth.php?action=register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        role: formData.role,
+    }),
+});
       const data = await res.json();
       if (data.success) {
         showToastSuccess('Registration successful', 'You can now log in.');
