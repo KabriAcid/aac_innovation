@@ -33,7 +33,7 @@ export function useCompanySettings() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/settings/company')
+    fetch('http://localhost/acc_innovation/backend/api/settings.php')
       .then(res => res.ok ? res.json() : Promise.reject())
       .then(data => {
         if (data.success && data.data) {
