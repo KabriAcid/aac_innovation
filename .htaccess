@@ -5,6 +5,10 @@ RewriteBase /
 RewriteCond %{REQUEST_URI} !^/dist/
 RewriteRule ^(.*)$ /dist/$1 [L]
 
+# Explicitly route API requests
+RewriteCond %{REQUEST_URI} ^/api/(.*)$
+RewriteRule ^api/(.*)$ backend/api/$1 [L]
+
 # Fallback to index.html for non-existing files
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
