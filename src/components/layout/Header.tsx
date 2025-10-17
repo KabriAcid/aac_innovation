@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { NAVIGATION_ITEMS } from '@/utils/constants';
 import { useCompanySettings } from '@/hooks/useCompanySettings';
 import { cn } from '@/utils/helpers';
+import { Spinner } from 'admin/components/Spinner';
 
 export const Header: React.FC = () => {
   const { settings: COMPANY_INFO, loading } = useCompanySettings();
@@ -38,7 +39,7 @@ export const Header: React.FC = () => {
           ? 'bg-white/95 backdrop-blur-sm shadow-md'
           : 'bg-transparent'
       )}>
-        <div className="container-max section-padding py-4 text-center">Loading company info...</div>
+        <div className="container-max section-padding py-4 text-center"><Spinner/></div>
       </header>
     );
   }

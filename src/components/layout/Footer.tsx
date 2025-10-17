@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
 import { COMPANY_INFO, NAVIGATION_ITEMS } from '@/utils/constants';
 import { useCompanySettings } from '@/hooks/useCompanySettings';
+import { Spinner } from 'admin/components/Spinner';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +13,7 @@ export const Footer: React.FC = () => {
     return (
       <footer className="bg-secondary-900 text-white">
         <div className="container-max section-padding text-center py-12">
-          Loading company info...
+          <Spinner />
         </div>
       </footer>
     );
