@@ -27,8 +27,8 @@ export const Button: React.FC<ButtonProps> = ({
   const baseClasses = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
   
   const variantClasses = {
-    primary: 'bg-primary-600 text-white shadow-sm hover:bg-primary-700 hover:shadow-md focus-visible:outline-primary-600',
-    secondary: 'border border-primary-600 bg-transparent text-primary-600 shadow-sm hover:bg-primary-50 hover:shadow-md focus-visible:outline-primary-600',
+    primary: 'bg-primary-900 text-white shadow-sm hover:bg-primary-700 hover:shadow-md focus-visible:outline-primary-600',
+    secondary: 'border border-primary-900 bg-transparent text-primary-600 shadow-sm hover:bg-primary-50 hover:shadow-md focus-visible:outline-primary-600',
     ghost: 'bg-transparent text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900 focus-visible:outline-secondary-600',
     danger: 'bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md focus-visible:outline-red-600',
   };

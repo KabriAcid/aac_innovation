@@ -320,7 +320,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Quick Booking Widget */}
-      <section className="section-padding bg-primary-600">
+      <section className="section-padding bg-primary-900">
         <div className="container-max">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

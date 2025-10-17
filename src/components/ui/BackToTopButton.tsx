@@ -44,7 +44,7 @@ export default function BackToTopButton({
             fixed bottom-8 right-8 z-50 
             inline-flex items-center justify-center 
             w-12 h-12 
-            bg-primary-600 hover:bg-primary-700 
+            bg-primary-900 hover:bg-primary-700 
             text-white 
             rounded-full 
             shadow-lg hover:shadow-xl 

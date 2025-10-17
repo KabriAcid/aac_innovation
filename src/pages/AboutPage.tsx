@@ -147,7 +147,7 @@ export const AboutPage: React.FC = () => {
       </section>
 
       {/* Stats */}
-      <section className="section-padding bg-primary-600 text-white">
+      <section className="section-padding bg-primary-900 text-white">
         <div className="container-max">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -298,7 +298,7 @@ export const AboutPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding bg-primary-600">
+      <section className="section-padding bg-primary-900">
         <div className="container-max">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

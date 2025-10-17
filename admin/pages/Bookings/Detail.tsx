@@ -321,7 +321,7 @@ const BookingsDetail: React.FC = () => {
             <button type="button" className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors" onClick={() => setShowEmailModal(false)} disabled={sendingEmail}>
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors flex items-center justify-center min-w-[80px]" disabled={sendingEmail}>
+            <button type="submit" className="px-4 py-2 rounded-lg bg-primary-900 text-white hover:bg-primary-700 transition-colors flex items-center justify-center min-w-[80px]" disabled={sendingEmail}>
               {sendingEmail ? <Spinner className="mr-2" /> : null}
               {sendingEmail ? 'Sending...' : 'Send'}
             </button>
