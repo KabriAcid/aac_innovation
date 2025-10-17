@@ -8,6 +8,7 @@ RewriteRule ^(.*)$ /dist/$1 [L]
 # Ensure index.html is served by default
 
 DirectoryIndex dist/index.html
+
 <IfModule mod_headers.c>
     Header set Access-Control-Allow-Origin "*"
     Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"

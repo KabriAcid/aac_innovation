@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
           ? 'bg-white/95 backdrop-blur-sm shadow-md'
           : 'bg-transparent'
       )}>
-        <div className="container-max section-padding py-4 text-center"><Spinner/></div>
+        <div className="container-max section-padding py-4 flex justify-center"><Spinner/></div>
       </header>
     );
   }
