@@ -5,9 +5,10 @@ RewriteBase /
 RewriteCond %{REQUEST_URI} !^/dist/
 RewriteRule ^(.*)$ /dist/$1 [L]
 
-# Ensure index.html is served by default
-
-DirectoryIndex dist/index.html
+# Fallback to index.html for non-existing files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /dist/index.html [L]
 
 <IfModule mod_headers.c>
     Header set Access-Control-Allow-Origin "*"
