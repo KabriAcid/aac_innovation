@@ -2,6 +2,10 @@
 
 require_once __DIR__ . '/../config/database.php';
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // GET all active services
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_GET['id'])) {
     try {
