@@ -57,9 +57,9 @@
         <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
             <div class="absolute inset-0 z-0">
                 <div id="hero-carousel" class="relative w-full h-full overflow-hidden">
-                    <div class="carousel-slide selected" style="background-image: url('public/img/hero.jpg');"></div>
-                    <div class="carousel-slide" style="background-image: url('public/img/staff-1-and-2.jpg');"></div>
-                    <div class="carousel-slide" style="background-image: url('public/img/3-staff.jpg');"></div>
+                    <div class="carousel-slide selected" style="background-image: url('/aac_innovation/public/img/hero.jpg');"></div>
+                    <div class="carousel-slide" style="background-image: url('/aac_innovation/public/img/staff-1-and-2.jpg');"></div>
+                    <div class="carousel-slide" style="background-image: url('/aac_innovation/public/img/3-staff.jpg');"></div>
                 </div>
                 <!-- Navigation Buttons -->
                 <button id="prev-slide" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
@@ -97,33 +97,44 @@
         </section>
 
         <script>
-            // Vanilla JavaScript Carousel Logic
-            const slides = document.querySelectorAll('.carousel-slide');
-            const prevButton = document.getElementById('prev-slide');
-            const nextButton = document.getElementById('next-slide');
-            let currentSlide = 0;
+            // Improved Vanilla JS Carousel Logic
+            document.addEventListener('DOMContentLoaded', function() {
+                const slides = document.querySelectorAll('.carousel-slide');
+                const prevButton = document.getElementById('prev-slide');
+                const nextButton = document.getElementById('next-slide');
+                let currentSlide = 0;
 
-            function showSlide(index) {
-                slides.forEach((slide, i) => {
-                    slide.classList.toggle('selected', i === index);
-                });
-            }
+                function showSlide(index) {
+                    slides.forEach((slide, i) => {
+                        if (i === index) {
+                            slide.style.display = 'block';
+                            slide.classList.add('selected');
+                        } else {
+                            slide.style.display = 'none';
+                            slide.classList.remove('selected');
+                        }
+                    });
+                }
 
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
+                function nextSlide() {
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    showSlide(currentSlide);
+                }
+
+                function prevSlide() {
+                    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                    showSlide(currentSlide);
+                }
+
+                nextButton.addEventListener('click', nextSlide);
+                prevButton.addEventListener('click', prevSlide);
+
+                // Auto-slide every 3 seconds
+                setInterval(nextSlide, 3000);
+
+                // Initialize
                 showSlide(currentSlide);
-            }
-
-            function prevSlide() {
-                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                showSlide(currentSlide);
-            }
-
-            nextButton.addEventListener('click', nextSlide);
-            prevButton.addEventListener('click', prevSlide);
-
-            // Auto-slide every 3 seconds
-            setInterval(nextSlide, 3000);
+            });
         </script>
 
         <!-- About Section -->
@@ -262,14 +273,14 @@
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <div class="text-center mt-12">
+                <!-- <div class="text-center mt-12">
                     <a href="public/services.php" class="bg-primary-900 text-white px-6 py-3 rounded-md flex items-center justify-center">
                         <span>View All Services</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                     </a>
-                </div>
+                </div> -->
             </div>
         </section>
         </div>
@@ -334,7 +345,7 @@
                     <p class="text-lg text-secondary-600 max-w-2xl mx-auto">Trusted by businesses across Africa for innovative technology solutions</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="p-4 bg-white shadow rounded h-full flex flex-col">
+                    <div class="card h-full flex flex-col">
                         <div class="flex mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
                                 <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
@@ -358,7 +369,7 @@
                             <p class="text-sm text-secondary-500">FinTech Solutions Ltd</p>
                         </div>
                     </div>
-                    <div class="p-4 bg-white shadow rounded h-full flex flex-col">
+                    <div class="card h-full flex flex-col">
                         <div class="flex mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
                                 <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
@@ -382,7 +393,7 @@
                             <p class="text-sm text-secondary-500">Abuja Manufacturing Co</p>
                         </div>
                     </div>
-                    <div class="p-4 bg-white shadow rounded h-full flex flex-col">
+                    <div class="card h-full flex flex-col">
                         <div class="flex mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
                                 <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
