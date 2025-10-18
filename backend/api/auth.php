@@ -71,12 +71,17 @@ function handleLogin($pdo)
             return;
         }
 
-        // Generate JWT token
-        $token = jwt_encode([
+        // Start session and set user info
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $_SESSION['user'] = array(
             'id' => $user['id'],
             'email' => $user['email'],
-            'role' => $user['role']
-        ], JWT_SECRET);
+            'name' => $user['first_name'] . ' ' . $user['last_name'],
+            'role' => $user['role'],
+            'lastLogin' => $user['last_login']
+        );
 
         // Update last login
         $stmt = $pdo->prepare('UPDATE admin_users SET last_login = NOW() WHERE id = ?');
@@ -86,14 +91,7 @@ function handleLogin($pdo)
         http_response_code(200);
         echo json_encode([
             'success' => true,
-            'token' => $token,
-            'user' => [
-                'id' => $user['id'],
-                'email' => $user['email'],
-                'name' => $user['first_name'] . ' ' . $user['last_name'],
-                'role' => $user['role'],
-                'lastLogin' => $user['last_login'],
-            ]
+            'user' => $_SESSION['user']
         ]);
     } catch (PDOException $e) {
         error_log("Login error: " . $e->getMessage());

@@ -1,7 +1,4 @@
 <?php
-// ============================================
-// CORS HEADERS - MUST BE FIRST
-// ============================================
 
 // Allowed origins
 $allowedOrigins = [
@@ -16,19 +13,20 @@ $allowedOrigins = [
 // Get the request origin
 $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
 
-// CRITICAL: When using credentials, cannot use wildcard (*)
-// Must specify exact origin
-if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
-} elseif ($origin) {
-    // Development only - allow any origin that sends one
-    // REMOVE THIS IN PRODUCTION!
+// Log the origin and request method for debugging
+error_log("CORS Debug: HTTP_ORIGIN = " . ($origin ?: 'No Origin Header'));
+error_log("CORS Debug: REQUEST_METHOD = " . $_SERVER['REQUEST_METHOD']);
+
+// Ensure Access-Control-Allow-Origin is always set
+if ($origin && in_array($origin, $allowedOrigins)) {
     header("Access-Control-Allow-Origin: $origin");
 } else {
-    // Fallback
+    // Fallback to a default origin
     header("Access-Control-Allow-Origin: http://localhost:5173");
+    error_log("CORS Debug: Using fallback origin http://localhost:5173");
 }
 
+// Ensure headers are set for all requests
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, Origin");
 header("Access-Control-Allow-Credentials: true");
