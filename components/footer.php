@@ -30,10 +30,10 @@
             <div>
                 <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Home</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Services</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
+                    <li><a href="/public/homepage.php" class="text-gray-400 hover:text-white transition-colors duration-200">Home</a></li>
+                    <li><a href="/public/about.php" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a></li>
+                    <li><a href="/public/services.php" class="text-gray-400 hover:text-white transition-colors duration-200">Services</a></li>
+                    <li><a href="/public/contact.php" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
                 </ul>
             </div>
 
