@@ -7,7 +7,7 @@
     <title>AAC Innovation</title>
     <!-- tailwind cdn -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -34,16 +34,20 @@
                 <!-- Desktop CTA -->
                 <div class="hidden lg:flex items-center space-x-4">
                     <a href="tel:07076536019" class="flex items-center space-x-2 text-sm text-gray-600 hover:text-primary-600">
-                        <i class="fas fa-phone"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 16.92V19a2 2 0 01-2.18 2A19.72 19.72 0 013 5.18 2 2 0 015 3h2.09a2 2 0 012 1.72c.13 1.05.37 2.07.72 3.06a2 2 0 01-.45 2.11l-.27.27a16 16 0 006.29 6.29l.27-.27a2 2 0 012.11-.45c.99.35 2.01.59 3.06.72A2 2 0 0122 16.92z" />
+                        </svg>
                         <span>0707 653 6019</span>
                     </a>
-                    <a href="public/booking.php" class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700">Book Consultation</a>
+                    <a href="public/booking.php" class="bg-primary-900 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700">Book Consultation</a>
                     <a href="admin/login" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300">Admin</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
                 <button class="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-bars"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                 </button>
             </nav>
         </div>
@@ -58,13 +62,37 @@
                     <div class="carousel-slide" style="background-image: url('public/img/3-staff.jpg');"></div>
                 </div>
                 <!-- Navigation Buttons -->
-                <button id="prev-slide" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">&#9664;</button>
-                <button id="next-slide" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">&#9654;</button>
+                <button id="prev-slide" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button id="next-slide" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
             </div>
-            <div class="relative z-10 container mx-auto text-center text-white">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6">AAC Innovation</h1>
-                <p class="text-xl md:text-2xl mb-8">Empowering Africa's Digital Transformation</p>
-                <a href="public/services.php" class="bg-primary-600 text-white px-6 py-3 rounded-md">Explore Services</a>
+            <div class="relative z-10 container-max section-padding text-center text-white">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+                    <span class="block">AAC Innovation</span>
+                    <span class="block text-2xl md:text-3xl lg:text-4xl font-normal text-primary-200 mt-2">Empowering Africa's Digital Transformation</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-primary-100 mb-8 max-w-3xl mx-auto">Driving technological advancement across Africa with expert solutions.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="public/services.php" class="bg-primary-900 text-white px-6 py-3 rounded-md flex items-center justify-center">
+                        <span>Explore Services</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+                <div class="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
+                    <div class="w-1 h-3 bg-white/50 rounded-full mt-2"></div>
+                </div>
             </div>
         </section>
 
@@ -99,72 +127,284 @@
         </script>
 
         <!-- About Section -->
-        <section class="py-12 bg-white">
-            <div class="container mx-auto">
-                <h2 class="text-3xl font-bold text-center mb-6">Empowering Africa's Digital Transformation</h2>
-                <p class="text-lg text-center text-gray-600 mb-6">
-                    At AAC Innovation, we're committed to driving technological advancement across Africa. Our team of experts delivers cutting-edge solutions that help businesses and individuals embrace the digital future with confidence.
-                </p>
-                <ul class="list-disc list-inside text-gray-600">
-                    <li>Innovative technology solutions tailored for African markets</li>
-                    <li>Expert team with deep industry knowledge</li>
-                    <li>Proven track record of successful implementations</li>
-                    <li>24/7 support and ongoing partnership</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Services Overview -->
-        <section class="py-12 bg-gray-50">
-            <div class="container mx-auto">
-                <h2 class="text-3xl font-bold text-center mb-6">Our Service Categories</h2>
-                <div id="service-categories" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Dynamic content will be loaded here -->
+        <section class="section-padding bg-white">
+            <div class="container-max">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-6">Empowering Africa's Digital Transformation</h2>
+                        <p class="text-lg text-secondary-600 mb-6">At AAC Innovation, we're committed to driving technological advancement across Africa. Our team of experts delivers cutting-edge solutions that help businesses and individuals embrace the digital future with confidence.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4" />
+                                </svg>
+                                <span class="text-secondary-700">Innovative technology solutions tailored for African markets</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4" />
+                                </svg>
+                                <span class="text-secondary-700">Expert team with deep industry knowledge</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4" />
+                                </svg>
+                                <span class="text-secondary-700">Proven track record of successful implementations</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4" />
+                                </svg>
+                                <span class="text-secondary-700">24/7 support and ongoing partnership</span>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <a href="public/about.php" class="bg-primary-900 text-white px-4 py-2 rounded-md flex items-center">
+                                <span>Learn More About Us</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop&crop=center" alt="Team collaboration" class="rounded-lg shadow-lg" />
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Services Overview -->
+        <section class="section-padding bg-secondary-50">
+            <div class="container-max">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">Our Service Categories</h2>
+                    <p class="text-lg text-secondary-600 max-w-2xl mx-auto">Comprehensive technology solutions designed to meet your business needs</p>
+                </div>
+                <?php
+                // --- PHP services array (mirroring services.ts) ---
+                $services = [
+                    ["id" => "penetration-testing", "title" => "Penetration Testing", "description" => "Comprehensive security assessments to identify vulnerabilities in your systems and applications.", "icon" => "Shield", "category" => "cybersecurity"],
+                    ["id" => "security-consulting", "title" => "Security Consulting", "description" => "Expert cybersecurity guidance to strengthen your organization's security posture.", "icon" => "Shield", "category" => "cybersecurity"],
+                    ["id" => "payment-gateway", "title" => "Payment Gateway Integration", "description" => "Seamless integration of secure payment processing solutions for your business.", "icon" => "CreditCard", "category" => "fintech"],
+                    ["id" => "digital-wallet", "title" => "Digital Wallet Solutions", "description" => "Custom digital wallet development for secure financial transactions.", "icon" => "CreditCard", "category" => "fintech"],
+                    ["id" => "cloud-migration", "title" => "Cloud Migration Services", "description" => "Seamless migration of your infrastructure and applications to the cloud.", "icon" => "Cloud", "category" => "cloud"],
+                    ["id" => "enterprise-software", "title" => "Enterprise Software Development", "description" => "Custom enterprise applications tailored to your business needs.", "icon" => "Cloud", "category" => "cloud"],
+                    ["id" => "ai-chatbots", "title" => "AI Chatbots & Virtual Assistants", "description" => "Intelligent conversational AI to enhance customer service and engagement.", "icon" => "Brain", "category" => "ai"],
+                    ["id" => "process-automation", "title" => "Business Process Automation", "description" => "Streamline operations with intelligent automation solutions.", "icon" => "Brain", "category" => "ai"],
+                    ["id" => "iot-solutions", "title" => "IoT Device Management", "description" => "Comprehensive IoT solutions for smart device connectivity and management.", "icon" => "Wifi", "category" => "iot"],
+                    ["id" => "smart-building", "title" => "Smart Building Solutions", "description" => "Intelligent building management systems for energy efficiency and security.", "icon" => "Wifi", "category" => "iot"],
+                    ["id" => "mobile-app-development", "title" => "Mobile App Development", "description" => "Custom mobile applications for iOS and Android platforms with modern technologies.", "icon" => "Smartphone", "category" => "mobile"],
+                    ["id" => "uiux-design", "title" => "UI/UX Design", "description" => "User-centered design solutions for web and mobile applications.", "icon" => "Smartphone", "category" => "mobile"],
+                    ["id" => "web-development", "title" => "Custom Web Development", "description" => "Professional web development services for modern, responsive websites and web applications.", "icon" => "Globe", "category" => "web"],
+                    ["id" => "ecommerce-development", "title" => "E-commerce Development", "description" => "Complete e-commerce solutions with payment integration and inventory management.", "icon" => "ShoppingCart", "category" => "web"],
+                    ["id" => "web-maintenance", "title" => "Website Maintenance & Support", "description" => "Ongoing maintenance, updates, and technical support for websites and web applications.", "icon" => "Wrench", "category" => "web"],
+                    ["id" => "digital-transformation", "title" => "Digital Transformation Consulting", "description" => "Strategic guidance to modernize your business processes and technology stack.", "icon" => "Target", "category" => "strategic"],
+                ];
+                // Group by category, pick first as representative
+                $categoryMap = [];
+                foreach ($services as $svc) {
+                    if (!isset($categoryMap[$svc["category"]])) {
+                        $categoryMap[$svc["category"]] = $svc;
+                    }
+                }
+                $serviceCategories = array_values($categoryMap);
+                // Featured services: first 6
+                $featuredServices = array_slice($services, 0, 6);
+                function lucide_svg($icon, $class = '')
+                {
+                    // Only a few icons needed for HomePage
+                    switch ($icon) {
+                        case 'Shield':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l8 4v5c0 5.25-3.5 10-8 10S4 17.25 4 12V7l8-4z"/></svg>';
+                        case 'CreditCard':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>';
+                        case 'Cloud':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.5 19a4.5 4.5 0 0 0 0-9c-.2 0-.4 0-.6.03A6 6 0 1 0 6 17"/></svg>';
+                        case 'Brain':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/></svg>';
+                        case 'Wifi':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"/></svg>';
+                        case 'Smartphone':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M12 18h.01"/></svg>';
+                        case 'Globe':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>';
+                        case 'ShoppingCart':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
+                        case 'Wrench':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M14.7 6.3a5 5 0 0 1-6.6 6.6l-4.6 4.6a2 2 0 1 0 2.8 2.8l4.6-4.6a5 5 0 0 1 6.6-6.6z"/></svg>';
+                        case 'Target':
+                            return '<svg xmlns="http://www.w3.org/2000/svg" class="' . $class . '" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
+                        default:
+                            return '';
+                    }
+                }
+                ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <?php foreach ($serviceCategories as $cat): ?>
+                        <div class="card h-full flex flex-col items-center">
+                            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                                <?= lucide_svg($cat['icon'], 'h-6 w-6 text-primary-600') ?>
+                            </div>
+                            <div class="card-header text-center">
+                                <div class="card-title"><?= htmlspecialchars(ucfirst($cat['category'])) ?></div>
+                                <div class="card-description"> <?= htmlspecialchars($cat['description']) ?> </div>
+                            </div>
+                            <div class="card-content mt-auto">
+                                <a href="public/services.php#<?= htmlspecialchars($cat['category']) ?>" class="bg-primary-900 text-white px-4 py-2 rounded-md flex items-center justify-center text-sm mt-4">
+                                    <span>Learn More</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="public/services.php" class="bg-primary-900 text-white px-6 py-3 rounded-md flex items-center justify-center">
+                        <span>View All Services</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+        </div>
+        </section>
+
         <!-- Featured Services -->
-        <section class="py-12 bg-white">
-            <div class="container mx-auto">
-                <h2 class="text-3xl font-bold text-center mb-6">Featured Services</h2>
-                <div id="featured-services" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Dynamic content will be loaded here -->
+        <section class="section-padding bg-white">
+            <div class="container-max">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">Featured Services</h2>
+                    <p class="text-lg text-secondary-600 max-w-2xl mx-auto">Popular solutions that are transforming businesses across Africa</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <?php foreach ($featuredServices as $svc): ?>
+                        <div class="card h-full flex flex-col">
+                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center mb-3">
+                                <?= lucide_svg($svc['icon'], 'h-5 w-5 text-primary-600') ?>
+                            </div>
+                            <div class="card-header">
+                                <div class="card-title"> <?= htmlspecialchars($svc['title']) ?> </div>
+                                <div class="card-description"> <?= htmlspecialchars($svc['description']) ?> </div>
+                            </div>
+                            <div class="card-content mt-auto">
+                                <a href="public/services.php?id=<?= htmlspecialchars($svc['id']) ?>" class="bg-primary-900 text-white px-4 py-2 rounded-md flex items-center justify-center text-sm mt-4">
+                                    <span>Learn More</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>
 
         <!-- Quick Booking Widget -->
-        <section class="py-12 bg-primary-900 text-white">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Business?</h2>
-                <p class="text-lg mb-6">Schedule a free consultation with our experts and discover how we can help you achieve your technology goals.</p>
-                <div class="flex justify-center space-x-4">
-                    <a href="public/booking.php" class="bg-white text-primary-900 px-6 py-3 rounded-md">Book Free Consultation</a>
-                    <a href="public/contact.php" class="bg-gray-200 text-primary-900 px-6 py-3 rounded-md">Contact Our Team</a>
+        <section class="section-padding bg-primary-900 text-white">
+            <div class="container-max text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Business?</h2>
+                <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">Schedule a free consultation with our experts and discover how we can help you achieve your technology goals.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="public/booking.php" class="bg-white text-primary-600 px-6 py-3 rounded-md flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2" stroke="currentColor" fill="none" />
+                            <path d="M16 2v4M8 2v4M3 10h18" stroke-width="2" stroke="currentColor" fill="none" />
+                        </svg>
+                        <span>Book Free Consultation</span>
+                    </a>
+                    <a href="public/contact.php" class="bg-gray-200 text-primary-600 px-6 py-3 rounded-md flex items-center justify-center">
+                        <span>Contact Our Team</span>
+                    </a>
                 </div>
             </div>
         </section>
 
         <!-- Testimonials -->
-        <section class="py-12 bg-gray-50">
-            <div class="container mx-auto">
-                <h2 class="text-3xl font-bold text-center mb-6">What Our Clients Say</h2>
+        <section class="section-padding bg-secondary-50">
+            <div class="container-max">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">What Our Clients Say</h2>
+                    <p class="text-lg text-secondary-600 max-w-2xl mx-auto">Trusted by businesses across Africa for innovative technology solutions</p>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="p-4 bg-white shadow rounded">
-                        <p class="text-gray-600 mb-4">"AAC Innovation transformed our payment processing system. The implementation was seamless and the results exceeded our expectations."</p>
-                        <p class="text-gray-900 font-bold">Sarah Johnson</p>
-                        <p class="text-gray-600 text-sm">FinTech Solutions Ltd</p>
+                    <div class="p-4 bg-white shadow rounded h-full flex flex-col">
+                        <div class="flex mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                        </div>
+                        <p class="text-secondary-600 mb-4">"AAC Innovation transformed our payment processing system. The implementation was seamless and the results exceeded our expectations."</p>
+                        <div>
+                            <p class="font-semibold text-secondary-900">Sarah Johnson</p>
+                            <p class="text-sm text-secondary-500">FinTech Solutions Ltd</p>
+                        </div>
                     </div>
-                    <div class="p-4 bg-white shadow rounded">
-                        <p class="text-gray-600 mb-4">"Their IoT solutions helped us optimize our production line and reduce costs by 30%. Excellent technical expertise and support."</p>
-                        <p class="text-gray-900 font-bold">Michael Okafor</p>
-                        <p class="text-gray-600 text-sm">Abuja Manufacturing Co</p>
+                    <div class="p-4 bg-white shadow rounded h-full flex flex-col">
+                        <div class="flex mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                        </div>
+                        <p class="text-secondary-600 mb-4">"Their IoT solutions helped us optimize our production line and reduce costs by 30%. Excellent technical expertise and support."</p>
+                        <div>
+                            <p class="font-semibold text-secondary-900">Michael Okafor</p>
+                            <p class="text-sm text-secondary-500">Abuja Manufacturing Co</p>
+                        </div>
                     </div>
-                    <div class="p-4 bg-white shadow rounded">
-                        <p class="text-gray-600 mb-4">"The cybersecurity audit and implementation by AAC Innovation gave us confidence in our security posture. Highly recommended."</p>
-                        <p class="text-gray-900 font-bold">Amina Hassan</p>
-                        <p class="text-gray-600 text-sm">Digital Bank Africa</p>
+                    <div class="p-4 bg-white shadow rounded h-full flex flex-col">
+                        <div class="flex mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                                <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                            </svg>
+                        </div>
+                        <p class="text-secondary-600 mb-4">"The cybersecurity audit and implementation by AAC Innovation gave us confidence in our security posture. Highly recommended."</p>
+                        <div>
+                            <p class="font-semibold text-secondary-900">Amina Hassan</p>
+                            <p class="text-sm text-secondary-500">Digital Bank Africa</p>
+                        </div>
                     </div>
                 </div>
             </div>
