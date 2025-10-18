@@ -2,7 +2,7 @@
     <div class="container mx-auto py-4 px-4">
         <nav class="flex items-center justify-between">
             <!-- Logo -->
-            <a href="/public/homepage.php" class="flex items-center space-x-3">
+            <a href="/public/index.php" class="flex items-center space-x-3">
                 <img src="/favicon.png" alt="AAC Innovation" class="h-10 w-10">
                 <div>
                     <h1 class="text-xl font-bold text-gray-900">AAC Innovation</h1>
