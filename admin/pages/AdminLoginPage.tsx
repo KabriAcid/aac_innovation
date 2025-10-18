@@ -44,10 +44,18 @@ const AdminLoginPage: React.FC = () => {
     try {
       const response = await fetch(
         `${API_BASE_URL}/auth.php?action=login`,
-        createRequestConfig('POST', {
-          email: formData.email.trim(),
-          password: formData.password,
-        })
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            email: formData.email.trim(),
+            password: formData.password,
+          })
+        }
       );
 
       if (!response.ok) {
