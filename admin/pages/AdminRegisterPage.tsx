@@ -3,7 +3,7 @@ import { useToast } from '../../src/context/ToastContext';
 import { motion } from 'framer-motion';
 import Button from '../ui/Input';
 import Input from '../ui/Button';
-import API_BASE_URL, { createRequestConfig } from '../config/apiConfig';
+import API_BASE_URL, { createRequestConfig } from '../../src/config/apiConfig';
 
 const AdminRegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
