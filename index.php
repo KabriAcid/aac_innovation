@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AAC Innovation</title>
-    <link rel="stylesheet" href="config/tailwind.css">
+    <!-- tailwind cdn -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
@@ -25,9 +26,9 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center space-x-8">
                     <a href="/index.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Home</a>
-                    <a href="/public/about.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">About Us</a>
-                    <a href="/public/services.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Services</a>
-                    <a href="/public/contact.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Contact</a>
+                    <a href="public/about.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">About Us</a>
+                    <a href="public/services.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Services</a>
+                    <a href="public/contact.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Contact</a>
                 </div>
 
                 <!-- Desktop CTA -->
@@ -36,8 +37,8 @@
                         <i class="fas fa-phone"></i>
                         <span>0707 653 6019</span>
                     </a>
-                    <a href="/public/booking.php" class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700">Book Consultation</a>
-                    <a href="/admin/login" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300">Admin</a>
+                    <a href="public/booking.php" class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700">Book Consultation</a>
+                    <a href="admin/login" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300">Admin</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -52,25 +53,64 @@
         <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
             <div class="absolute inset-0 z-0">
                 <div id="hero-carousel" class="relative w-full h-full overflow-hidden">
-                    <div class="carousel-slide" style="background-image: url('public/img/hero.jpg');"></div>
+                    <div class="carousel-slide selected" style="background-image: url('public/img/hero.jpg');"></div>
                     <div class="carousel-slide" style="background-image: url('public/img/staff-1-and-2.jpg');"></div>
                     <div class="carousel-slide" style="background-image: url('public/img/3-staff.jpg');"></div>
                 </div>
+                <!-- Navigation Buttons -->
+                <button id="prev-slide" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">&#9664;</button>
+                <button id="next-slide" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">&#9654;</button>
             </div>
             <div class="relative z-10 container mx-auto text-center text-white">
                 <h1 class="text-4xl md:text-6xl font-bold mb-6">AAC Innovation</h1>
                 <p class="text-xl md:text-2xl mb-8">Empowering Africa's Digital Transformation</p>
-                <a href="/public/services.php" class="bg-primary-600 text-white px-6 py-3 rounded-md">Explore Services</a>
+                <a href="public/services.php" class="bg-primary-600 text-white px-6 py-3 rounded-md">Explore Services</a>
             </div>
         </section>
+
+        <script>
+            // Vanilla JavaScript Carousel Logic
+            const slides = document.querySelectorAll('.carousel-slide');
+            const prevButton = document.getElementById('prev-slide');
+            const nextButton = document.getElementById('next-slide');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('selected', i === index);
+                });
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            nextButton.addEventListener('click', nextSlide);
+            prevButton.addEventListener('click', prevSlide);
+
+            // Auto-slide every 3 seconds
+            setInterval(nextSlide, 3000);
+        </script>
 
         <!-- About Section -->
         <section class="py-12 bg-white">
             <div class="container mx-auto">
                 <h2 class="text-3xl font-bold text-center mb-6">Empowering Africa's Digital Transformation</h2>
                 <p class="text-lg text-center text-gray-600 mb-6">
-                    At AAC Innovation, we're committed to driving technological advancement across Africa.
+                    At AAC Innovation, we're committed to driving technological advancement across Africa. Our team of experts delivers cutting-edge solutions that help businesses and individuals embrace the digital future with confidence.
                 </p>
+                <ul class="list-disc list-inside text-gray-600">
+                    <li>Innovative technology solutions tailored for African markets</li>
+                    <li>Expert team with deep industry knowledge</li>
+                    <li>Proven track record of successful implementations</li>
+                    <li>24/7 support and ongoing partnership</li>
+                </ul>
             </div>
         </section>
 
@@ -93,6 +133,42 @@
                 </div>
             </div>
         </section>
+
+        <!-- Quick Booking Widget -->
+        <section class="py-12 bg-primary-900 text-white">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Business?</h2>
+                <p class="text-lg mb-6">Schedule a free consultation with our experts and discover how we can help you achieve your technology goals.</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="public/booking.php" class="bg-white text-primary-900 px-6 py-3 rounded-md">Book Free Consultation</a>
+                    <a href="public/contact.php" class="bg-gray-200 text-primary-900 px-6 py-3 rounded-md">Contact Our Team</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold text-center mb-6">What Our Clients Say</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="p-4 bg-white shadow rounded">
+                        <p class="text-gray-600 mb-4">"AAC Innovation transformed our payment processing system. The implementation was seamless and the results exceeded our expectations."</p>
+                        <p class="text-gray-900 font-bold">Sarah Johnson</p>
+                        <p class="text-gray-600 text-sm">FinTech Solutions Ltd</p>
+                    </div>
+                    <div class="p-4 bg-white shadow rounded">
+                        <p class="text-gray-600 mb-4">"Their IoT solutions helped us optimize our production line and reduce costs by 30%. Excellent technical expertise and support."</p>
+                        <p class="text-gray-900 font-bold">Michael Okafor</p>
+                        <p class="text-gray-600 text-sm">Abuja Manufacturing Co</p>
+                    </div>
+                    <div class="p-4 bg-white shadow rounded">
+                        <p class="text-gray-600 mb-4">"The cybersecurity audit and implementation by AAC Innovation gave us confidence in our security posture. Highly recommended."</p>
+                        <p class="text-gray-900 font-bold">Amina Hassan</p>
+                        <p class="text-gray-600 text-sm">Digital Bank Africa</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     <footer class="bg-gray-900 text-white">
         <div class="container mx-auto py-12 px-4">
@@ -100,7 +176,7 @@
                 <!-- Company Info -->
                 <div class="lg:col-span-2">
                     <div class="flex items-center space-x-3 mb-4">
-                        <img src="/favicon-black-outline.png" alt="AAC Innovation" class="h-10 w-10">
+                        <img src="public/favicon-black-outline.png" alt="AAC Innovation" class="h-10 w-10">
                         <div>
                             <h3 class="text-xl font-bold">AAC Innovation</h3>
                             <p class="text-sm text-gray-400">Empowering Africa's Digital Transformation</p>
@@ -127,9 +203,9 @@
                     <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
                     <ul class="space-y-2">
                         <li><a href="/index.php" class="text-gray-400 hover:text-white transition-colors duration-200">Home</a></li>
-                        <li><a href="/public/about.php" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a></li>
-                        <li><a href="/public/services.php" class="text-gray-400 hover:text-white transition-colors duration-200">Services</a></li>
-                        <li><a href="/public/contact.php" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
+                        <li><a href="public/about.php" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a></li>
+                        <li><a href="public/services.php" class="text-gray-400 hover:text-white transition-colors duration-200">Services</a></li>
+                        <li><a href="public/contact.php" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
                     </ul>
                 </div>
 
@@ -163,15 +239,6 @@
     </footer>
 
     <script>
-        // Hero Carousel Logic
-        const slides = document.querySelectorAll('.carousel-slide');
-        let currentSlide = 0;
-        setInterval(() => {
-            slides[currentSlide].classList.remove('selected');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('selected');
-        }, 3000);
-
         // Fetch and Render Service Categories
         fetch('/api/services')
             .then(response => response.json())
