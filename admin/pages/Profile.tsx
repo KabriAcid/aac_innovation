@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useToast } from '../../src/context/ToastContext';
-import API_BASE_URL from '../config/apiConfig';
+import API_BASE_URL from '../../src/config/apiConfig';
 
 // Profile fields based on admin_users schema
 interface ProfileData {

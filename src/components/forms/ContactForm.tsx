@@ -11,7 +11,7 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import { ContactFormData } from '@/types';
 import { services } from '@/data/services';
 import { useToast } from '@/context/ToastContext';
-import API_BASE_URL from '@/utils/apiConfig';
+import API_BASE_URL from '@/config/apiConfig';
 
 const schema: yup.ObjectSchema<ContactFormData> = yup.object({
   firstName: yup.string().required('First name is required'),

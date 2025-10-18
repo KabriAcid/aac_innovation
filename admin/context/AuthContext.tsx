@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { AdminUser as User } from '../types/AdminUser';
-import API_BASE_URL from '../config/apiConfig';
+import API_BASE_URL from '../../src/config/apiConfig';
 
 interface AuthState {
   user: User | null;

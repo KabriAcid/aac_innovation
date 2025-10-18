@@ -25,7 +25,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import './HomePage.module.css';
-import API_BASE_URL from '@/utils/apiConfig';
+import API_BASE_URL from '@/config/apiConfig';
 
 const iconMap = {
   Shield,

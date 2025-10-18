@@ -1,31 +1,22 @@
 import React, { useState } from 'react';
 import { useToast } from '@/context/ToastContext';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 import Button from '../ui/Input';
 import Input from '../ui/Button';
+import API_BASE_URL, { createRequestConfig } from '../../src/config/apiConfig';
 
 const AdminLoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false,
   });
-  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { login, isLoading } = useAuth();
   const { error: showToastError, success: showToastSuccess } = useToast();
   const [submitting, setSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-    
-    // Clear error when user starts typing
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -33,60 +24,79 @@ const AdminLoginPage: React.FC = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-    
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Please enter a valid email';
+    if (!formData.password) newErrors.password = 'Password is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
+
+    if (!validateForm()) {
+      showToastError('Validation Error', 'Please fix the errors in the form');
+      return;
+    }
+
     setSubmitting(true);
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      await login(formData.email, formData.password, formData.rememberMe);
-      showToastSuccess('Login successful', 'Welcome back!');
-      window.location.href = '/admin/dashboard';
-    } catch (err) {
-      let errorMsg = 'Invalid email or password';
-      if (err instanceof Error && err.message) {
-        errorMsg = err.message;
-      } else if (typeof err === 'string') {
-        errorMsg = err;
+      const response = await fetch(
+        `${API_BASE_URL}/auth.php?action=login`,
+        createRequestConfig('POST', {
+          email: formData.email.trim(),
+          password: formData.password,
+        })
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({
+          message: `Server error: ${response.status} ${response.statusText}`,
+        }));
+        throw new Error(errorData.message || 'Login failed');
       }
-      setErrors(prev => ({ ...prev, general: errorMsg }));
-      showToastError('Login failed', errorMsg);
-      // Do NOT reset formData here, so values persist
+
+      const data = await response.json();
+
+      if (data.success) {
+        showToastSuccess('Login Successful', 'Welcome back!');
+
+        // Clear form
+        setFormData({
+          email: '',
+          password: '',
+        });
+
+        // Redirect to dashboard
+        setTimeout(() => {
+          window.location.href = '/admin/dashboard';
+        }, 1500);
+      } else {
+        showToastError('Login Failed', data.message || 'Unknown error occurred');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Network error occurred';
+      showToastError('Login Failed', errorMessage);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="card rounded-3xl p-8 box-shadow"
         >
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-spiritual-900 mb-2">Sign In</h1>
             <p className="text-spiritual-600">Welcome back!</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {errors.general && (
               <div className="p-3 bg-error-50 border border-error-200 rounded-xl text-error-600 text-sm">
@@ -94,56 +104,37 @@ const AdminLoginPage: React.FC = () => {
               </div>
             )}
 
-            <div>
-              <Input
-                label="Email ID"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter Email ID"
-                error={errors.email}
-              />
-            </div>
-            <div>
-              <Input
-                label="Password"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                placeholder="Enter Password"
-                showPasswordToggle
-                error={errors.password}
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleInputChange}
-                  className="w-4 h-4 text-primary-600 border-spiritual-300 rounded focus:ring-primary-500"
-                />
-                <span className="text-sm text-spiritual-600">Remember Me</span>
-              </label>
-            </div>
+            <Input
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter Email"
+              error={errors.email}
+              disabled={submitting}
+            />
+
+            <Input
+              label="Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="Enter Password"
+              error={errors.password}
+              disabled={submitting}
+            />
 
             <Button
               type="submit"
               variant="primary"
               size="md"
               className="w-full cursor-pointer"
-              loading={isLoading || submitting}
+              loading={submitting}
+              disabled={submitting}
             >
-              {submitting ? (
-                <span className="flex items-center justify-center gap-2">
-                  Signing In...
-                </span>
-              ) : (
-                'Sign In'
-              )}
+              {submitting ? 'Signing In...' : 'Sign In'}
             </Button>
 
             <div className="text-center mt-4">

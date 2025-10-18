@@ -14,7 +14,7 @@ import { teamMembers } from '@/data/team';
 import { TIME_SLOTS } from '@/utils/constants';
 import { useToast } from '@/context/ToastContext';
 import { generateId } from '@/utils/helpers';
-import API_BASE_URL from '@/utils/apiConfig';
+import API_BASE_URL from '@/config/apiConfig';
 
 const schema: yup.ObjectSchema<BookingFormData> = yup.object({
   firstName: yup.string().required('First name is required'),
