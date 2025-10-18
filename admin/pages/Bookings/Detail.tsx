@@ -12,7 +12,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Spinner } from '../../components/Spinner';
 
 import { formatDate, formatTime, cn } from '@/utils/helpers';
-import API_BASE_URL from '../../src/config/apiConfig';
+import API_BASE_URL from '../../../src/config/apiConfig';
 
 const BookingsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
