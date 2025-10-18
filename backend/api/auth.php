@@ -2,15 +2,7 @@
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/jwt.php';
-
-// Ensure CORS headers are applied globally
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-// Debugging: Log when auth.php is executed
-error_log("auth.php executed for action: " . ($_GET['action'] ?? 'none'));
-
+require_once __DIR__ . '/../config/cors.php';
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
