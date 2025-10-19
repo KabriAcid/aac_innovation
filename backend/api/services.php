@@ -11,6 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_GET['id'])) {
     try {
         $stmt = $pdo->query('SELECT * FROM services WHERE is_active = 1');
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Parse features as JSON arrays if needed
+        foreach ($rows as &$row) {
+            if (isset($row['features']) && is_string($row['features'])) {
+                $decoded = json_decode($row['features'], true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $row['features'] = $decoded;
+                }
+            }
+        }
         header('Content-Type: application/json');
         echo json_encode(['success' => true, 'data' => $rows]);
     } catch (PDOException $e) {
@@ -30,6 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             http_response_code(404);
             echo json_encode(['success' => false, 'message' => 'Service not found']);
             exit;
+        }
+        // Parse features as JSON array if needed
+        if (isset($row['features']) && is_string($row['features'])) {
+            $decoded = json_decode($row['features'], true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $row['features'] = $decoded;
+            }
         }
         header('Content-Type: application/json');
         echo json_encode(['success' => true, 'data' => $row]);

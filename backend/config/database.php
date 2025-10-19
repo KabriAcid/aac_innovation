@@ -2,6 +2,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// African date and timezone
+date_default_timezone_set('Africa/Lagos');
+
 use Dotenv\Dotenv;
 
 // Load environment variables
