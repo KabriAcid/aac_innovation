@@ -17,16 +17,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['action'] === 'send') {
             exit;
         }
 
+        // Fetch SMTP settings from system_settings table
+        $smtpSettings = [
+            'host' => '',
+            'port' => '',
+            'user' => '',
+            'password' => '',
+            'secure' => 'tls'
+        ];
+        $stmt = $pdo->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('smtp_host','smtp_port','smtp_user','smtp_password','smtp_secure')");
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            switch ($row['setting_key']) {
+                case 'smtp_host':
+                    $smtpSettings['host'] = $row['setting_value'];
+                    break;
+                case 'smtp_port':
+                    $smtpSettings['port'] = $row['setting_value'];
+                    break;
+                case 'smtp_user':
+                    $smtpSettings['user'] = $row['setting_value'];
+                    break;
+                case 'smtp_password':
+                    $smtpSettings['password'] = $row['setting_value'];
+                    break;
+                case 'smtp_secure':
+                    $smtpSettings['secure'] = $row['setting_value'];
+                    break;
+            }
+        }
+        if (!$smtpSettings['host'] || !$smtpSettings['port'] || !$smtpSettings['user'] || !$smtpSettings['password']) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'SMTP settings are not configured']);
+            exit;
+        }
+
         $mail = new PHPMailer(true);
         $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
+        $mail->Host = $smtpSettings['host'];
         $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USER;
-        $mail->Password = SMTP_PASS;
-        $mail->SMTPSecure = SMTP_SECURE;
-        $mail->Port = SMTP_PORT;
+        $mail->Username = $smtpSettings['user'];
+        $mail->Password = $smtpSettings['password'];
+        $mail->SMTPSecure = $smtpSettings['secure'];
+        $mail->Port = $smtpSettings['port'];
 
-        $mail->setFrom(SMTP_USER, 'AAC Innovation');
+        $mail->setFrom($smtpSettings['user'], 'AAC Innovation');
         $mail->addAddress($data['to']);
         $mail->Subject = $data['subject'];
         $mail->Body = $data['message'];
@@ -38,6 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['action'] === 'send') {
         echo json_encode(['success' => true, 'message' => 'Email sent successfully']);
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Email could not be sent', 'error' => $mail->ErrorInfo]);
+        echo json_encode(['success' => false, 'message' => 'Email could not be sent', 'error' => isset($mail) ? $mail->ErrorInfo : $e->getMessage()]);
     }
 }

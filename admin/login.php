@@ -12,9 +12,11 @@
 
 <body class="bg-secondary-50 min-h-screen flex items-center justify-center">
     <main class="w-full max-w-lg p-6">
-        <div class="card box-shadow rounded-3xl p-8">
+        <div class="rounded-3xl p-8">
             <div class="text-center mb-8">
-                <h1 class="text-2xl font-bold text-primary-900 mb-2">Admin Sign In</h1>
+                <div class="flex items-center justify-center">
+                    <img src="../public/favicon/favicon.png" alt="" class="w-12 h-12">
+                </div>
                 <p class="text-primary-600">Welcome back, admin!</p>
             </div>
             <form id="admin-login-form" class="space-y-6">
@@ -90,15 +92,51 @@
                 errorForgotEmail.textContent = 'Please enter a valid email';
                 return;
             }
-            // Placeholder for future email sending functionality
-            showToast({
-                type: 'info',
-                title: 'Reset Link',
-                message: 'Password reset link will be sent to your email (feature coming soon).'
-            });
-            setTimeout(() => {
-                forgotModal.style.display = 'none';
-            }, 1800);
+            const submitBtn = document.querySelector('#forgot-password-form button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-60');
+            fetch('../backend/api/email.php?action=send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        to: email,
+                        subject: 'AAC Innovation Password Reset',
+                        message: 'A password reset was requested for your admin account. If this was you, please follow the instructions sent by AAC Innovation.'
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast({
+                            type: 'success',
+                            title: 'Reset Link Sent',
+                            message: 'Password reset link sent to your email.'
+                        });
+                        setTimeout(() => {
+                            forgotModal.style.display = 'none';
+                        }, 1800);
+                    } else {
+                        showToast({
+                            type: 'error',
+                            title: 'Email Error',
+                            message: data.message || 'Failed to send reset link.'
+                        });
+                    }
+                })
+                .catch(() => {
+                    showToast({
+                        type: 'error',
+                        title: 'Email Error',
+                        message: 'Network or server error occurred.'
+                    });
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-60');
+                });
         };
         // Toast system (reuse from public site)
         function showToast({
@@ -200,7 +238,7 @@
                         message: 'Welcome back!'
                     });
                     setTimeout(() => {
-                        window.location.href = '/admin/dashboard.php';
+                        window.location.href = 'dashboard.php';
                     }, 1500);
                 } else {
                     showToast({
