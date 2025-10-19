@@ -41,7 +41,7 @@
                         <span>0707 653 6019</span>
                     </a>
                     <a href="public/booking.php" class="bg-primary-900 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700">Book Consultation</a>
-                    <a href="admin/login" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300">Admin</a>
+                    <a href="admin/login.php" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300">Admin</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -64,7 +64,7 @@
                 <a href="public/services.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Services</a>
                 <a href="public/contact.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Contact</a>
                 <a href="public/booking.php" class="bg-primary-900 text-white px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-700 flex items-center justify-center">Book Consultation</a>
-                <a href="admin/login" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md transition-colors duration-200 hover:bg-gray-300 flex items-center justify-center">Admin</a>
+                <a href="admin/login.php" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md transition-colors duration-200 hover:bg-gray-300 flex items-center justify-center">Admin</a>
             </div>
         </div>
     </header>

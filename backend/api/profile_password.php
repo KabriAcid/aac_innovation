@@ -1,10 +1,7 @@
 <?php
 session_start();
 session_start();
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit;
-}
+
 
 require_once '../config/database.php';
 header('Content-Type: application/json');

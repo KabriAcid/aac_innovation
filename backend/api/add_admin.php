@@ -4,10 +4,7 @@ session_start();
 require_once '../config/database.php';
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit;
-}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
