@@ -10,35 +10,40 @@
     <link rel="stylesheet" href="../style.css">
     <script src="script.js" defer></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Tab logic
-        const tabBtns = document.querySelectorAll('.profile-tab-btn');
-        const tabPanels = document.querySelectorAll('.profile-tab-panel');
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                tabBtns.forEach(b => b.classList.remove('border-blue-600', 'text-blue-600', 'font-semibold'));
-                this.classList.add('border-blue-600', 'text-blue-600', 'font-semibold');
-                tabPanels.forEach(panel => panel.style.display = 'none');
-                document.getElementById(this.dataset.tab).style.display = 'block';
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab logic
+            const tabBtns = document.querySelectorAll('.profile-tab-btn');
+            const tabPanels = document.querySelectorAll('.profile-tab-panel');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabBtns.forEach(b => b.classList.remove('border-blue-600', 'text-blue-600', 'font-semibold'));
+                    this.classList.add('border-blue-600', 'text-blue-600', 'font-semibold');
+                    tabPanels.forEach(panel => panel.style.display = 'none');
+                    document.getElementById(this.dataset.tab).style.display = 'block';
+                });
             });
-        });
-        // Show first tab by default
-        if (tabBtns.length) tabBtns[0].click();
+            // Show first tab by default
+            if (tabBtns.length) tabBtns[0].click();
 
-        // Toast logic (same as before)
-        function showToast({ type = 'info', title = '', message = '', duration = 3500 }) {
-            const container = document.getElementById('toast-container');
-            const stack = document.getElementById('toast-stack');
-            if (!container || !stack) return;
-            container.style.display = 'flex';
-            const icons = {
-                success: '<svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke-width="2"/></svg>',
-                error: '<svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
-                info: '<svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 16v-4m0-4h.01" stroke-width="2"/></svg>'
-            };
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.innerHTML = `
+            // Toast logic (same as before)
+            function showToast({
+                type = 'info',
+                title = '',
+                message = '',
+                duration = 3500
+            }) {
+                const container = document.getElementById('toast-container');
+                const stack = document.getElementById('toast-stack');
+                if (!container || !stack) return;
+                container.style.display = 'flex';
+                const icons = {
+                    success: '<svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke-width="2"/></svg>',
+                    error: '<svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
+                    info: '<svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 16v-4m0-4h.01" stroke-width="2"/></svg>'
+                };
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.innerHTML = `
                 <div class="flex items-start p-4">
                     <div class="toast-icon">${icons[type] || icons.info}</div>
                     <div class="flex-1">
@@ -48,171 +53,243 @@
                     <button class="toast-close" aria-label="Close">&times;</button>
                 </div>
             `;
-            toast.querySelector('.toast-close').onclick = function() {
-                toast.classList.remove('show');
+                toast.querySelector('.toast-close').onclick = function() {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                        if (!stack.children.length) container.style.display = 'none';
+                    }, 200);
+                };
+                setTimeout(() => toast.classList.add('show'), 10);
                 setTimeout(() => {
-                    toast.remove();
-                    if (!stack.children.length) container.style.display = 'none';
-                }, 200);
-            };
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    toast.remove();
-                    if (!stack.children.length) container.style.display = 'none';
-                }, 200);
-            }, duration);
-            stack.appendChild(toast);
-        }
-
-        // Profile tab logic
-        const form = document.getElementById('profileForm');
-        const loadingDiv = document.getElementById('profile-loading');
-        let saving = false;
-        function setLoading(loading) {
-            loadingDiv.style.display = loading ? 'block' : 'none';
-            form.style.display = loading ? 'none' : 'block';
-        }
-        function fillProfile(data) {
-            form.username.value = data.username || '';
-            form.email.value = data.email || '';
-            form.firstName.value = data.firstName || '';
-            form.lastName.value = data.lastName || '';
-            form.role.value = data.role || '';
-        }
-        function loadProfile() {
-            setLoading(true);
-            fetch('../backend/api/profile.php', { credentials: 'include' })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.data) {
-                        fillProfile(data.data);
-                    } else {
-                        showToast({ type: 'error', title: 'Error', message: data.error || 'Failed to load profile' });
-                    }
-                })
-                .catch(() => {
-                    showToast({ type: 'error', title: 'Error', message: 'Failed to load profile' });
-                })
-                .finally(() => setLoading(false));
-        }
-        form.onsubmit = function(e) {
-            e.preventDefault();
-            if (saving) return;
-            saving = true;
-            const btn = form.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            fetch('../backend/api/profile.php', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    email: form.email.value,
-                    firstName: form.firstName.value,
-                    lastName: form.lastName.value
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showToast({ type: 'success', title: 'Profile Saved', message: 'Profile updated successfully.' });
-                } else {
-                    showToast({ type: 'error', title: 'Error', message: data.error || 'Failed to update profile' });
-                }
-            })
-            .catch(() => {
-                showToast({ type: 'error', title: 'Error', message: 'Failed to update profile' });
-            })
-            .finally(() => { saving = false; btn.disabled = false; });
-        };
-        loadProfile();
-
-        // Password tab logic
-        const passwordForm = document.getElementById('passwordForm');
-        passwordForm.onsubmit = function(e) {
-            e.preventDefault();
-            if (saving) return;
-            const newPassword = passwordForm.newPassword.value;
-            const confirmPassword = passwordForm.confirmPassword.value;
-            if (newPassword !== confirmPassword) {
-                showToast({ type: 'error', title: 'Error', message: 'Passwords do not match' });
-                return;
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                        if (!stack.children.length) container.style.display = 'none';
+                    }, 200);
+                }, duration);
+                stack.appendChild(toast);
             }
-            saving = true;
-            const btn = passwordForm.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            fetch('../backend/api/profile_password.php', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    currentPassword: passwordForm.password.value,
-                    newPassword: newPassword
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showToast({ type: 'success', title: 'Password Changed', message: 'Password changed successfully.' });
-                    passwordForm.password.value = '';
-                    passwordForm.newPassword.value = '';
-                    passwordForm.confirmPassword.value = '';
-                } else {
-                    showToast({ type: 'error', title: 'Error', message: data.error || 'Failed to change password' });
-                }
-            })
-            .catch(() => {
-                showToast({ type: 'error', title: 'Error', message: 'Failed to change password' });
-            })
-            .finally(() => { saving = false; btn.disabled = false; });
-        };
 
-        // Add Admin tab logic
-        const addAdminForm = document.getElementById('addAdminForm');
-        if (addAdminForm) {
-            addAdminForm.onsubmit = function(e) {
+            // Profile tab logic
+            const form = document.getElementById('profileForm');
+            const loadingDiv = document.getElementById('profile-loading');
+            let saving = false;
+
+            function setLoading(loading) {
+                loadingDiv.style.display = loading ? 'block' : 'none';
+                form.style.display = loading ? 'none' : 'block';
+            }
+
+            function fillProfile(data) {
+                form.username.value = data.username || '';
+                form.email.value = data.email || '';
+                form.firstName.value = data.firstName || '';
+                form.lastName.value = data.lastName || '';
+                form.role.value = data.role || '';
+            }
+
+            function loadProfile() {
+                setLoading(true);
+                fetch('../backend/api/profile.php', {
+                        credentials: 'include'
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.data) {
+                            fillProfile(data.data);
+                        } else {
+                            showToast({
+                                type: 'error',
+                                title: 'Error',
+                                message: data.error || 'Failed to load profile'
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        showToast({
+                            type: 'error',
+                            title: 'Error',
+                            message: 'Failed to load profile'
+                        });
+                    })
+                    .finally(() => setLoading(false));
+            }
+            form.onsubmit = function(e) {
                 e.preventDefault();
                 if (saving) return;
-                const btn = addAdminForm.querySelector('button[type="submit"]');
+                saving = true;
+                const btn = form.querySelector('button[type="submit"]');
                 btn.disabled = true;
-                const password = addAdminForm.password.value;
-                const confirmPassword = addAdminForm.confirmPassword.value;
-                if (password !== confirmPassword) {
-                    showToast({ type: 'error', title: 'Error', message: 'Passwords do not match' });
-                    btn.disabled = false;
+                fetch('../backend/api/profile.php', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            email: form.email.value,
+                            firstName: form.firstName.value,
+                            lastName: form.lastName.value
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast({
+                                type: 'success',
+                                title: 'Profile Saved',
+                                message: 'Profile updated successfully.'
+                            });
+                        } else {
+                            showToast({
+                                type: 'error',
+                                title: 'Error',
+                                message: data.error || 'Failed to update profile'
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        showToast({
+                            type: 'error',
+                            title: 'Error',
+                            message: 'Failed to update profile'
+                        });
+                    })
+                    .finally(() => {
+                        saving = false;
+                        btn.disabled = false;
+                    });
+            };
+            loadProfile();
+
+            // Password tab logic
+            const passwordForm = document.getElementById('passwordForm');
+            passwordForm.onsubmit = function(e) {
+                e.preventDefault();
+                if (saving) return;
+                const newPassword = passwordForm.newPassword.value;
+                const confirmPassword = passwordForm.confirmPassword.value;
+                if (newPassword !== confirmPassword) {
+                    showToast({
+                        type: 'error',
+                        title: 'Error',
+                        message: 'Passwords do not match'
+                    });
                     return;
                 }
                 saving = true;
-                fetch('../backend/api/add_admin.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        username: addAdminForm.username.value,
-                        email: addAdminForm.email.value,
-                        firstName: addAdminForm.firstName.value,
-                        lastName: addAdminForm.lastName.value,
-                        role: addAdminForm.role.value,
-                        password: password
+                const btn = passwordForm.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                fetch('../backend/api/profile_password.php', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            currentPassword: passwordForm.password.value,
+                            newPassword: newPassword
+                        })
                     })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast({ type: 'success', title: 'Admin Added', message: 'New admin added successfully.' });
-                        addAdminForm.reset();
-                    } else {
-                        showToast({ type: 'error', title: 'Error', message: data.error || 'Failed to add admin' });
-                    }
-                })
-                .catch(() => {
-                    showToast({ type: 'error', title: 'Error', message: 'Failed to add admin' });
-                })
-                .finally(() => { saving = false; btn.disabled = false; });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast({
+                                type: 'success',
+                                title: 'Password Changed',
+                                message: 'Password changed successfully.'
+                            });
+                            passwordForm.password.value = '';
+                            passwordForm.newPassword.value = '';
+                            passwordForm.confirmPassword.value = '';
+                        } else {
+                            showToast({
+                                type: 'error',
+                                title: 'Error',
+                                message: data.error || 'Failed to change password'
+                            });
+                        }
+                    })
+                    .catch(() => {
+                        showToast({
+                            type: 'error',
+                            title: 'Error',
+                            message: 'Failed to change password'
+                        });
+                    })
+                    .finally(() => {
+                        saving = false;
+                        btn.disabled = false;
+                    });
             };
-        }
-    });
+
+            // Add Admin tab logic
+            const addAdminForm = document.getElementById('addAdminForm');
+            if (addAdminForm) {
+                addAdminForm.onsubmit = function(e) {
+                    e.preventDefault();
+                    if (saving) return;
+                    const btn = addAdminForm.querySelector('button[type="submit"]');
+                    btn.disabled = true;
+                    const password = addAdminForm.password.value;
+                    const confirmPassword = addAdminForm.confirmPassword.value;
+                    if (password !== confirmPassword) {
+                        showToast({
+                            type: 'error',
+                            title: 'Error',
+                            message: 'Passwords do not match'
+                        });
+                        btn.disabled = false;
+                        return;
+                    }
+                    saving = true;
+                    fetch('../backend/api/add_admin.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                username: addAdminForm.username.value,
+                                email: addAdminForm.email.value,
+                                firstName: addAdminForm.firstName.value,
+                                lastName: addAdminForm.lastName.value,
+                                role: addAdminForm.role.value,
+                                password: password
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                showToast({
+                                    type: 'success',
+                                    title: 'Admin Added',
+                                    message: 'New admin added successfully.'
+                                });
+                                addAdminForm.reset();
+                            } else {
+                                showToast({
+                                    type: 'error',
+                                    title: 'Error',
+                                    message: data.error || 'Failed to add admin'
+                                });
+                            }
+                        })
+                        .catch(() => {
+                            showToast({
+                                type: 'error',
+                                title: 'Error',
+                                message: 'Failed to add admin'
+                            });
+                        })
+                        .finally(() => {
+                            saving = false;
+                            btn.disabled = false;
+                        });
+                };
+            }
+        });
     </script>
 </head>
 
@@ -234,23 +311,23 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                <input type="text" name="username" class="input w-full" disabled />
+                                <input type="text" name="username" class="input w-full" disabled value="<?= htmlspecialchars($user['username'] ?? '') ?>" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                <input type="email" name="email" class="input w-full" required />
+                                <input type="email" name="email" class="input w-full" required value="<?= htmlspecialchars($user['email'] ?? '') ?>" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                                <input type="text" name="firstName" class="input w-full" required />
+                                <input type="text" name="firstName" class="input w-full" required value="<?= htmlspecialchars($user['first_name'] ?? '') ?>" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                                <input type="text" name="lastName" class="input w-full" required />
+                                <input type="text" name="lastName" class="input w-full" required value="<?= htmlspecialchars($user['last_name'] ?? '') ?>" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                                <input type="text" name="role" class="input w-full" disabled />
+                                <input type="text" name="role" class="input w-full" disabled value="<?= htmlspecialchars($user['role'] ?? '') ?>" />
                             </div>
                         </div>
                         <div class="flex justify-end">
