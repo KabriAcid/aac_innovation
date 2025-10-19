@@ -2,6 +2,11 @@
 // Now include other dependencies
 require_once __DIR__ . '/../config/database.php';
 
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Get the action parameter
 $action = $_GET['action'] ?? '';
 
