@@ -2,8 +2,8 @@
     <div class="container mx-auto py-4 px-4">
         <nav class="flex items-center justify-between">
             <!-- Logo -->
-            <a href="/index.php" class="flex items-center space-x-3">
-                <img src="public/favicon.png" alt="AAC Innovation" class="h-10 w-10">
+            <a href="../index.php" class="flex items-center space-x-3">
+                <img src="../public/favicon/favicon.png" alt="AAC Innovation" class="h-10 w-10">
                 <div>
                     <h1 class="text-xl font-bold text-gray-900">AAC Innovation</h1>
                     <p class="text-xs text-gray-600 hidden sm:block">Empowering Africa's Digital Transformation</p>
@@ -12,10 +12,10 @@
 
             <!-- Desktop Navigation -->
             <div class="hidden lg:flex items-center space-x-8">
-                <a href="/index.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Home</a>
-                <a href="public/about.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">About Us</a>
-                <a href="public/services.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Services</a>
-                <a href="public/contact.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Contact</a>
+                <a href="../index.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Home</a>
+                <a href="../public/about.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">About Us</a>
+                <a href="../public/services.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Services</a>
+                <a href="../public/contact.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Contact</a>
             </div>
 
             <!-- Desktop CTA -->
@@ -26,8 +26,8 @@
                     </svg>
                     <span>0707 653 6019</span>
                 </a>
-                <a href="public/booking.php" class="bg-primary-900 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700">Book Consultation</a>
-                <a href="admin/login" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300">Admin</a>
+                <a href="../public/booking.php" class="bg-primary-900 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700">Book Consultation</a>
+                <a href="../admin/login" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-300">Admin</a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -45,12 +45,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-            <a href="/index.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Home</a>
-            <a href="public/about.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">About Us</a>
-            <a href="public/services.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Services</a>
-            <a href="public/contact.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Contact</a>
-            <a href="public/booking.php" class="bg-primary-900 text-white px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-700 flex items-center justify-center">Book Consultation</a>
-            <a href="admin/login" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md transition-colors duration-200 hover:bg-gray-300 flex items-center justify-center">Admin</a>
+            <a href="../index.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Home</a>
+            <a href="../public/about.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">About Us</a>
+            <a href="../public/services.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Services</a>
+            <a href="../public/contact.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Contact</a>
+            <a href="../public/booking.php" class="bg-primary-900 text-white px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-700 flex items-center justify-center">Book Consultation</a>
+            <a href="../admin/login" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md transition-colors duration-200 hover:bg-gray-300 flex items-center justify-center">Admin</a>
         </div>
     </div>
 </header>

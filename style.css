@@ -11,9 +11,10 @@
     height: 100vh;
     min-height: 400px;
     background-size: cover;
-    background-position: center 30%; /* Push image down like React version */
+    background-position: center 30%;
     transition: opacity 0.5s;
     position: absolute;
+    object-position: 'center 30%'
     top: 0;
     left: 0;
     z-index: 0;

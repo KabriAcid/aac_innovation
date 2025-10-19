@@ -439,7 +439,7 @@
                 <!-- Company Info -->
                 <div class="lg:col-span-2">
                     <div class="flex items-center space-x-3 mb-4">
-                        <img src="public/favicon-black-outline.png" alt="AAC Innovation" class="h-10 w-10">
+                        <img src="public/favicon/favicon-black-outline.png" alt="AAC Innovation" class="h-10 w-10">
                         <div>
                             <h3 class="text-xl font-bold">AAC Innovation</h3>
                             <p class="text-sm text-gray-400">Empowering Africa's Digital Transformation</p>
