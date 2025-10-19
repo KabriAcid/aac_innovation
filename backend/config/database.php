@@ -26,5 +26,8 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    echo '<div style="background:#fee;color:#900;padding:16px;font-size:16px;border:2px solid #900;">';
+    echo '<strong>Database connection failed:</strong> ' . htmlspecialchars($e->getMessage());
+    echo '</div>';
+    exit;
 }

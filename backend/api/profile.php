@@ -9,7 +9,7 @@ $userId = $_SESSION['user']['id'];
 
 $action = $_GET['action'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === '') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($action === '' || $action === 'profile')) {
     // Get profile
     $stmt = $pdo->prepare('SELECT username, email, first_name, last_name, role FROM admin_users WHERE id = ? LIMIT 1');
     $stmt->execute([$userId]);
