@@ -5,7 +5,7 @@ require_once __DIR__ . '/backend/vendor/autoload.php';
 use Dotenv\Dotenv;
 
 // Load environment variables from .env or .env.production
-$dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 // Show loaded env values

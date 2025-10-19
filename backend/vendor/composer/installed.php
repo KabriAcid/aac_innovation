@@ -3,7 +3,7 @@
         'name' => 'aac_innovation/backend',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '8f59549524670b90c1666a62ea4abf767309934e',
+        'reference' => '291438c421cdce9e6771b203857aff6dfd4e3b2e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'aac_innovation/backend' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8f59549524670b90c1666a62ea4abf767309934e',
+            'reference' => '291438c421cdce9e6771b203857aff6dfd4e3b2e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
