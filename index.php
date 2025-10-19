@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AAC Innovation</title>
     <!-- tailwind cdn -->
+    <link rel="shortcut icon" href="public/favicon/favicon.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -15,8 +16,8 @@
         <div class="container mx-auto py-4 px-4">
             <nav class="flex items-center justify-between">
                 <!-- Logo -->
-                <a href="/index.php" class="flex items-center space-x-3">
-                    <img src="public/favicon.png" alt="AAC Innovation" class="h-10 w-10">
+                <a href="index.php" class="flex items-center space-x-3">
+                    <img src="public/favicon/favicon.png" alt="AAC Innovation" class="h-10 w-10">
                     <div>
                         <h1 class="text-xl font-bold text-gray-900">AAC Innovation</h1>
                         <p class="text-xs text-gray-600 hidden sm:block">Empowering Africa's Digital Transformation</p>
