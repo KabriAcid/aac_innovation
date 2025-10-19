@@ -125,7 +125,7 @@ function handleRegister($pdo)
         $password = $data['password'] ?? '';
         $firstName = trim($data['first_name'] ?? '');
         $lastName = trim($data['last_name'] ?? '');
-        $role = $data['role'] ?? 'user';
+        $role = $data['role'] ?? 'admin';
 
         // Validate required fields
         if (empty($email) || empty($password) || empty($firstName) || empty($lastName)) {
