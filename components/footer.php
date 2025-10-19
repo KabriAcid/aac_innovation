@@ -4,7 +4,7 @@
             <!-- Company Info -->
             <div class="lg:col-span-2">
                 <div class="flex items-center space-x-3 mb-4">
-                    <img src="/favicon-black-outline.png" alt="AAC Innovation" class="h-10 w-10">
+                    <img src="public/favicon-black-outline.png" alt="AAC Innovation" class="h-10 w-10">
                     <div>
                         <h3 class="text-xl font-bold">AAC Innovation</h3>
                         <p class="text-sm text-gray-400">Empowering Africa's Digital Transformation</p>
@@ -30,10 +30,10 @@
             <div>
                 <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="/public/homepage.php" class="text-gray-400 hover:text-white transition-colors duration-200">Home</a></li>
-                    <li><a href="/public/about.php" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a></li>
-                    <li><a href="/public/services.php" class="text-gray-400 hover:text-white transition-colors duration-200">Services</a></li>
-                    <li><a href="/public/contact.php" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
+                    <li><a href="/index.php" class="text-gray-400 hover:text-white transition-colors duration-200">Home</a></li>
+                    <li><a href="public/about.php" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a></li>
+                    <li><a href="public/services.php" class="text-gray-400 hover:text-white transition-colors duration-200">Services</a></li>
+                    <li><a href="public/contact.php" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
                 </ul>
             </div>
 

@@ -95,7 +95,7 @@
                 </h1>
                 <p class="text-xl md:text-2xl text-primary-100 mb-8 max-w-3xl mx-auto">Driving technological advancement across Africa with expert solutions.</p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="public/services.php" class="bg-primary-900 text-white px-6 py-3 rounded-md flex items-center justify-center">
+                    <a href="public/services.php" class="inline bg-primary-900 text-white px-6 py-3 rounded-md flex items-center justify-center">
                         <span>Explore Services</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -186,11 +186,8 @@
                             </div>
                         </div>
                         <div class="mt-8">
-                            <a href="public/about.php" class="bg-primary-900 text-white px-4 py-2 rounded-md flex items-center">
+                            <a href="public/about.php" class="inline bg-primary-900 text-white px-4 py-2 rounded-md">
                                 <span>Learn More About Us</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
                             </a>
                         </div>
                     </div>
@@ -545,6 +542,7 @@
             var mobileNav = document.getElementById('mobile-nav');
             var closeMobileNav = document.getElementById('close-mobile-nav');
             var overlay = document.getElementById('mobile-nav-overlay');
+
             function openMobileNav() {
                 mobileNav.style.display = 'flex';
                 overlay.classList.remove('hidden');
@@ -553,6 +551,7 @@
                     overlay.classList.add('opacity-100');
                 }, 10);
             }
+
             function closeMobileNavFn() {
                 mobileNav.classList.add('translate-x-full');
                 overlay.classList.remove('opacity-100');
