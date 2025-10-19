@@ -60,6 +60,12 @@ function check_svg($class = '')
         <section class="section-padding bg-secondary-50">
             <div class="container-max">
                 <div id="services-error" class="text-center text-red-600 py-12 hidden"></div>
+                <div id="services-spinner" class="flex justify-center py-12 hidden">
+                    <svg id="spinner-svg" class="animate-spin h-8 w-8 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                </div>
                 <div id="services-filters" class="flex flex-wrap gap-4 justify-center mb-8"></div>
                 <div id="services-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
@@ -165,20 +171,34 @@ function check_svg($class = '')
             el.classList.remove('hidden');
         }
 
-        // Fetch services on page load (like useEffect)
-        window.addEventListener('DOMContentLoaded', function() {
-            fetch('../backend/api/services.php')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && Array.isArray(data.data)) {
-                        allServices = data.data;
-                        renderFilters(allServices);
-                        renderServices();
-                    } else {
-                        showError('Failed to load services.');
-                    }
-                })
-                .catch(() => showError('Failed to load services.'));
+        // Show/hide spinner
+        function showSpinner(show) {
+            const el = document.getElementById('services-spinner');
+            if (show) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // Fetch services on page load (like useEffect), using async/await
+        window.addEventListener('DOMContentLoaded', async function() {
+            showSpinner(true);
+            try {
+                const res = await fetch('../backend/api/services.php');
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    allServices = data.data;
+                    renderFilters(allServices);
+                    renderServices();
+                } else {
+                    showError('Failed to load services.');
+                }
+            } catch (e) {
+                showError('Failed to load services.');
+            } finally {
+                showSpinner(false);
+            }
         });
     </script>
 </body>
