@@ -26,7 +26,7 @@
 
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center space-x-8">
-                    <a href="/index.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Home</a>
+                    <a href="index.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Home</a>
                     <a href="public/about.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">About Us</a>
                     <a href="public/services.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Services</a>
                     <a href="public/contact.php" class="text-sm font-medium text-gray-700 hover:text-primary-600">Contact</a>
