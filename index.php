@@ -44,12 +44,27 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button class="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
+                <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </nav>
+            <!-- Mobile Navigation & Overlay -->
+            <div id="mobile-nav-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-40 hidden lg:hidden transition-opacity duration-300"></div>
+            <div id="mobile-nav" class="fixed inset-0 z-50 bg-white bg-opacity-95 flex flex-col items-center justify-center space-y-8 text-xl font-semibold text-gray-900 transition-transform duration-300 transform translate-x-full lg:hidden" style="display: none;">
+                <button id="close-mobile-nav" class="absolute top-6 right-6 p-2 rounded-full bg-gray-200 hover:bg-gray-300" aria-label="Close menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <a href="/index.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Home</a>
+                <a href="public/about.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">About Us</a>
+                <a href="public/services.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Services</a>
+                <a href="public/contact.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Contact</a>
+                <a href="public/booking.php" class="bg-primary-900 text-white px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-700 flex items-center justify-center">Book Consultation</a>
+                <a href="admin/login" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md transition-colors duration-200 hover:bg-gray-300 flex items-center justify-center">Admin</a>
+            </div>
         </div>
     </header>
     <main class="min-h-screen">
@@ -521,6 +536,37 @@
                     featuredContainer.appendChild(serviceElement);
                 });
             });
+    </script>
+
+    <script>
+        // Mobile nav toggle logic with overlay
+        document.addEventListener('DOMContentLoaded', function() {
+            var mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            var mobileNav = document.getElementById('mobile-nav');
+            var closeMobileNav = document.getElementById('close-mobile-nav');
+            var overlay = document.getElementById('mobile-nav-overlay');
+            function openMobileNav() {
+                mobileNav.style.display = 'flex';
+                overlay.classList.remove('hidden');
+                setTimeout(function() {
+                    mobileNav.classList.remove('translate-x-full');
+                    overlay.classList.add('opacity-100');
+                }, 10);
+            }
+            function closeMobileNavFn() {
+                mobileNav.classList.add('translate-x-full');
+                overlay.classList.remove('opacity-100');
+                setTimeout(function() {
+                    mobileNav.style.display = 'none';
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+            if (mobileMenuBtn && mobileNav && closeMobileNav && overlay) {
+                mobileMenuBtn.addEventListener('click', openMobileNav);
+                closeMobileNav.addEventListener('click', closeMobileNavFn);
+                overlay.addEventListener('click', closeMobileNavFn);
+            }
+        });
     </script>
 
 </body>
