@@ -1,16 +1,6 @@
 <?php
-
-/**
- * Authentication API Endpoint
- * File: backend/api/auth.php
- */
-
-// IMPORTANT: Include CORS first, before any other output
-require_once __DIR__ . '/../config/cors.php';
-
 // Now include other dependencies
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../config/jwt.php';
 
 // Get the action parameter
 $action = $_GET['action'] ?? '';

@@ -1,4 +1,7 @@
+
 <?php
+// Set timezone to Africa/Lagos
+date_default_timezone_set('Africa/Lagos');
 
 // Allowed origins
 $allowedOrigins = [

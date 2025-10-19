@@ -1,13 +1,15 @@
 <?php
-require_once '../config/database.php';
 session_start();
-header('Content-Type: application/json');
-
+session_start();
 if (!isset($_SESSION['user'])) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Not authenticated']);
+    header("Location: login.php");
     exit;
 }
+
+require_once '../config/database.php';
+header('Content-Type: application/json');
+
+
 
 $userId = $_SESSION['user']['id'];
 
