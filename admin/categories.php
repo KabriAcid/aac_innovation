@@ -15,6 +15,48 @@
             const list = document.getElementById('categories-list');
             const addBtn = document.getElementById('addCategoryBtn');
 
+            // Toast system
+            function showToast({ type = 'info', title = '', message = '', duration = 3500 }) {
+                const container = document.getElementById('toast-container');
+                const stack = document.getElementById('toast-stack');
+                if (!container || !stack) return;
+                container.style.display = 'flex';
+                const icons = {
+                    success: '<svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke-width="2"/></svg>',
+                    error: '<svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
+                    warning: '<svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
+                    info: '<svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 16v-4m0-4h.01" stroke-width="2"/></svg>'
+                };
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.innerHTML = `
+                    <div class="flex items-start p-4">
+                        <div class="toast-icon">${icons[type] || icons.info}</div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">${title}</p>
+                            ${message ? `<p class="mt-1 text-sm opacity-90">${message}</p>` : ''}
+                        </div>
+                        <button class="toast-close" aria-label="Close">&times;</button>
+                    </div>
+                `;
+                toast.querySelector('.toast-close').onclick = function() {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                        if (!stack.children.length) container.style.display = 'none';
+                    }, 200);
+                };
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                        if (!stack.children.length) container.style.display = 'none';
+                    }, 200);
+                }, duration);
+                stack.appendChild(toast);
+            }
+
             function fetchCategories() {
                 fetch('../backend/api/category.php')
                     .then(res => res.json())
@@ -61,8 +103,12 @@
                                 })
                                 .then(res => res.json())
                                 .then(data => {
-                                    if (data.success) fetchCategories();
-                                    else alert('Failed to delete category');
+                                    if (data.success) {
+                                        showToast({ type: 'success', title: 'Success', message: 'Category deleted successfully.' });
+                                        fetchCategories();
+                                    } else {
+                                        showToast({ type: 'error', title: 'Error', message: 'Failed to delete category.' });
+                                    }
                                 });
                         }
                     });
@@ -104,7 +150,7 @@
                             </div>
                             <div class='flex space-x-3 pt-4'>
                                 <button type='submit' class='btn btn-primary flex-1'>${mode === 'edit' ? 'Update Category' : 'Save Category'}</button>
-                                <button type='button' class='btn btn-secondary flex-1' onclick='document.getElementById("category-modal").remove()'>Cancel</button>
+                                <button type='button' class='btn btn-secondary-500 flex-1' onclick='document.getElementById("category-modal").remove()'>Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -128,9 +174,10 @@
                             .then(data => {
                                 if (data.success) {
                                     document.getElementById('category-modal').remove();
+                                    showToast({ type: 'success', title: 'Success', message: 'Category updated successfully.' });
                                     fetchCategories();
                                 } else {
-                                    alert('Failed to update category');
+                                    showToast({ type: 'error', title: 'Error', message: 'Failed to update category.' });
                                 }
                             });
                     } else {
@@ -145,9 +192,10 @@
                             .then(data => {
                                 if (data.success) {
                                     document.getElementById('category-modal').remove();
+                                    showToast({ type: 'success', title: 'Success', message: 'Category added successfully.' });
                                     fetchCategories();
                                 } else {
-                                    alert('Failed to save category');
+                                    showToast({ type: 'error', title: 'Error', message: 'Failed to save category.' });
                                 }
                             });
                     }
@@ -171,9 +219,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>Add Category</button>
                 </div>
-                <div id="categories-list" class="space-y-4"></div>
+                <div id="categories-list" class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-4"></div>
             </div>
         </main>
+        <!-- Toast Container -->
+        <div id="toast-container" class="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:items-start sm:justify-end sm:p-6" style="display:none;">
+            <div id="toast-stack" class="flex w-full flex-col items-center space-y-4 sm:items-end"></div>
+        </div>
+        <!-- End Toast Container -->
         <?php include 'components/footer.php'; ?>
     </div>
 </body>

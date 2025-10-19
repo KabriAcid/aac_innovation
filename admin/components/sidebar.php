@@ -1,5 +1,3 @@
-<!-- Sidebar Component for Admin -->
-<!-- Sidebar Overlay for mobile -->
 <div id="sidebarOverlay" class="fixed inset-0 z-40 bg-black bg-opacity-30 backdrop-blur-sm hidden lg:hidden"></div>
 <!-- Sidebar -->
 <aside id="adminSidebar" class="z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out min-h-screen flex-shrink-0 flex flex-col fixed inset-y-0 left-0 lg:static lg:translate-x-0 lg:block sidebar">
