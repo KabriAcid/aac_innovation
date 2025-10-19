@@ -55,25 +55,198 @@
                     return;
                 }
                 list.innerHTML = servicesArr.map(s => {
+                    const name = s.name || s.title || '';
+                    const active = typeof s.is_active !== 'undefined' ? s.is_active : (typeof s.active !== 'undefined' ? s.active : false);
+                    const category = s.category || '';
+                    const description = s.description || '';
+                    const price = s.price || s.pricing_starting_price || '';
+                    const duration = s.duration || '';
                     return `
-                        <div class='card p-6 hover:shadow-md transition-shadow cursor-pointer' onclick='window.location.href="services_detail.php?id=${s.id}"'>
-                            <div class='flex items-start justify-between mb-4'>
-                                <div class='flex-1'>
-                                    <div class='flex items-center space-x-2 mb-2'>
-                                        <h3 class='text-lg font-semibold text-gray-900'>${s.name}</h3>
-                                        <span class='px-2 py-1 text-xs font-medium rounded-full ${s.is_active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}'>${s.is_active ? 'Active' : 'Inactive'}</span>
-                                    </div>
-                                    <p class='text-sm text-gray-600 mb-3'>${s.category}</p>
-                                </div>
+                        <div class='card p-6 hover:shadow-md transition-shadow cursor-pointer group relative'>
+                            <div class='absolute top-4 right-4 z-10'>
+                                <button class='edit-service-btn' data-id='${s.id}' title='Edit Service'>
+                                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-pencil-icon lucide-pencil w-5 h-5 text-gray-500 hover:text-blue-600'><path d='M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z'/><path d='m15 5 4 4'/></svg>
+                                </button>
                             </div>
-                            <p class='text-gray-700 text-sm mb-4 line-clamp-3'>${s.description}</p>
-                            <div class='flex items-center justify-between text-sm text-gray-600 mb-4'>
-                                <span class='font-medium'>${s.price}</span>
-                                <span>${s.duration}</span>
+                            <div onclick='window.location.href="services_detail.php?id=${s.id}"'>
+                                <div class='flex items-start justify-between mb-4'>
+                                    <div class='flex-1'>
+                                        <div class='flex items-center space-x-2 mb-2'>
+                                            <h3 class='text-lg font-semibold text-gray-900'>${name}</h3>
+                                            <span class='px-2 py-1 text-xs font-medium rounded-full ${active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}'>${active ? 'Active' : 'Inactive'}</span>
+                                        </div>
+                                        <p class='text-sm text-gray-600 mb-3'>${category}</p>
+                                    </div>
+                                </div>
+                                <p class='text-gray-700 text-sm mb-4 line-clamp-3'>${description}</p>
+                                <div class='flex items-center justify-between text-sm text-gray-600 mb-4'>
+                                    <span class='font-medium'>${price}</span>
+                                    <span>${duration}</span>
+                                </div>
                             </div>
                         </div>
                     `;
                 }).join('');
+                // Attach edit button listeners
+                document.querySelectorAll('.edit-service-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.getAttribute('data-id');
+                        openServiceModal('edit', id);
+                    });
+                });
+            }
+            // Modal logic
+            let modalMode = 'add';
+            let editingServiceId = null;
+            const addServiceBtn = document.getElementById('addServiceBtn');
+            addServiceBtn.addEventListener('click', function() {
+                openServiceModal('add');
+            });
+
+            function openServiceModal(mode, id = null) {
+                modalMode = mode;
+                editingServiceId = id;
+                let service = {
+                    name: '',
+                    description: '',
+                    price: '',
+                    duration: '',
+                    category: '',
+                    active: true
+                };
+                if (mode === 'edit' && id) {
+                    // Find service by id
+                    const s = services.find(s => String(s.id) === String(id));
+                    if (s) {
+                        service = {
+                            name: s.name || s.title || '',
+                            description: s.description || '',
+                            price: s.price || s.pricing_starting_price || '',
+                            duration: s.duration || '',
+                            category: s.category || '',
+                            active: typeof s.is_active !== 'undefined' ? !!s.is_active : !!s.active
+                        };
+                    }
+                }
+                showServiceModal(service);
+            }
+
+            function showServiceModal(service) {
+                // Remove existing modal
+                document.getElementById('service-modal')?.remove();
+                const modal = document.createElement('div');
+                modal.id = 'service-modal';
+                modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm';
+                modal.innerHTML = `
+                <div class='bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative'>
+                    <button class='absolute top-4 right-4 text-gray-400 hover:text-gray-600' onclick='document.getElementById("service-modal").remove()'>
+                        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 18L18 6M6 6l12 12'/></svg>
+                    </button>
+                    <h2 class='text-xl font-bold mb-6'>${modalMode === 'edit' ? 'Edit Service' : 'Add Service'}</h2>
+                    <form id='serviceForm' class='space-y-4'>
+                        <div>
+                            <label class='block text-sm font-medium text-gray-700 mb-1'>Service Name</label>
+                            <input type='text' name='name' value='${service.name}' class='input w-full' required />
+                        </div>
+                        <div>
+                            <label class='block text-sm font-medium text-gray-700 mb-1'>Category</label>
+                            <input type='text' name='category' value='${service.category}' class='input w-full' required />
+                        </div>
+                        <div class='grid grid-cols-2 gap-4'>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Price</label>
+                                <input type='text' name='price' value='${service.price}' class='input w-full' required />
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Duration</label>
+                                <input type='text' name='duration' value='${service.duration}' class='input w-full' required />
+                            </div>
+                        </div>
+                        <div>
+                            <label class='block text-sm font-medium text-gray-700 mb-1'>Description</label>
+                            <textarea name='description' rows='4' class='input w-full' required>${service.description}</textarea>
+                        </div>
+                        <div class='flex items-center'>
+                            <input type='checkbox' name='active' id='active' ${service.active ? 'checked' : ''} class='mr-2' />
+                            <label for='active' class='text-sm font-medium text-gray-700'>Active Service</label>
+                        </div>
+                        <div class='flex space-x-3 pt-4'>
+                            <button type='submit' class='btn btn-primary flex-1'>${modalMode === 'edit' ? 'Update Service' : 'Save Service'}</button>
+                            <button type='button' class='btn btn-secondary' onclick='document.getElementById("service-modal").remove()'>Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+                document.body.appendChild(modal);
+                // Form submit logic
+                document.getElementById('serviceForm').onsubmit = function(e) {
+                    e.preventDefault();
+                    const fd = new FormData(this);
+                    const payload = {
+                        name: fd.get('name'),
+                        category: fd.get('category'),
+                        price: fd.get('price'),
+                        duration: fd.get('duration'),
+                        description: fd.get('description'),
+                        active: this.active.checked
+                    };
+                    if (modalMode === 'edit' && editingServiceId) {
+                        // Update service
+                        fetch(`../backend/api/services.php?id=${editingServiceId}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(payload)
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    document.getElementById('service-modal').remove();
+                                    // Reload services
+                                    fetch('../backend/api/services.php')
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.success && Array.isArray(data.data)) {
+                                                services = data.data;
+                                                filteredServices = services;
+                                                renderServices(filteredServices);
+                                            }
+                                        });
+                                } else {
+                                    alert('Failed to update service');
+                                }
+                            });
+                    } else {
+                        // Add service
+                        fetch('../backend/api/services.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(payload)
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    document.getElementById('service-modal').remove();
+                                    // Reload services
+                                    fetch('../backend/api/services.php')
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.success && Array.isArray(data.data)) {
+                                                services = data.data;
+                                                filteredServices = services;
+                                                renderServices(filteredServices);
+                                            }
+                                        });
+                                } else {
+                                    alert('Failed to save service');
+                                }
+                            });
+                    }
+                };
             }
         });
     </script>
