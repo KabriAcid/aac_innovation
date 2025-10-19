@@ -1,5 +1,8 @@
 <!-- Sidebar Component for Admin -->
-<aside class="z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out min-h-screen flex-shrink-0 flex flex-col fixed inset-y-0 left-0 lg:static lg:translate-x-0 lg:block sidebar" id="adminSidebar">
+<!-- Sidebar Overlay for mobile -->
+<div id="sidebarOverlay" class="fixed inset-0 z-40 bg-black bg-opacity-30 backdrop-blur-sm hidden lg:hidden"></div>
+<!-- Sidebar -->
+<aside id="adminSidebar" class="z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out min-h-screen flex-shrink-0 flex flex-col fixed inset-y-0 left-0 lg:static lg:translate-x-0 lg:block sidebar">
     <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
         <img src="../public/favicon/favicon.png" alt="favicon" class="h-10 w-10" />
         <!-- <span class="font-semibold">AAC Innovation</span> -->

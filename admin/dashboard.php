@@ -24,16 +24,22 @@
                         // Chart.js bookings chart
                         const chartCanvas = document.getElementById('bookingsChart');
                         if (chartCanvas && bookings.length) {
-                            const labels = bookings.map(b => b.scheduled_date ? b.scheduled_date.split(' ')[0] : '');
-                            const values = bookings.map(b => 1); // Each booking as 1, or group by date for real chart
+                            // Group bookings by date
+                            const grouped = {};
+                            bookings.forEach(b => {
+                                const date = b.scheduled_date ? b.scheduled_date.split(' ')[0] : 'Unknown';
+                                grouped[date] = (grouped[date] || 0) + 1;
+                            });
+                            const labels = Object.keys(grouped);
+                            const values = Object.values(grouped);
                             new Chart(chartCanvas, {
-                                type: 'line',
+                                type: 'line', // You can change to 'bar', 'line', etc.
                                 data: {
                                     labels,
                                     datasets: [{
                                         label: 'Recent Bookings',
                                         data: values,
-                                        backgroundColor: 'rgba(30, 41, 59, 0.93)',
+                                        backgroundColor: labels.map((_, i) => `rgba(30, 41, 59, ${0.93 - i*0.1})`),
                                         borderColor: 'rgba(30, 41, 59, 0.82)',
                                         borderWidth: 1
                                     }]
@@ -42,27 +48,11 @@
                                     responsive: true,
                                     plugins: {
                                         legend: {
-                                            display: false
+                                            display: true
                                         },
                                         title: {
                                             display: true,
-                                            text: 'Bookings (Last 7)'
-                                        }
-                                    },
-                                    scales: {
-                                        x: {
-                                            title: {
-                                                display: true,
-                                                text: 'Date'
-                                            }
-                                        },
-                                        y: {
-                                            title: {
-                                                display: true,
-                                                text: 'Count'
-                                            },
-                                            beginAtZero: true,
-                                            stepSize: 1
+                                            text: 'Bookings by Date'
                                         }
                                     }
                                 }

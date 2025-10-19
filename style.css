@@ -1,3 +1,13 @@
+/* Sidebar open/close for mobile */
+.sidebar {
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+body:not(.sidebar-open) .sidebar {
+    transform: translateX(-100%);
+}
+body.sidebar-open .sidebar {
+    transform: translateX(0);
+}
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 body {
