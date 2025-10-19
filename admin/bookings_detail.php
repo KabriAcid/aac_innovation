@@ -1,7 +1,4 @@
 <?php
-// Bookings Detail Page
-include 'components/sidebar.php';
-include 'components/topnav.php';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 ?>
 <!DOCTYPE html>

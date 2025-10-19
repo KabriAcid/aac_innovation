@@ -12,6 +12,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let servicesMap = {};
+            let bookings = [];
+            let filteredBookings = [];
+            const searchInput = document.getElementById('searchBookings');
+            const statusFilter = document.getElementById('statusFilter');
             // Fetch services first for lookup
             fetch('../backend/api/services.php')
                 .then(res => res.json())
@@ -29,19 +33,45 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.success && Array.isArray(data.data)) {
-                            renderBookings(data.data);
+                            bookings = data.data;
+                            filteredBookings = bookings;
+                            renderBookings(filteredBookings);
                         }
                     });
             }
 
-            function renderBookings(bookings) {
+            function filterBookings() {
+                let filtered = bookings;
+                const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
+                const status = statusFilter ? statusFilter.value : 'all';
+                if (searchTerm) {
+                    filtered = filtered.filter(b =>
+                        b.client_name.toLowerCase().includes(searchTerm) ||
+                        b.client_email.toLowerCase().includes(searchTerm) ||
+                        (servicesMap[b.service_id] || '').toLowerCase().includes(searchTerm)
+                    );
+                }
+                if (status !== 'all') {
+                    filtered = filtered.filter(b => (b.status || 'pending') === status);
+                }
+                filteredBookings = filtered;
+                renderBookings(filteredBookings);
+            }
+            if (searchInput) {
+                searchInput.addEventListener('input', filterBookings);
+            }
+            if (statusFilter) {
+                statusFilter.addEventListener('change', filterBookings);
+            }
+
+            function renderBookings(bookingsArr) {
                 const list = document.getElementById('bookings-list');
                 if (!list) return;
-                if (!bookings.length) {
-                    list.innerHTML = `<div class='card p-12 text-center'><svg class='w-12 h-12 text-gray-400 mx-auto mb-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/></svg><h3 class='text-lg font-medium text-gray-900 mb-2'>No bookings found</h3><p class='text-gray-500'>No bookings have been made yet.</p></div>`;
+                if (!bookingsArr.length) {
+                    list.innerHTML = `<div class='card p-12 text-center'><svg class='w-12 h-12 text-gray-400 mx-auto mb-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/></svg><h3 class='text-lg font-medium text-gray-900 mb-2'>No bookings found</h3><p class='text-gray-500'>${searchInput && searchInput.value ? 'Try adjusting your search or filter criteria.' : 'No bookings have been made yet.'}</p></div>`;
                     return;
                 }
-                list.innerHTML = bookings.map(b => {
+                list.innerHTML = bookingsArr.map(b => {
                     const serviceTitle = servicesMap[b.service_id] || 'Unknown';
                     const status = b.status || 'pending';
                     return `
