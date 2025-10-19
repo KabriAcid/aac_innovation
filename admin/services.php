@@ -13,6 +13,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             let services = [];
             let filteredServices = [];
+            let categoriesList = [];
             const searchInput = document.getElementById('searchServices');
             const list = document.getElementById('services-list');
             // Fetch services
@@ -30,6 +31,16 @@
                 .catch(() => {
                     list.innerHTML = `<div class='col-span-full'><div class='card p-12 text-center'><h3 class='text-lg font-medium text-gray-900 mb-2'>Failed to load services</h3><p class='text-gray-500'>Please try again later.</p></div></div>`;
                 });
+
+            function fetchCategoriesList() {
+                return fetch('../backend/api/category.php')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && Array.isArray(data.data)) {
+                            categoriesList = data.data;
+                        }
+                    });
+            }
 
             function filterServices() {
                 let filtered = services;
@@ -63,9 +74,12 @@
                     const duration = s.duration || '';
                     return `
                         <div class='card p-6 hover:shadow-md transition-shadow cursor-pointer group relative'>
-                            <div class='absolute top-4 right-4 z-10'>
+                            <div class='absolute top-4 right-4 z-10 flex gap-2'>
                                 <button class='edit-service-btn' data-id='${s.id}' title='Edit Service'>
                                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-pencil-icon lucide-pencil w-5 h-5 text-gray-500 hover:text-blue-600'><path d='M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z'/><path d='m15 5 4 4'/></svg>
+                                </button>
+                                <button class='delete-service-btn' data-id='${s.id}' title='Delete Service'>
+                                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-trash-2 w-5 h-5 text-red-500 hover:text-red-700'><polyline points='3 6 5 6 21 6'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m5 6v6m4-6v6'/></svg>
                                 </button>
                             </div>
                             <div onclick='window.location.href="services_detail.php?id=${s.id}"'>
@@ -93,6 +107,41 @@
                         e.stopPropagation();
                         const id = this.getAttribute('data-id');
                         openServiceModal('edit', id);
+                    });
+                });
+                // Attach delete button listeners
+                list.querySelectorAll('.delete-service-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.getAttribute('data-id');
+                        fetch(`../backend/api/services.php?id=${id}`, {
+                                method: 'DELETE'
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    showToast({
+                                        type: 'success',
+                                        title: 'Service Deleted',
+                                        message: 'Service was deleted successfully.'
+                                    });
+                                    fetch('../backend/api/services.php')
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.success && Array.isArray(data.data)) {
+                                                services = data.data;
+                                                filteredServices = services;
+                                                renderServices(filteredServices);
+                                            }
+                                        });
+                                } else {
+                                    showToast({
+                                        type: 'error',
+                                        title: 'Error',
+                                        message: 'Failed to delete service.'
+                                    });
+                                }
+                            });
                     });
                 });
             }
@@ -133,11 +182,11 @@
             }
 
             function showServiceModal(service) {
-                // Remove existing modal
                 document.getElementById('service-modal')?.remove();
                 const modal = document.createElement('div');
                 modal.id = 'service-modal';
                 modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm';
+                let categoryOptions = categoriesList.map(cat => `<option value='${cat.name}'${cat.name === service.category ? ' selected' : ''}>${cat.name}</option>`).join('');
                 modal.innerHTML = `
                     <div class='bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative'>
                         <button class='absolute top-4 right-4 text-gray-400 hover:text-gray-600' onclick='document.getElementById("service-modal").remove()'>
@@ -151,7 +200,7 @@
                             </div>
                             <div>
                                 <label class='block text-sm font-medium text-gray-700 mb-1'>Category</label>
-                                <input type='text' name='category' value='${service.category}' class='input w-full' required placeholder='e.g., Cybersecurity, Cloud Computing' />
+                                <select name='category' class='input w-full' required>${categoryOptions}</select>
                             </div>
                             <div class='grid grid-cols-2 gap-4'>
                                 <div>
@@ -179,7 +228,6 @@
                     </div>
                 `;
                 document.body.appendChild(modal);
-                // Form submit logic
                 document.getElementById('serviceForm').onsubmit = function(e) {
                     e.preventDefault();
                     const fd = new FormData(this);
@@ -192,7 +240,6 @@
                         active: this.active.checked
                     };
                     if (modalMode === 'edit' && editingServiceId) {
-                        // Update service
                         fetch(`../backend/api/services.php?id=${editingServiceId}`, {
                                 method: 'PUT',
                                 headers: {
@@ -204,7 +251,11 @@
                             .then(data => {
                                 if (data.success) {
                                     document.getElementById('service-modal').remove();
-                                    // Reload services
+                                    showToast({
+                                        type: 'success',
+                                        title: 'Service Updated',
+                                        message: 'Service was updated successfully.'
+                                    });
                                     fetch('../backend/api/services.php')
                                         .then(res => res.json())
                                         .then(data => {
@@ -215,11 +266,14 @@
                                             }
                                         });
                                 } else {
-                                    alert('Failed to update service');
+                                    showToast({
+                                        type: 'error',
+                                        title: 'Error',
+                                        message: 'Failed to update service.'
+                                    });
                                 }
                             });
                     } else {
-                        // Add service
                         fetch('../backend/api/services.php', {
                                 method: 'POST',
                                 headers: {
@@ -231,7 +285,11 @@
                             .then(data => {
                                 if (data.success) {
                                     document.getElementById('service-modal').remove();
-                                    // Reload services
+                                    showToast({
+                                        type: 'success',
+                                        title: 'Service Added',
+                                        message: 'Service was added successfully.'
+                                    });
                                     fetch('../backend/api/services.php')
                                         .then(res => res.json())
                                         .then(data => {
@@ -242,12 +300,72 @@
                                             }
                                         });
                                 } else {
-                                    alert('Failed to save service');
+                                    showToast({
+                                        type: 'error',
+                                        title: 'Error',
+                                        message: 'Failed to save service.'
+                                    });
                                 }
                             });
                     }
                 };
             }
+            // Toast system
+            function showToast({
+                type = 'info',
+                title = '',
+                message = '',
+                duration = 3500
+            }) {
+                const container = document.getElementById('toast-container');
+                const stack = document.getElementById('toast-stack');
+                if (!container || !stack) return;
+                container.style.display = 'flex';
+                const icons = {
+                    success: '<svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke-width="2"/></svg>',
+                    error: '<svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
+                    warning: '<svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
+                    info: '<svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 16v-4m0-4h.01" stroke-width="2"/></svg>'
+                };
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.innerHTML = `
+                    <div class="flex items-start p-4">
+                        <div class="toast-icon">${icons[type] || icons.info}</div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">${title}</p>
+                            ${message ? `<p class="mt-1 text-sm opacity-90">${message}</p>` : ''}
+                        </div>
+                        <button class="toast-close" aria-label="Close">&times;</button>
+                    </div>
+                `;
+                toast.querySelector('.toast-close').onclick = function() {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                        if (!stack.children.length) container.style.display = 'none';
+                    }, 200);
+                };
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                        if (!stack.children.length) container.style.display = 'none';
+                    }, 200);
+                }, duration);
+                stack.appendChild(toast);
+            }
+            // On DOMContentLoaded, fetch categories before rendering modal
+            fetchCategoriesList().then(() => {
+                // Initialize tooltips
+                tippy('.tooltip', {
+                    content: (reference) => reference.getAttribute('data-title'),
+                    arrow: true,
+                    placement: 'top',
+                    theme: 'light',
+                });
+            });
         });
     </script>
 </head>
@@ -274,6 +392,11 @@
                 <div id="services-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
         </main>
+        <!-- Toast Container -->
+        <div id="toast-container" class="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:items-start sm:justify-end sm:p-6" style="display:none;">
+            <div id="toast-stack" class="flex w-full flex-col items-center space-y-4 sm:items-end"></div>
+        </div>
+        <!-- End Toast Container -->
         <?php include 'components/footer.php'; ?>
     </div>
 </body>

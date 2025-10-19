@@ -16,7 +16,12 @@
             const addBtn = document.getElementById('addCategoryBtn');
 
             // Toast system
-            function showToast({ type = 'info', title = '', message = '', duration = 3500 }) {
+            function showToast({
+                type = 'info',
+                title = '',
+                message = '',
+                duration = 3500
+            }) {
                 const container = document.getElementById('toast-container');
                 const stack = document.getElementById('toast-stack');
                 if (!container || !stack) return;
@@ -97,20 +102,26 @@
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
                         const id = this.getAttribute('data-id');
-                        if (confirm('Are you sure you want to delete this category?')) {
-                            fetch(`../backend/api/category.php?id=${id}`, {
-                                    method: 'DELETE'
-                                })
-                                .then(res => res.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        showToast({ type: 'success', title: 'Success', message: 'Category deleted successfully.' });
-                                        fetchCategories();
-                                    } else {
-                                        showToast({ type: 'error', title: 'Error', message: 'Failed to delete category.' });
-                                    }
-                                });
-                        }
+                        fetch(`../backend/api/category.php?id=${id}`, {
+                                method: 'DELETE'
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    showToast({
+                                        type: 'success',
+                                        title: 'Category Deleted',
+                                        message: 'Category was deleted successfully.'
+                                    });
+                                    fetchCategories();
+                                } else {
+                                    showToast({
+                                        type: 'error',
+                                        title: 'Error',
+                                        message: 'Failed to delete category.'
+                                    });
+                                }
+                            });
                     });
                 });
             }
@@ -174,10 +185,18 @@
                             .then(data => {
                                 if (data.success) {
                                     document.getElementById('category-modal').remove();
-                                    showToast({ type: 'success', title: 'Success', message: 'Category updated successfully.' });
+                                    showToast({
+                                        type: 'success',
+                                        title: 'Category Updated',
+                                        message: 'Category was updated successfully.'
+                                    });
                                     fetchCategories();
                                 } else {
-                                    showToast({ type: 'error', title: 'Error', message: 'Failed to update category.' });
+                                    showToast({
+                                        type: 'error',
+                                        title: 'Error',
+                                        message: 'Failed to update category.'
+                                    });
                                 }
                             });
                     } else {
@@ -192,10 +211,18 @@
                             .then(data => {
                                 if (data.success) {
                                     document.getElementById('category-modal').remove();
-                                    showToast({ type: 'success', title: 'Success', message: 'Category added successfully.' });
+                                    showToast({
+                                        type: 'success',
+                                        title: 'Category Added',
+                                        message: 'Category was added successfully.'
+                                    });
                                     fetchCategories();
                                 } else {
-                                    showToast({ type: 'error', title: 'Error', message: 'Failed to save category.' });
+                                    showToast({
+                                        type: 'error',
+                                        title: 'Error',
+                                        message: 'Failed to save category.'
+                                    });
                                 }
                             });
                     }
