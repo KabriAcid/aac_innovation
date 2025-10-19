@@ -59,18 +59,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $data = json_decode(file_get_contents('php://input'), true);
+        // Generate a unique id if not provided
+        $id = $data['id'] ?? uniqid();
         $stmt = $pdo->prepare(
-            'INSERT INTO services (name, description, price, duration, category, is_active) VALUES (?, ?, ?, ?, ?, ?)'
+            'INSERT INTO services (id, title, description, icon, category, features, pricing_model, pricing_starting_price, pricing_description, is_active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([
-            $data['name'],
+            $id,
+            $data['title'],
             $data['description'],
-            $data['price'],
-            $data['duration'],
+            $data['icon'],
             $data['category'],
-            $data['active'] ? 1 : 0
+            json_encode($data['features'] ?? []),
+            $data['pricing_model'] ?? null,
+            $data['pricing_starting_price'] ?? null,
+            $data['pricing_description'] ?? null,
+            $data['active'] ? 1 : 0,
+            $data['sort_order'] ?? 0
         ]);
-        $id = $pdo->lastInsertId();
         $stmt = $pdo->prepare('SELECT * FROM services WHERE id = ?');
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -88,15 +94,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['id'])) {
         $id = $_GET['id'];
         $data = json_decode(file_get_contents('php://input'), true);
         $stmt = $pdo->prepare(
-            'UPDATE services SET name = ?, description = ?, price = ?, duration = ?, category = ?, is_active = ? WHERE id = ?'
+            'UPDATE services SET title = ?, description = ?, icon = ?, category = ?, features = ?, pricing_model = ?, pricing_starting_price = ?, pricing_description = ?, is_active = ?, sort_order = ? WHERE id = ?'
         );
         $stmt->execute([
-            $data['name'],
+            $data['title'],
             $data['description'],
-            $data['price'],
-            $data['duration'],
+            $data['icon'],
             $data['category'],
+            json_encode($data['features'] ?? []),
+            $data['pricing_model'] ?? null,
+            $data['pricing_starting_price'] ?? null,
+            $data['pricing_description'] ?? null,
             $data['active'] ? 1 : 0,
+            $data['sort_order'] ?? 0,
             $id
         ]);
         if ($stmt->rowCount() === 0) {

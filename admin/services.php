@@ -195,30 +195,55 @@
                         <h2 class='text-xl font-bold mb-6'>${modalMode === 'edit' ? 'Edit Service' : 'Add Service'}</h2>
                         <form id='serviceForm' class='space-y-4'>
                             <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Service Name</label>
-                                <input type='text' name='name' value='${service.name}' class='input w-full' required placeholder='e.g., AI Chatbot Development' />
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Service ID</label>
+                                <input type='text' name='id' value='${service.id || ''}' class='input w-full' required placeholder='e.g., ai-chatbots' />
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Service Title</label>
+                                <input type='text' name='title' value='${service.title || service.name || ''}' class='input w-full' required placeholder='e.g., AI Chatbot Development' />
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Icon</label>
+                                <input type='text' name='icon' value='${service.icon || ''}' class='input w-full' required placeholder='e.g., Brain, Cloud, Shield' />
                             </div>
                             <div>
                                 <label class='block text-sm font-medium text-gray-700 mb-1'>Category</label>
                                 <select name='category' class='input w-full' required>${categoryOptions}</select>
                             </div>
-                            <div class='grid grid-cols-2 gap-4'>
-                                <div>
-                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Price</label>
-                                    <input type='text' name='price' value='${service.price}' class='input w-full' required placeholder='e.g., ₦2,550,000' />
-                                </div>
-                                <div>
-                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Duration</label>
-                                    <input type='text' name='duration' value='${service.duration}' class='input w-full' required placeholder='e.g., 2-4 weeks, 1 hour' />
-                                </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Features (comma separated)</label>
+                                <textarea name='features' rows='2' class='input w-full' placeholder='e.g., NLP, Integration, 24/7 Support'>${Array.isArray(service.features) ? service.features.join(', ') : (service.features || '')}</textarea>
                             </div>
                             <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Description</label>
-                                <textarea name='description' rows='4' class='input w-full' required placeholder='Describe the service features, benefits, and scope'>${service.description}</textarea>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Model</label>
+                                <select name='pricing_model' class='input w-full'>
+                                    <option value=''>Select model</option>
+                                    <option value='subscription'${service.pricing_model === 'subscription' ? ' selected' : ''}>Subscription</option>
+                                    <option value='one-time'${service.pricing_model === 'one-time' ? ' selected' : ''}>One-time</option>
+                                    <option value='transaction'${service.pricing_model === 'transaction' ? ' selected' : ''}>Transaction</option>
+                                    <option value='licensing'${service.pricing_model === 'licensing' ? ' selected' : ''}>Licensing</option>
+                                    <option value='consulting'${service.pricing_model === 'consulting' ? ' selected' : ''}>Consulting</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Starting Price</label>
+                                <input type='text' name='pricing_starting_price' value='${service.pricing_starting_price || ''}' class='input w-full' placeholder='e.g., ₦2,550,000' />
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Description</label>
+                                <textarea name='pricing_description' rows='2' class='input w-full' placeholder='e.g., Starting price for chatbot development'>${service.pricing_description || ''}</textarea>
                             </div>
                             <div class='flex items-center'>
                                 <input type='checkbox' name='active' id='active' ${service.active ? 'checked' : ''} class='mr-2' />
                                 <label for='active' class='text-sm font-medium text-gray-700'>Active Service</label>
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Sort Order</label>
+                                <input type='number' name='sort_order' value='${service.sort_order || 0}' class='input w-full' min='0' />
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Description</label>
+                                <textarea name='description' rows='4' class='input w-full' required placeholder='Describe the service features, benefits, and scope'>${service.description || ''}</textarea>
                             </div>
                             <div class='flex space-x-3 pt-4'>
                                 <button type='submit' class='btn btn-primary flex-1'>${modalMode === 'edit' ? 'Update Service' : 'Save Service'}</button>
@@ -231,13 +256,32 @@
                 document.getElementById('serviceForm').onsubmit = function(e) {
                     e.preventDefault();
                     const fd = new FormData(this);
+                    // Parse features from a comma-separated string to array
+                    let featuresInput = fd.get('features');
+                    let featuresArr = [];
+                    if (featuresInput) {
+                        try {
+                            // If already an array, use it
+                            featuresArr = JSON.parse(featuresInput);
+                            if (!Array.isArray(featuresArr)) {
+                                featuresArr = featuresInput.split(',').map(f => f.trim()).filter(f => f);
+                            }
+                        } catch {
+                            featuresArr = featuresInput.split(',').map(f => f.trim()).filter(f => f);
+                        }
+                    }
                     const payload = {
                         name: fd.get('name'),
-                        category: fd.get('category'),
-                        price: fd.get('price'),
-                        duration: fd.get('duration'),
+                        title: fd.get('title') || fd.get('name'),
                         description: fd.get('description'),
-                        active: this.active.checked
+                        icon: fd.get('icon') || '',
+                        category: fd.get('category'),
+                        features: featuresArr,
+                        pricing_model: fd.get('pricing_model') || null,
+                        pricing_starting_price: fd.get('pricing_starting_price') || null,
+                        pricing_description: fd.get('pricing_description') || null,
+                        active: this.active.checked,
+                        sort_order: fd.get('sort_order') || 0
                     };
                     if (modalMode === 'edit' && editingServiceId) {
                         fetch(`../backend/api/services.php?id=${editingServiceId}`, {
@@ -402,3 +446,4 @@
 </body>
 
 </html>
+</div>
