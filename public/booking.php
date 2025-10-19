@@ -217,26 +217,7 @@
     <script src="js/navbar.js"></script>
     <script>
         // --- Data (could be fetched from backend in production) ---
-        const services = [{
-                id: 'ai-chatbots',
-                title: 'AI Chatbot Development',
-                description: 'Custom AI chatbots for your business',
-                pricing: {
-                    startingPrice: '$500',
-                    description: 'Basic chatbot'
-                }
-            },
-            {
-                id: 'cloud-migration',
-                title: 'Cloud Migration Services',
-                description: 'Seamless migration to the cloud',
-                pricing: {
-                    startingPrice: '$1000',
-                    description: 'Includes assessment'
-                }
-            },
-            // Add more as needed
-        ];
+        let services = [];
         // teamMembers removed; now fetched from backend
         const TIME_SLOTS = [
             '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
@@ -245,10 +226,19 @@
 
         // --- Populate select options ---
         async function populateOptions() {
-            // Service select
+            // Service select (fetch from backend)
             const serviceSelect = document.getElementById('serviceId');
-            serviceSelect.innerHTML = '<option value="">Select a service</option>' +
-                services.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
+            serviceSelect.innerHTML = '<option value="">Select a service</option>';
+            try {
+                const res = await fetch('../backend/api/services.php');
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    services = data.data;
+                    serviceSelect.innerHTML += services.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
+                }
+            } catch (err) {
+                serviceSelect.innerHTML += '<option value="" disabled>(Failed to load services)</option>';
+            }
             // Consultant select (fetch from backend)
             const consultantSelect = document.getElementById('consultantId');
             consultantSelect.innerHTML = '<option value="">Any available consultant</option>';
@@ -292,17 +282,17 @@
                 return;
             }
             infoDiv.innerHTML = `
-                    <div class="card box-shadow">
-                        <div class="card-header"><h3 class="card-title">Selected Service</h3></div>
-                        <div class="card-content">
-                            <div class="space-y-3">
-                                <h4 class="font-semibold text-secondary-900">${service.title}</h4>
-                                <p class="text-sm text-secondary-600">${service.description}</p>
-                                ${service.pricing ? `<div class='p-3 bg-primary-50 rounded-lg'><div class='flex items-center justify-between'><span class='text-sm text-primary-700'>Starting at</span><span class='font-semibold text-primary-900'>${service.pricing.startingPrice}</span></div><p class='text-xs text-primary-600 mt-1'>${service.pricing.description}</p></div>` : ''}
-                            </div>
+                <div class="card box-shadow">
+                    <div class="card-header"><h3 class="card-title">Selected Service</h3></div>
+                    <div class="card-content">
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-secondary-900">${service.title}</h4>
+                            <p class="text-sm text-secondary-600">${service.description}</p>
+                            ${service.pricing_starting_price || service.pricing_description ? `<div class='p-3 bg-primary-50 rounded-lg'><div class='flex items-center justify-between'><span class='text-sm text-primary-700'>Starting at</span><span class='font-semibold text-primary-900'>${service.pricing_starting_price || ''}</span></div><p class='text-xs text-primary-600 mt-1'>${service.pricing_description || ''}</p></div>` : ''}
                         </div>
                     </div>
-                `;
+                </div>
+            `;
         }
 
         // --- Toast system (reuse from contact.php) ---
