@@ -501,41 +501,6 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        // Fetch and Render Service Categories
-        fetch('/api/services')
-            .then(response => response.json())
-            .then(data => {
-                const categoriesContainer = document.getElementById('service-categories');
-                data.categories.forEach(category => {
-                    const categoryElement = document.createElement('div');
-                    categoryElement.className = 'p-4 bg-white shadow rounded';
-                    categoryElement.innerHTML = `
-                <h3 class="text-xl font-bold">${category.name}</h3>
-                <p class="text-gray-600">${category.description}</p>
-            `;
-                    categoriesContainer.appendChild(categoryElement);
-                });
-            });
-
-        // Fetch and Render Featured Services
-        fetch('/api/featured-services')
-            .then(response => response.json())
-            .then(data => {
-                const featuredContainer = document.getElementById('featured-services');
-                data.services.forEach(service => {
-                    const serviceElement = document.createElement('div');
-                    serviceElement.className = 'p-4 bg-white shadow rounded';
-                    serviceElement.innerHTML = `
-                <h3 class="text-xl font-bold">${service.name}</h3>
-                <p class="text-gray-600">${service.description}</p>
-            `;
-                    featuredContainer.appendChild(serviceElement);
-                });
-            });
-    </script>
-
     <script>
         // Mobile nav toggle logic with overlay
         document.addEventListener('DOMContentLoaded', function() {
