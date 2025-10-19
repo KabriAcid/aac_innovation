@@ -139,45 +139,45 @@
                 modal.id = 'service-modal';
                 modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm';
                 modal.innerHTML = `
-                <div class='bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative'>
-                    <button class='absolute top-4 right-4 text-gray-400 hover:text-gray-600' onclick='document.getElementById("service-modal").remove()'>
-                        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 18L18 6M6 6l12 12'/></svg>
-                    </button>
-                    <h2 class='text-xl font-bold mb-6'>${modalMode === 'edit' ? 'Edit Service' : 'Add Service'}</h2>
-                    <form id='serviceForm' class='space-y-4'>
-                        <div>
-                            <label class='block text-sm font-medium text-gray-700 mb-1'>Service Name</label>
-                            <input type='text' name='name' value='${service.name}' class='input w-full' required />
-                        </div>
-                        <div>
-                            <label class='block text-sm font-medium text-gray-700 mb-1'>Category</label>
-                            <input type='text' name='category' value='${service.category}' class='input w-full' required />
-                        </div>
-                        <div class='grid grid-cols-2 gap-4'>
+                    <div class='bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative'>
+                        <button class='absolute top-4 right-4 text-gray-400 hover:text-gray-600' onclick='document.getElementById("service-modal").remove()'>
+                            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 18L18 6M6 6l12 12'/></svg>
+                        </button>
+                        <h2 class='text-xl font-bold mb-6'>${modalMode === 'edit' ? 'Edit Service' : 'Add Service'}</h2>
+                        <form id='serviceForm' class='space-y-4'>
                             <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Price</label>
-                                <input type='text' name='price' value='${service.price}' class='input w-full' required />
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Service Name</label>
+                                <input type='text' name='name' value='${service.name}' class='input w-full' required placeholder='e.g., AI Chatbot Development' />
                             </div>
                             <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Duration</label>
-                                <input type='text' name='duration' value='${service.duration}' class='input w-full' required />
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Category</label>
+                                <input type='text' name='category' value='${service.category}' class='input w-full' required placeholder='e.g., Cybersecurity, Cloud Computing' />
                             </div>
-                        </div>
-                        <div>
-                            <label class='block text-sm font-medium text-gray-700 mb-1'>Description</label>
-                            <textarea name='description' rows='4' class='input w-full' required>${service.description}</textarea>
-                        </div>
-                        <div class='flex items-center'>
-                            <input type='checkbox' name='active' id='active' ${service.active ? 'checked' : ''} class='mr-2' />
-                            <label for='active' class='text-sm font-medium text-gray-700'>Active Service</label>
-                        </div>
-                        <div class='flex space-x-3 pt-4'>
-                            <button type='submit' class='btn btn-primary flex-1'>${modalMode === 'edit' ? 'Update Service' : 'Save Service'}</button>
-                            <button type='button' class='btn btn-secondary' onclick='document.getElementById("service-modal").remove()'>Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            `;
+                            <div class='grid grid-cols-2 gap-4'>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Price</label>
+                                    <input type='text' name='price' value='${service.price}' class='input w-full' required placeholder='e.g., ₦2,550,000' />
+                                </div>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Duration</label>
+                                    <input type='text' name='duration' value='${service.duration}' class='input w-full' required placeholder='e.g., 2-4 weeks, 1 hour' />
+                                </div>
+                            </div>
+                            <div>
+                                <label class='block text-sm font-medium text-gray-700 mb-1'>Description</label>
+                                <textarea name='description' rows='4' class='input w-full' required placeholder='Describe the service features, benefits, and scope'>${service.description}</textarea>
+                            </div>
+                            <div class='flex items-center'>
+                                <input type='checkbox' name='active' id='active' ${service.active ? 'checked' : ''} class='mr-2' />
+                                <label for='active' class='text-sm font-medium text-gray-700'>Active Service</label>
+                            </div>
+                            <div class='flex space-x-3 pt-4'>
+                                <button type='submit' class='btn btn-primary flex-1'>${modalMode === 'edit' ? 'Update Service' : 'Save Service'}</button>
+                                <button type='button' class='btn btn-secondary flex-1' onclick='document.getElementById("service-modal").remove()'>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
                 document.body.appendChild(modal);
                 // Form submit logic
                 document.getElementById('serviceForm').onsubmit = function(e) {
