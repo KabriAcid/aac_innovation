@@ -1,3 +1,7 @@
+<?php
+session_start();
+error_log('SESSION: ' . print_r($_SESSION, true));
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,7 +95,7 @@
 
             function loadProfile() {
                 setLoading(true);
-                fetch('../backend/api/profile.php', {
+                fetch('../backend/api/profile.php?action=profile', {
                         credentials: 'include'
                     })
                     .then(res => res.json())
@@ -121,7 +125,7 @@
                 saving = true;
                 const btn = form.querySelector('button[type="submit"]');
                 btn.disabled = true;
-                fetch('../backend/api/profile.php', {
+                fetch('../backend/api/profile.php?action=profile', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
@@ -181,7 +185,7 @@
                 saving = true;
                 const btn = passwordForm.querySelector('button[type="submit"]');
                 btn.disabled = true;
-                fetch('../backend/api/profile_password.php', {
+                fetch('../backend/api/profile.php?action=password', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
@@ -244,7 +248,7 @@
                         return;
                     }
                     saving = true;
-                    fetch('../backend/api/add_admin.php', {
+                    fetch('../backend/api/profile.php?action=add_admin', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -311,23 +315,23 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                <input type="text" name="username" class="input w-full" disabled value="<?= htmlspecialchars($user['username'] ?? '') ?>" />
+                                <input type="text" name="username" class="input w-full" disabled />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                <input type="email" name="email" class="input w-full" required value="<?= htmlspecialchars($user['email'] ?? '') ?>" />
+                                <input type="email" name="email" class="input w-full" required />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                                <input type="text" name="firstName" class="input w-full" required value="<?= htmlspecialchars($user['first_name'] ?? '') ?>" />
+                                <input type="text" name="firstName" class="input w-full" required />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                                <input type="text" name="lastName" class="input w-full" required value="<?= htmlspecialchars($user['last_name'] ?? '') ?>" />
+                                <input type="text" name="lastName" class="input w-full" required />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                                <input type="text" name="role" class="input w-full" disabled value="<?= htmlspecialchars($user['role'] ?? '') ?>" />
+                                <input type="text" name="role" class="input w-full" disabled />
                             </div>
                         </div>
                         <div class="flex justify-end">
