@@ -86,7 +86,19 @@ function handleLogin($pdo)
     } catch (PDOException $e) {
         error_log("Login error: " . $e->getMessage());
         http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Server error occurred']);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Server error occurred',
+            'error' => $e->getMessage()
+        ]);
+    } catch (Exception $e) {
+        error_log("Login error: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Server error occurred',
+            'error' => $e->getMessage()
+        ]);
     }
 }
 
