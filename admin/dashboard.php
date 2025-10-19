@@ -10,6 +10,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../style.css">
     <script src="script.js" defer></script>
+    <!-- Chart.js from node_modules -->
+    <script src="../node_modules/chart.js/dist/chart.umd.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Fetch bookings
@@ -17,8 +19,55 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && Array.isArray(data.data)) {
-                        const bookings = data.data.slice(0, 5);
+                        const bookings = data.data.slice(0, 7); // Use up to 7 for chart
                         const bookingsList = document.getElementById('recent-bookings');
+                        // Chart.js bookings chart
+                        const chartCanvas = document.getElementById('bookingsChart');
+                        if (chartCanvas && bookings.length) {
+                            const labels = bookings.map(b => b.scheduled_date ? b.scheduled_date.split(' ')[0] : '');
+                            const values = bookings.map(b => 1); // Each booking as 1, or group by date for real chart
+                            new Chart(chartCanvas, {
+                                type: 'line',
+                                data: {
+                                    labels,
+                                    datasets: [{
+                                        label: 'Recent Bookings',
+                                        data: values,
+                                        backgroundColor: 'rgba(30, 41, 59, 0.93)',
+                                        borderColor: 'rgba(30, 41, 59, 0.82)',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            display: false
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Bookings (Last 7)'
+                                        }
+                                    },
+                                    scales: {
+                                        x: {
+                                            title: {
+                                                display: true,
+                                                text: 'Date'
+                                            }
+                                        },
+                                        y: {
+                                            title: {
+                                                display: true,
+                                                text: 'Count'
+                                            },
+                                            beginAtZero: true,
+                                            stepSize: 1
+                                        }
+                                    }
+                                }
+                            });
+                        }
                         if (bookingsList) {
                             bookingsList.innerHTML = bookings.length ? bookings.map(b => `
                                 <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
@@ -148,6 +197,10 @@
                             </svg>
                         </div>
                     </div>
+                </div>
+                <!-- Bookings Chart -->
+                <div class="card box-shadow bg-white p-6">
+                    <canvas id="bookingsChart" height="120"></canvas>
                 </div>
                 <!-- Recent Activity -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
