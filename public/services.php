@@ -72,6 +72,7 @@ function check_svg($class = '')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services | AAC Innovation</title>
+    <link rel="shortcut icon" href="../favicon/favicon.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../style.css">
 </head>
