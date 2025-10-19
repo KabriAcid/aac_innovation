@@ -237,33 +237,30 @@
             },
             // Add more as needed
         ];
-        const teamMembers = [{
-                id: '1',
-                name: 'Jane Doe',
-                role: 'AI Consultant'
-            },
-            {
-                id: '2',
-                name: 'John Smith',
-                role: 'Cloud Specialist'
-            },
-            // Add more as needed
-        ];
+        // teamMembers removed; now fetched from backend
         const TIME_SLOTS = [
             '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
             '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM',
         ];
 
         // --- Populate select options ---
-        function populateOptions() {
+        async function populateOptions() {
             // Service select
             const serviceSelect = document.getElementById('serviceId');
             serviceSelect.innerHTML = '<option value="">Select a service</option>' +
                 services.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
-            // Consultant select
+            // Consultant select (fetch from backend)
             const consultantSelect = document.getElementById('consultantId');
-            consultantSelect.innerHTML = '<option value="">Any available consultant</option>' +
-                teamMembers.map(m => `<option value="${m.id}">${m.name} - ${m.role}</option>`).join('');
+            consultantSelect.innerHTML = '<option value="">Any available consultant</option>';
+            try {
+                const res = await fetch('../backend/api/consultants.php');
+                const data = await res.json();
+                if (data.success && Array.isArray(data.data)) {
+                    consultantSelect.innerHTML += data.data.map(m => `<option value="${m.id}">${m.name} - ${m.role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>`).join('');
+                }
+            } catch (err) {
+                consultantSelect.innerHTML += '<option value="" disabled>(Failed to load consultants)</option>';
+            }
             // Time select
             const timeSelect = document.getElementById('preferredTime');
             timeSelect.innerHTML = '<option value="">Select a time</option>' +
