@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Generate a unique id if not provided
         $id = $data['id'] ?? uniqid();
         $stmt = $pdo->prepare(
-            'INSERT INTO services (id, title, description, icon, category, features, pricing_model, pricing_starting_price, pricing_description, is_active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO services (id, title, description, icon, category, features, pricing_model, pricing_starting_price, pricing_description, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $id,
@@ -74,8 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data['pricing_model'] ?? null,
             $data['pricing_starting_price'] ?? null,
             $data['pricing_description'] ?? null,
-            $data['active'] ? 1 : 0,
-            $data['sort_order'] ?? 0
+            $data['active'] ? 1 : 0
         ]);
         $stmt = $pdo->prepare('SELECT * FROM services WHERE id = ?');
         $stmt->execute([$id]);
@@ -94,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['id'])) {
         $id = $_GET['id'];
         $data = json_decode(file_get_contents('php://input'), true);
         $stmt = $pdo->prepare(
-            'UPDATE services SET title = ?, description = ?, icon = ?, category = ?, features = ?, pricing_model = ?, pricing_starting_price = ?, pricing_description = ?, is_active = ?, sort_order = ? WHERE id = ?'
+            'UPDATE services SET title = ?, description = ?, icon = ?, category = ?, features = ?, pricing_model = ?, pricing_starting_price = ?, pricing_description = ?, is_active = ? WHERE id = ?'
         );
         $stmt->execute([
             $data['title'],
@@ -106,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['id'])) {
             $data['pricing_starting_price'] ?? null,
             $data['pricing_description'] ?? null,
             $data['active'] ? 1 : 0,
-            $data['sort_order'] ?? 0,
             $id
         ]);
         if ($stmt->rowCount() === 0) {

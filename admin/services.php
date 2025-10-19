@@ -70,7 +70,14 @@
                     const active = typeof s.is_active !== 'undefined' ? s.is_active : (typeof s.active !== 'undefined' ? s.active : false);
                     const category = s.category || '';
                     const description = s.description || '';
-                    const price = s.price || s.pricing_starting_price || '';
+                    let priceRaw = s.price || s.pricing_starting_price || '';
+
+                    function formatAmount(amount) {
+                        amount = String(amount).replace(/[^\d.]/g, '');
+                        if (!amount) return '';
+                        return amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    }
+                    let price = priceRaw ? `₦${formatAmount(priceRaw.replace(/^₦/, '').trim())}` : '';
                     const duration = s.duration || '';
                     return `
                         <div class='card p-6 hover:shadow-md transition-shadow cursor-pointer group relative'>
@@ -82,19 +89,20 @@
                                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-trash-2 w-5 h-5 text-red-500 hover:text-red-700'><polyline points='3 6 5 6 21 6'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m5 6v6m4-6v6'/></svg>
                                 </button>
                             </div>
-                            <div onclick='window.location.href="services_detail.php?id=${s.id}"'>
+                            <div class='service-card-content'>
                                 <div class='flex items-start justify-between mb-4'>
                                     <div class='flex-1'>
                                         <div class='flex items-center space-x-2 mb-2'>
                                             <h3 class='text-lg font-semibold text-gray-900'>${name}</h3>
                                             <span class='px-2 py-1 text-xs font-medium rounded-full ${active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}'>${active ? 'Active' : 'Inactive'}</span>
                                         </div>
+                                        <div class='text-xs text-gray-500 mb-1'><span class='font-mono'>${s.id}</span></div>
                                         <p class='text-sm text-gray-600 mb-3'>${category}</p>
                                     </div>
                                 </div>
                                 <p class='text-gray-700 text-sm mb-4 line-clamp-3'>${description}</p>
                                 <div class='flex items-center justify-between text-sm text-gray-600 mb-4'>
-                                    <span class='font-medium'>${price}</span>
+                                    <span class='font-bold text-primary-800'>${price}</span>
                                     <span>${duration}</span>
                                 </div>
                             </div>
@@ -157,23 +165,30 @@
                 modalMode = mode;
                 editingServiceId = id;
                 let service = {
-                    name: '',
+                    id: '',
+                    title: '',
                     description: '',
-                    price: '',
-                    duration: '',
+                    icon: '',
                     category: '',
+                    features: [],
+                    pricing_model: '',
+                    pricing_starting_price: '',
+                    pricing_description: '',
                     active: true
                 };
                 if (mode === 'edit' && id) {
-                    // Find service by id
                     const s = services.find(s => String(s.id) === String(id));
                     if (s) {
                         service = {
-                            name: s.name || s.title || '',
+                            id: s.id || '',
+                            title: s.title || s.name || '',
                             description: s.description || '',
-                            price: s.price || s.pricing_starting_price || '',
-                            duration: s.duration || '',
+                            icon: s.icon || '',
                             category: s.category || '',
+                            features: Array.isArray(s.features) ? s.features : (typeof s.features === 'string' ? JSON.parse(s.features) : []),
+                            pricing_model: s.pricing_model || '',
+                            pricing_starting_price: s.pricing_starting_price || '',
+                            pricing_description: s.pricing_description || '',
                             active: typeof s.is_active !== 'undefined' ? !!s.is_active : !!s.active
                         };
                     }
@@ -188,46 +203,52 @@
                 modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm';
                 let categoryOptions = categoriesList.map(cat => `<option value='${cat.name}'${cat.name === service.category ? ' selected' : ''}>${cat.name}</option>`).join('');
                 modal.innerHTML = `
-                    <div class='bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative'>
+                    <div class='bg-white rounded-lg shadow-lg w-full max-w-lg p-8 relative flex flex-col' style='max-height:90vh;'>
                         <button class='absolute top-4 right-4 text-gray-400 hover:text-gray-600' onclick='document.getElementById("service-modal").remove()'>
                             <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 18L18 6M6 6l12 12'/></svg>
                         </button>
                         <h2 class='text-xl font-bold mb-6'>${modalMode === 'edit' ? 'Edit Service' : 'Add Service'}</h2>
-                        <form id='serviceForm' class='space-y-4'>
-                            <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Service ID</label>
-                                <input type='text' name='id' value='${service.id || ''}' class='input w-full' required placeholder='e.g., ai-chatbots' />
+                        <form id='serviceForm' class='space-y-4 flex-1 overflow-y-auto pb-24'>
+                            <div class='grid grid-cols-2 gap-4'>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Service ID</label>
+                                    <input type='text' name='id' value='${service.id || ''}' class='input w-full' required placeholder='e.g., ai-chatbots' />
+                                </div>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Service Title</label>
+                                    <input type='text' name='title' value='${service.title || service.name || ''}' class='input w-full' required placeholder='e.g., AI Chatbot Development' />
+                                </div>
                             </div>
-                            <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Service Title</label>
-                                <input type='text' name='title' value='${service.title || service.name || ''}' class='input w-full' required placeholder='e.g., AI Chatbot Development' />
-                            </div>
-                            <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Icon</label>
-                                <input type='text' name='icon' value='${service.icon || ''}' class='input w-full' required placeholder='e.g., Brain, Cloud, Shield' />
-                            </div>
-                            <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Category</label>
-                                <select name='category' class='input w-full' required>${categoryOptions}</select>
+                            <div class='grid grid-cols-2 gap-4'>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Icon</label>
+                                    <input type='text' name='icon' value='${service.icon || ''}' class='input w-full' required placeholder='e.g., Brain, Cloud, Shield' />
+                                </div>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Category</label>
+                                    <select name='category' class='input w-full' required>${categoryOptions}</select>
+                                </div>
                             </div>
                             <div>
                                 <label class='block text-sm font-medium text-gray-700 mb-1'>Features (comma separated)</label>
                                 <textarea name='features' rows='2' class='input w-full' placeholder='e.g., NLP, Integration, 24/7 Support'>${Array.isArray(service.features) ? service.features.join(', ') : (service.features || '')}</textarea>
                             </div>
-                            <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Model</label>
-                                <select name='pricing_model' class='input w-full'>
-                                    <option value=''>Select model</option>
-                                    <option value='subscription'${service.pricing_model === 'subscription' ? ' selected' : ''}>Subscription</option>
-                                    <option value='one-time'${service.pricing_model === 'one-time' ? ' selected' : ''}>One-time</option>
-                                    <option value='transaction'${service.pricing_model === 'transaction' ? ' selected' : ''}>Transaction</option>
-                                    <option value='licensing'${service.pricing_model === 'licensing' ? ' selected' : ''}>Licensing</option>
-                                    <option value='consulting'${service.pricing_model === 'consulting' ? ' selected' : ''}>Consulting</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Starting Price</label>
-                                <input type='text' name='pricing_starting_price' value='${service.pricing_starting_price || ''}' class='input w-full' placeholder='e.g., ₦2,550,000' />
+                            <div class='grid grid-cols-2 gap-4'>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Model</label>
+                                    <select name='pricing_model' class='input w-full'>
+                                        <option value=''>Select model</option>
+                                        <option value='subscription'${service.pricing_model === 'subscription' ? ' selected' : ''}>Subscription</option>
+                                        <option value='one-time'${service.pricing_model === 'one-time' ? ' selected' : ''}>One-time</option>
+                                        <option value='transaction'${service.pricing_model === 'transaction' ? ' selected' : ''}>Transaction</option>
+                                        <option value='licensing'${service.pricing_model === 'licensing' ? ' selected' : ''}>Licensing</option>
+                                        <option value='consulting'${service.pricing_model === 'consulting' ? ' selected' : ''}>Consulting</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Starting Price</label>
+                                    <input type='text' name='pricing_starting_price' value='${service.pricing_starting_price ? service.pricing_starting_price.replace(/^₦/, '').trim() : ''}' class='input w-full' placeholder='e.g., 2,550,000' />
+                                </div>
                             </div>
                             <div>
                                 <label class='block text-sm font-medium text-gray-700 mb-1'>Pricing Description</label>
@@ -238,18 +259,13 @@
                                 <label for='active' class='text-sm font-medium text-gray-700'>Active Service</label>
                             </div>
                             <div>
-                                <label class='block text-sm font-medium text-gray-700 mb-1'>Sort Order</label>
-                                <input type='number' name='sort_order' value='${service.sort_order || 0}' class='input w-full' min='0' />
-                            </div>
-                            <div>
                                 <label class='block text-sm font-medium text-gray-700 mb-1'>Description</label>
                                 <textarea name='description' rows='4' class='input w-full' required placeholder='Describe the service features, benefits, and scope'>${service.description || ''}</textarea>
                             </div>
-                            <div class='flex space-x-3 pt-4'>
-                                <button type='submit' class='btn btn-primary flex-1'>${modalMode === 'edit' ? 'Update Service' : 'Save Service'}</button>
-                                <button type='button' class='btn btn-secondary flex-1' onclick='document.getElementById("service-modal").remove()'>Cancel</button>
-                            </div>
                         </form>
+                        <div class='sticky left-0 right-0 bottom-0 bg-white border-t px-8 py-4 flex space-x-3 z-10' style='max-width:inherit;'>
+                            <button type='submit' form='serviceForm' class='btn btn-primary flex-1'>${modalMode === 'edit' ? 'Update Service' : 'Save Service'}</button>
+                        </div>
                     </div>
                 `;
                 document.body.appendChild(modal);
@@ -271,7 +287,7 @@
                         }
                     }
                     const payload = {
-                        name: fd.get('name'),
+                        id: fd.get('id'),
                         title: fd.get('title') || fd.get('name'),
                         description: fd.get('description'),
                         icon: fd.get('icon') || '',
@@ -280,8 +296,7 @@
                         pricing_model: fd.get('pricing_model') || null,
                         pricing_starting_price: fd.get('pricing_starting_price') || null,
                         pricing_description: fd.get('pricing_description') || null,
-                        active: this.active.checked,
-                        sort_order: fd.get('sort_order') || 0
+                        active: this.active.checked
                     };
                     if (modalMode === 'edit' && editingServiceId) {
                         fetch(`../backend/api/services.php?id=${editingServiceId}`, {
@@ -350,6 +365,13 @@
                                         message: 'Failed to save service.'
                                     });
                                 }
+                            })
+                            .catch(err => {
+                                showToast({
+                                    type: 'error',
+                                    title: 'Error',
+                                    message: 'Network or server error.'
+                                });
                             });
                     }
                 };

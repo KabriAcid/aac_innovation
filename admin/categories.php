@@ -161,7 +161,6 @@
                             </div>
                             <div class='flex space-x-3 pt-4'>
                                 <button type='submit' class='btn btn-primary flex-1'>${mode === 'edit' ? 'Update Category' : 'Save Category'}</button>
-                                <button type='button' class='btn btn-secondary-500 flex-1' onclick='document.getElementById("category-modal").remove()'>Cancel</button>
                             </div>
                         </form>
                     </div>
