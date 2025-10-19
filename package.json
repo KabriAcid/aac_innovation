@@ -16,12 +16,19 @@
     "type": "git",
     "url": "git+https://github.com/KabriAcid/aac_innovation.git"
   },
-  "keywords": ["php", "tailwindcss", "vanilla-js"],
+  "keywords": [
+    "php",
+    "tailwindcss",
+    "vanilla-js"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/KabriAcid/aac_innovation/issues"
   },
   "homepage": "https://github.com/KabriAcid/aac_innovation#readme",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "chart.js": "^4.5.1"
+  }
 }

@@ -10,6 +10,78 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../style.css">
     <script src="script.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch bookings
+            fetch('../backend/api/bookings.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && Array.isArray(data.data)) {
+                        const bookings = data.data.slice(0, 5);
+                        const bookingsList = document.getElementById('recent-bookings');
+                        if (bookingsList) {
+                            bookingsList.innerHTML = bookings.length ? bookings.map(b => `
+                                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                                    <div>
+                                        <p class="font-medium text-gray-900">${b.client_name || ''}</p>
+                                        <p class="text-sm text-gray-500">${b.service_title || ''}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-medium text-gray-900">${b.scheduled_date || ''}</p>
+                                        <p class="text-sm text-gray-500">${b.scheduled_time || ''}</p>
+                                    </div>
+                                </div>
+                            `).join('') : '<p class="text-gray-500 text-center py-4">No recent bookings</p>';
+                        }
+                        // Update stat card
+                        const bookingsCount = document.getElementById('stat-total-bookings');
+                        if (bookingsCount) bookingsCount.textContent = data.data.length;
+                    }
+                });
+            // Fetch contacts
+            // Fetch services
+            fetch('../backend/api/services.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && Array.isArray(data.data)) {
+                        const servicesCount = document.getElementById('stat-total-services');
+                        if (servicesCount) servicesCount.textContent = data.data.length;
+                        // You can replace this with real backend logic if available
+                        const growthRate = document.getElementById('stat-growth-rate');
+                        if (growthRate) {
+                            // For demo, randomize growth between 5% and 20%
+                            const percent = Math.floor(Math.random() * 16) + 5;
+                            growthRate.textContent = `+${percent}%`;
+                        }
+                    }
+                });
+            fetch('../backend/api/contacts.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && Array.isArray(data.data)) {
+                        const contacts = data.data.slice(0, 5);
+                        const contactsList = document.getElementById('recent-contacts');
+                        if (contactsList) {
+                            contactsList.innerHTML = contacts.length ? contacts.map(c => `
+                                <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                                    <div>
+                                        <p class="font-medium text-gray-900">${c.first_name || ''} ${c.last_name || ''}</p>
+                                        <p class="text-sm text-gray-500">${c.email || ''}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-medium text-gray-900">${c.created_at ? c.created_at.split(' ')[0] : ''}</p>
+                                        <p class="text-sm text-gray-500">${c.status || 'New'}</p>
+                                    </div>
+                                </div>
+                            `).join('') : '<p class="text-gray-500 text-center py-4">No recent contacts</p>';
+                        }
+                        // Update stat card
+                        const contactsCount = document.getElementById('stat-total-contacts');
+                        if (contactsCount) contactsCount.textContent = data.data.length;
+                    }
+                });
+        });
+    </script>
 </head>
 
 <body class="min-h-screen bg-gray-50 flex flex-col lg:flex-row sidebar-open">
@@ -31,7 +103,7 @@
                     <div class="card box-shadow bg-blue-50 flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600">Total Bookings</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-1">123</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1" id="stat-total-bookings">123</p>
                         </div>
                         <div class="p-3 rounded-full bg-blue-100">
                             <!-- Calendar Icon -->
@@ -43,7 +115,7 @@
                     <div class="card box-shadow bg-green-50 flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600">Total Contacts</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-1">45</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1" id="stat-total-contacts">45</p>
                         </div>
                         <div class="p-3 rounded-full bg-green-100">
                             <!-- Users Icon -->
@@ -55,7 +127,7 @@
                     <div class="card box-shadow bg-purple-50 flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600">Active Services</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-1">8</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1" id="stat-total-services">8</p>
                         </div>
                         <div class="p-3 rounded-full bg-purple-100">
                             <!-- Briefcase Icon -->
@@ -67,7 +139,7 @@
                     <div class="card box-shadow bg-orange-50 flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600">Growth Rate</p>
-                            <p class="text-2xl font-bold text-gray-900 mt-1">+12%</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1" id="stat-growth-rate">+12%</p>
                         </div>
                         <div class="p-3 rounded-full bg-orange-100">
                             <!-- TrendingUp Icon -->
@@ -81,54 +153,14 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="card box-shadow bg-white">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Bookings</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                                <div>
-                                    <p class="font-medium text-gray-900">Jane Doe</p>
-                                    <p class="text-sm text-gray-500">Consulting</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium text-gray-900">2025-10-18</p>
-                                    <p class="text-sm text-gray-500">10:00 AM</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                                <div>
-                                    <p class="font-medium text-gray-900">John Smith</p>
-                                    <p class="text-sm text-gray-500">Strategy</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium text-gray-900">2025-10-17</p>
-                                    <p class="text-sm text-gray-500">2:00 PM</p>
-                                </div>
-                            </div>
-                            <!-- Add more bookings as needed -->
+                        <div class="space-y-3" id="recent-bookings">
+                            <div class="text-gray-500 text-center py-4">Loading...</div>
                         </div>
                     </div>
                     <div class="card box-shadow bg-white">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Contacts</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                                <div>
-                                    <p class="font-medium text-gray-900">Alice Johnson</p>
-                                    <p class="text-sm text-gray-500">alice@email.com</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium text-gray-900">2025-10-19</p>
-                                    <p class="text-sm text-gray-500">New</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                                <div>
-                                    <p class="font-medium text-gray-900">Bob Lee</p>
-                                    <p class="text-sm text-gray-500">bob@email.com</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium text-gray-900">2025-10-18</p>
-                                    <p class="text-sm text-gray-500">Pending</p>
-                                </div>
-                            </div>
-                            <!-- Add more contacts as needed -->
+                        <div class="space-y-3" id="recent-contacts">
+                            <div class="text-gray-500 text-center py-4">Loading...</div>
                         </div>
                     </div>
                 </div>
