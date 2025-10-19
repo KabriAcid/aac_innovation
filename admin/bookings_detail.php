@@ -38,40 +38,40 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
                             const serviceTitle = servicesMap[b.service_id] || 'Unknown';
                             const status = b.status || 'pending';
                             detail.innerHTML = `
-              <div class='card box-shadow p-8'>
-                <div class='flex items-center justify-between mb-6'>
-                  <h2 class='text-xl font-bold text-gray-900'>Booking #${b.id}</h2>
-                  <span class='px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(status)}'>${status}</span>
-                </div>
-                <div class='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
-                  <div>
-                    <h3 class='font-semibold mb-2'>Client Info</h3>
-                    <div class='text-gray-700'>
-                      <div><span class='font-medium'>Name:</span> ${b.client_name}</div>
-                      <div><span class='font-medium'>Email:</span> ${b.client_email}</div>
-                      <div><span class='font-medium'>Phone:</span> ${b.client_phone}</div>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 class='font-semibold mb-2'>Service Info</h3>
-                    <div class='text-gray-700'>
-                      <div><span class='font-medium'>Service:</span> ${serviceTitle}</div>
-                      <div><span class='font-medium'>Date:</span> ${b.scheduled_date}</div>
-                      <div><span class='font-medium'>Time:</span> ${b.scheduled_time}</div>
-                    </div>
-                  </div>
-                </div>
-                <div class='mb-8'>
-                  <h3 class='font-semibold mb-2'>Notes</h3>
-                  <div class='text-gray-700'>${b.message || '<span class="text-gray-400">No notes provided.</span>'}</div>
-                </div>
-                <div class='flex gap-4'>
-                  <button class='btn btn-primary' onclick='window.history.back()'>Back</button>
-                  <button class='btn btn-danger'>Cancel Booking</button>
-                  <button class='btn btn-success'>Confirm Booking</button>
-                </div>
-              </div>
-            `;
+                            <div class='card box-shadow p-8'>
+                                <div class='flex items-center justify-between mb-6'>
+                                    <h2 class='text-xl font-bold text-gray-900'>Booking #${b.id}</h2>
+                                    <span class='px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(status)}'>${status}</span>
+                                </div>
+                                <div class='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
+                                    <div class='card bg-white border border-gray-200 p-6'>
+                                        <h3 class='font-semibold mb-2 text-blue-700'>Client Info</h3>
+                                        <div class='text-gray-700 space-y-1'>
+                                            <div><span class='font-medium'>Name:</span> ${b.client_name}</div>
+                                            <div><span class='font-medium'>Email:</span> ${b.client_email}</div>
+                                            <div><span class='font-medium'>Phone:</span> ${b.client_phone}</div>
+                                        </div>
+                                    </div>
+                                    <div class='card bg-blue-50 border border-blue-200 p-6'>
+                                        <h3 class='font-semibold mb-2 text-blue-700'>Service Info</h3>
+                                        <div class='text-gray-700 space-y-1'>
+                                            <div><span class='font-medium'>Service:</span> ${serviceTitle}</div>
+                                            <div><span class='font-medium'>Date:</span> ${b.scheduled_date}</div>
+                                            <div><span class='font-medium'>Time:</span> ${b.scheduled_time}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='mb-8'>
+                                    <h3 class='font-semibold mb-2 text-blue-700'>Notes</h3>
+                                    <div class='text-gray-700'>${b.message || '<span class="text-gray-400">No notes provided.</span>'}</div>
+                                </div>
+                                <div class='flex gap-4'>
+                                    <button class='btn btn-secondary' style='background-color:#f3f4f6;color:#374151;' onclick='window.history.back()'>Back</button>
+                                    <button class='btn btn-danger' style='background-color:#fee2e2;color:#b91c1c;'>Cancel Booking</button>
+                                    <button class='btn btn-success' style='background-color:#d1fae5;color:#065f46;'>Confirm Booking</button>
+                                </div>
+                            </div>
+                        `;
                         } else {
                             detail.innerHTML = `<div class='card p-12 text-center'><h3 class='text-lg font-medium text-gray-900 mb-2'>Booking not found</h3><p class='text-gray-500'>No booking found for this ID.</p></div>`;
                         }
@@ -100,7 +100,22 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         <?php include 'components/topnav.php'; ?>
         <main class="p-4 sm:p-6 lg:p-8 flex-1">
             <div class="space-y-6">
-                <div id="booking-detail" class="py-8 text-center text-gray-500">Loading...</div>
+                <!-- Breadcrumb -->
+                <nav class="flex mb-4 text-sm text-gray-500" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1">
+                        <li><a href="dashboard.php" class="hover:text-blue-600">Dashboard</a></li>
+                        <li>/</li>
+                        <li><a href="bookings.php" class="hover:text-blue-600">Bookings</a></li>
+                        <li>/</li>
+                        <li class="text-gray-700 font-semibold">Booking Detail</li>
+                    </ol>
+                </nav>
+                <div id="booking-detail" class="py-8 text-center text-gray-500">
+                    <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                </div>
             </div>
         </main>
         <?php include 'components/footer.php'; ?>
