@@ -23,58 +23,60 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
                     if (data.success && data.data) {
                         const c = data.data;
                         const status = c.status || 'new';
+                        const name = c.name || ((c.first_name || '') + ' ' + (c.last_name || '')).trim() || 'No name';
+                        const subject = c.subject || c.service_interest || 'No subject';
                         detail.innerHTML = `
-              <div class='space-y-6'>
-                <!-- Breadcrumb -->
-                <nav class='flex mb-4 text-sm text-gray-500' aria-label='Breadcrumb'>
-                  <ol class='inline-flex items-center space-x-1'>
-                    <li><a href='dashboard.php' class='hover:text-blue-600'>Dashboard</a></li>
-                    <li>/</li>
-                    <li><a href='contacts.php' class='hover:text-blue-600'>Contacts</a></li>
-                    <li>/</li>
-                    <li class='text-gray-700 font-semibold'>Contact Detail</li>
-                  </ol>
-                </nav>
-                <div class='flex items-center justify-between mb-4'>
-                  <button class='btn btn-secondary' style='background-color:#f3f4f6;color:#374151;' onclick='window.location.href="contacts.php"'>Back</button>
-                  <span class='px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(status)}'>${status.charAt(0).toUpperCase() + status.slice(1)}</span>
-                </div>
-                <h3 class='text-lg font-semibold text-gray-900 mb-4'>Contact Information</h3>
-                <div class='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-                  <div class='lg:col-span-2 space-y-6'>
-                    <div class='card p-6 box-shadow'>
-                      <div class='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <div class='space-y-4'>
-                          <div><span class='text-sm text-gray-500'>Name</span><div class='font-medium text-gray-900'>${c.name}</div></div>
-                          <div><span class='text-sm text-gray-500'>Email</span><div class='font-medium text-gray-900'>${c.email}</div></div>
-                          ${c.phone ? `<div><span class='text-sm text-gray-500'>Phone</span><div class='font-medium text-gray-900'>${c.phone}</div></div>` : ''}
+                      <div class='space-y-6'>
+                        <!-- Breadcrumb -->
+                        <nav class='flex mb-4 text-sm text-gray-500' aria-label='Breadcrumb'>
+                          <ol class='inline-flex items-center space-x-1'>
+                            <li><a href='dashboard.php' class='hover:text-blue-600'>Dashboard</a></li>
+                            <li>/</li>
+                            <li><a href='contacts.php' class='hover:text-blue-600'>Contacts</a></li>
+                            <li>/</li>
+                            <li class='text-gray-700 font-semibold'>Contact Detail</li>
+                          </ol>
+                        </nav>
+                        <div class='flex items-center justify-between mb-4'>
+                          <button class='btn btn-secondary' style='background-color:#f3f4f6;color:#374151;' onclick='window.location.href="contacts.php"'>Back</button>
+                          <span class='px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(status)}'>${status.charAt(0).toUpperCase() + status.slice(1)}</span>
                         </div>
-                        <div class='space-y-4'>
-                          <div><span class='text-sm text-gray-500'>Subject</span><div class='font-medium text-gray-900'>${c.subject}</div></div>
-                          <div><span class='text-sm text-gray-500'>Received</span><div class='font-medium text-gray-900'>${formatDate(c.created_at || c.date)}</div></div>
+                        <h3 class='text-lg font-semibold text-gray-900 mb-4'>Contact Information</h3>
+                        <div class='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+                          <div class='lg:col-span-2 space-y-6'>
+                            <div class='card p-6 box-shadow'>
+                              <div class='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                                <div class='space-y-4'>
+                                  <div><span class='text-sm text-gray-500'>Name</span><div class='font-medium text-gray-900'>${name}</div></div>
+                                  <div><span class='text-sm text-gray-500'>Email</span><div class='font-medium text-gray-900'>${c.email}</div></div>
+                                  ${c.phone ? `<div><span class='text-sm text-gray-500'>Phone</span><div class='font-medium text-gray-900'>${c.phone}</div></div>` : ''}
+                                </div>
+                                <div class='space-y-4'>
+                                  <div><span class='text-sm text-gray-500'>Subject</span><div class='font-medium text-gray-900'>${subject}</div></div>
+                                  <div><span class='text-sm text-gray-500'>Received</span><div class='font-medium text-gray-900'>${formatDate(c.created_at || c.date)}</div></div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class='card p-6 box-shadow'>
+                              <h3 class='text-lg font-semibold text-gray-900 mb-4'>Message</h3>
+                              <div class='bg-gray-50 rounded-lg p-4'>
+                                <p class='text-gray-700 whitespace-pre-wrap'>${c.message || '<span class="text-gray-400">No message provided.</span>'}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class='space-y-6'>
+                            <div class='card p-6 box-shadow'>
+                              <h3 class='text-lg font-semibold text-gray-900 mb-4'>Contact Details</h3>
+                              <div class='space-y-3 text-sm'>
+                                <div class='flex justify-between'><span class='text-gray-500'>Contact ID:</span><span class='font-mono text-gray-900'>${c.id}</span></div>
+                                <div class='flex justify-between'><span class='text-gray-500'>Received:</span><span class='text-gray-900'>${formatDate(c.created_at || c.date)}</span></div>
+                                <div class='flex justify-between'><span class='text-gray-500'>Status:</span><span class='text-gray-900 capitalize'>${status}</span></div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class='card p-6 box-shadow'>
-                      <h3 class='text-lg font-semibold text-gray-900 mb-4'>Message</h3>
-                      <div class='bg-gray-50 rounded-lg p-4'>
-                        <p class='text-gray-700 whitespace-pre-wrap'>${c.message || '<span class="text-gray-400">No message provided.</span>'}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class='space-y-6'>
-                    <div class='card p-6 box-shadow'>
-                      <h3 class='text-lg font-semibold text-gray-900 mb-4'>Contact Details</h3>
-                      <div class='space-y-3 text-sm'>
-                        <div class='flex justify-between'><span class='text-gray-500'>Contact ID:</span><span class='font-mono text-gray-900'>${c.id}</span></div>
-                        <div class='flex justify-between'><span class='text-gray-500'>Received:</span><span class='text-gray-900'>${formatDate(c.created_at || c.date)}</span></div>
-                        <div class='flex justify-between'><span class='text-gray-500'>Status:</span><span class='text-gray-900 capitalize'>${status}</span></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
+                    `;
                     } else {
                         detail.innerHTML = `<div class='card p-12 text-center'><h3 class='text-lg font-medium text-gray-900 mb-2'>Contact not found</h3><p class='text-gray-500'>No contact found for this ID.</p></div>`;
                     }

@@ -29,11 +29,14 @@
                 let filtered = contacts;
                 const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
                 if (searchTerm) {
-                    filtered = filtered.filter(c =>
-                        (c.name || '').toLowerCase().includes(searchTerm) ||
-                        (c.email || '').toLowerCase().includes(searchTerm) ||
-                        (c.subject || '').toLowerCase().includes(searchTerm)
-                    );
+                    filtered = filtered.filter(c => {
+                        const name = (c.name || ((c.first_name || '') + ' ' + (c.last_name || '')).trim()).toLowerCase();
+                        return name.includes(searchTerm) ||
+                            (c.first_name || '').toLowerCase().includes(searchTerm) ||
+                            (c.last_name || '').toLowerCase().includes(searchTerm) ||
+                            (c.email || '').toLowerCase().includes(searchTerm) ||
+                            (c.subject || '').toLowerCase().includes(searchTerm);
+                    });
                 }
                 filteredContacts = filtered;
                 renderContacts(filteredContacts);
@@ -74,30 +77,33 @@
                 }
                 list.innerHTML = contactsArr.map(c => {
                     const status = c.status || 'new';
-                    // Fix name and subject mapping
                     const name = c.name || ((c.first_name || '') + ' ' + (c.last_name || '')).trim() || 'No name';
                     const subject = c.subject || c.service_interest || 'No subject';
                     return `
-                                <div class='card p-6 box-shadow hover:shadow-md transition-shadow'>
-                                    <div class='flex items-center justify-between'>
-                                        <div class='flex-1 min-w-0'>
-                                            <div class='flex items-center space-x-3 mb-2'>
-                                                <h3 class='text-lg font-semibold text-gray-900 truncate'>${name}</h3>
-                                                <span class='px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(status)}'>${status.charAt(0).toUpperCase() + status.slice(1)}</span>
-                                            </div>
-                                            <div class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-600'>
-                                                <div class='flex items-center'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 12v4m0 0v4m0-4h4m-4 0H8m8-4a8 8 0 11-16 0 8 8 0 0116 0z'/></svg>${c.email}</div>
-                                                <div class='flex items-center'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 13l4 4L19 7'/></svg>${subject}</div>
-                                                <div class='flex items-center'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/></svg>${formatDate(c.created_at || c.date)}</div>
-                                            </div>
-                                            ${c.message ? `<p class='mt-2 text-sm text-gray-600 line-clamp-2'>${c.message}</p>` : ''}
-                                        </div>
-                                        <div class='ml-4'>
-                                            <a href='contacts_detail.php?id=${c.id}'><button class='btn btn-secondary btn-sm'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/></svg>View</button></a>
-                                        </div>
+                        <div class='card p-6 box-shadow hover:shadow-md transition-shadow'>
+                            <div class='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
+                                <div class='flex-1 min-w-0'>
+                                    <div class='flex items-center space-x-3 mb-2'>
+                                        <h3 class='text-lg font-semibold text-gray-900 truncate'>${name}</h3>
+                                        <span class='px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(status)}'>${status.charAt(0).toUpperCase() + status.slice(1)}</span>
                                     </div>
+                                    <div class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-600'>
+                                        <div class='flex items-center'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 12v4m0 0v4m0-4h4m-4 0H8m8-4a8 8 0 11-16 0 8 8 0 0116 0z'/></svg>${c.email}</div>
+                                        <div class='flex items-center'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 13l4 4L19 7'/></svg>${subject}</div>
+                                        <div class='flex items-center'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/></svg>${formatDate(c.created_at || c.date)}</div>
+                                    </div>
+                                    ${c.message ? `<p class='mt-2 text-sm text-gray-600 line-clamp-2'>${c.message}</p>` : ''}
                                 </div>
-                            `;
+                                <div class='w-full md:w-auto md:ml-4'>
+                                    <a href='contacts_detail.php?id=${c.id}'>
+                                        <button class='btn btn-secondary btn-sm w-full md:w-auto flex items-center justify-center'>
+                                            <svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/></svg>View
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }).join('');
             }
         });
