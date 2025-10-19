@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $stmt = $pdo->prepare(
-            'INSERT INTO contacts (first_name, last_name, email, phone, company, service_interest, message, consent, status, created_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, "new", NOW())'
+            'INSERT INTO contacts (first_name, last_name, email, phone, company, service_interest, message, consent, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())'
         );
         $stmt->execute([
             $data['firstName'],
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'message' => 'Contact form submitted successfully', 'data' => ['id' => $pdo->lastInsertId(), 'status' => 'new']]);
+        echo json_encode(['success' => true, 'message' => 'Contact form submitted successfully', 'data' => ['id' => $pdo->lastInsertId()]]);
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
@@ -80,15 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['id'])) {
             exit;
         }
 
-        $stmt = $pdo->prepare('UPDATE contacts SET status = ?, updated_at = NOW() WHERE id = ?');
-        $stmt->execute([$data['status'], $id]);
-        if ($stmt->rowCount() === 0) {
-            http_response_code(404);
-            echo json_encode(['success' => false, 'message' => 'Contact not found']);
-            exit;
-        }
-        header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'message' => 'Contact updated']);
+        // No status column in schema, so this block can be removed or adapted if needed
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Status update not supported in current schema']);
+        exit;
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);

@@ -1,9 +1,3 @@
-<?php
-// Contact page for AAC Innovation
-// Includes header and footer, uses reusable navbar.js for mobile nav
-// Contact form posts to backend/api/contacts.php
-// All validation and UX handled in JS for React-like feel
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | AAC Innovation</title>
+    <link rel="shortcut icon" href="../favicon/favicon.png" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -228,14 +223,68 @@
         </section>
     </main>
     <?php include '../components/footer.php'; ?>
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed inset-0 z-50 flex items-end justify-center px-4 py-6 pointer-events-none sm:items-start sm:justify-end sm:p-6" style="display:none;">
+        <div id="toast-stack" class="flex w-full flex-col items-center space-y-4 sm:items-end"></div>
+    </div>
     <script src="js/navbar.js"></script>
     <script>
+        // Toast system (vanilla, inspired by Toast.tsx)
+        function showToast({
+            type = 'info',
+            title = '',
+            message = '',
+            duration = 3500
+        }) {
+            const container = document.getElementById('toast-container');
+            const stack = document.getElementById('toast-stack');
+            if (!container || !stack) return;
+            container.style.display = 'flex';
+            // Icon SVGs
+            const icons = {
+                success: '<svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke-width="2"/></svg>',
+                error: '<svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
+                warning: '<svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>',
+                info: '<svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 16v-4m0-4h.01" stroke-width="2"/></svg>'
+            };
+            // Toast element
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="flex items-start p-4">
+                    <div class="toast-icon">${icons[type] || icons.info}</div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">${title}</p>
+                        ${message ? `<p class="mt-1 text-sm opacity-90">${message}</p>` : ''}
+                    </div>
+                    <button class="toast-close" aria-label="Close">&times;</button>
+                </div>
+            `;
+            // Close button
+            toast.querySelector('.toast-close').onclick = function() {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                    if (!stack.children.length) container.style.display = 'none';
+                }, 200);
+            };
+            // Animate in
+            setTimeout(() => toast.classList.add('show'), 10);
+            // Auto-remove
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                    if (!stack.children.length) container.style.display = 'none';
+                }, 200);
+            }, duration);
+            stack.appendChild(toast);
+        }
+
         // Contact form validation and AJAX submit
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('contact-form');
             const submitBtn = document.getElementById('contact-submit-btn');
-            const successMsg = document.getElementById('contact-success');
-            const errorMsg = document.getElementById('contact-error');
             const fields = ['firstName', 'lastName', 'email', 'phone', 'company', 'serviceInterest', 'message', 'consent'];
 
             function clearErrors() {
@@ -243,7 +292,6 @@
                     const el = document.getElementById('error-' + f);
                     if (el) el.textContent = '';
                 });
-                errorMsg.classList.add('hidden');
             }
 
             function validate(formData) {
@@ -279,12 +327,11 @@
                 }
                 return valid;
             }
+
             if (form) {
                 form.onsubmit = async function(e) {
                     e.preventDefault();
                     clearErrors();
-                    successMsg.classList.add('hidden');
-                    errorMsg.classList.add('hidden');
                     submitBtn.disabled = true;
                     submitBtn.classList.add('opacity-60');
                     // Gather form data
@@ -315,14 +362,24 @@
                         const data = await res.json();
                         if (data.success) {
                             form.reset();
-                            successMsg.classList.remove('hidden');
+                            showToast({
+                                type: 'success',
+                                title: 'Message Sent',
+                                message: 'Thank you for contacting us! We\'ll be in touch soon.'
+                            });
                         } else {
-                            errorMsg.textContent = data.message || 'Failed to send message. Please try again.';
-                            errorMsg.classList.remove('hidden');
+                            showToast({
+                                type: 'error',
+                                title: 'Error',
+                                message: data.message || 'Failed to send message. Please try again.'
+                            });
                         }
                     } catch (err) {
-                        errorMsg.textContent = 'Failed to send message. Please try again.';
-                        errorMsg.classList.remove('hidden');
+                        showToast({
+                            type: 'error',
+                            title: 'Error',
+                            message: 'Failed to send message. Please try again.'
+                        });
                     } finally {
                         submitBtn.disabled = false;
                         submitBtn.classList.remove('opacity-60');
