@@ -59,7 +59,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <a href="/index.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Home</a>
+                <a href="index.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Home</a>
                 <a href="public/about.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">About Us</a>
                 <a href="public/services.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Services</a>
                 <a href="public/contact.php" class="px-6 py-2 rounded-md transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700">Contact</a>
@@ -73,9 +73,9 @@
         <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
             <div class="absolute inset-0 z-0">
                 <div id="hero-carousel" class="relative w-full h-full overflow-hidden">
-                    <div class="carousel-slide selected" style="background-image: url('/aac_innovation/public/img/hero.jpg');"></div>
-                    <div class="carousel-slide" style="background-image: url('/aac_innovation/public/img/staff-1-and-2.jpg');"></div>
-                    <div class="carousel-slide" style="background-image: url('/aac_innovation/public/img/3-staff.jpg');"></div>
+                    <div class="carousel-slide selected" style="background-image: url('public/img/hero.jpg');"></div>
+                    <div class="carousel-slide" style="background-image: url('public/img/staff-1-and-2.jpg');"></div>
+                    <div class="carousel-slide" style="background-image: url('public/img/3-staff.jpg');"></div>
                 </div>
                 <!-- Navigation Buttons -->
                 <button id="prev-slide" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
